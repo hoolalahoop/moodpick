@@ -234,6 +234,22 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .modal-steps a{color:var(--primary);}
 .modal-note{font-size:11px;color:var(--muted);margin-top:8px;text-align:center;}
 
+/* REFINE BAR */
+.refine-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
+.refine-input-row{display:flex;gap:8px;margin-bottom:10px;}
+.refine-input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg3);font-family:'Sora',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color 0.2s;}
+.refine-input:focus{border-color:var(--primary);}
+.refine-input::placeholder{color:var(--muted);}
+.refine-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.refine-tag{display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;background:var(--primary-dim);border:1px solid rgba(200,169,110,0.3);font-size:12px;color:var(--primary);}
+.refine-tag button{background:none;border:none;cursor:pointer;color:var(--primary);font-size:14px;line-height:1;padding:0;}
+.refine-tag button:hover{color:var(--red);}
+.sort-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.sort-lbl{font-size:11px;color:var(--muted);font-weight:600;}
+.sort-pill{padding:5px 12px;border-radius:100px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;font-family:'Sora',sans-serif;font-size:11px;font-weight:500;color:var(--muted);transition:all 0.15s;}
+.sort-pill:hover{border-color:var(--primary);color:var(--primary);}
+.sort-pill.active{background:var(--primary);border-color:var(--primary);color:var(--bg);}
+
 /* RESULTS HEADER */
 .results-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
 .results-header h2{font-family:'Playfair Display',serif;font-size:24px;}
@@ -486,7 +502,12 @@ Return JSON object with this exact structure:
   }
 }
 
-function renderResults(acts){
+// Refine state
+let refineState={tags:[],sort:'default',input:''};
+
+function renderResults(acts,resetRefine=true){
+  if(resetRefine)refineState={tags:[],sort:'default',input:''};
+  window._acts=acts;
   const moodText=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(' & ');
   const sub=[S.specific,moodText,S.preference,S.time].filter(Boolean).join(' · ');
   document.getElementById('resultsContent').innerHTML=`
@@ -496,21 +517,122 @@ function renderResults(acts){
         <h2>${S.specific?`Ideas for "${S.specific}"` :'Your Activities'}</h2>
         <div class="results-meta">${sub}</div>
       </div>
-      <button class="btn-ghost" onclick="getRecommendations()">↻ Refresh</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-ghost" onclick="getRecommendations()">↻ Refresh</button>
+        <button class="btn-ghost" onclick="startOver()" style="color:var(--red);border-color:var(--red)">🔄 Start Over</button>
+      </div>
     </div>
-    <div class="activity-grid">
-      ${acts.map((a,i)=>`
-        <div class="act-card" onclick="showDetail(${i})" style="animation:fadeUp 0.4s ease both;animation-delay:${i*0.08}s">
-          <div class="act-top">
-            <span class="cat-badge">${a.category||'Activity'}</span>
-            <span class="diff-badge diff-${a.difficulty||'easy'}">${a.difficulty==='hard'?'💪 Hard':a.difficulty==='medium'?'🧠 Medium':'😌 Easy'}</span>
-          </div>
-          <div class="act-title">${a.title}</div>
-          <div class="act-desc">${a.description}</div>
-          <div class="act-meta"><span>⏱ ${a.estimated_time||'?'}</span><span>💰 ${a.estimated_cost||'Free'}</span></div>
-          <div class="act-arrow">→</div>
-        </div>`).join('')}
-    </div>`;
+    <div class="refine-bar">
+      <div class="refine-input-row">
+        <input class="refine-input" id="refineInput" placeholder='Refine... e.g. "no screens", "outdoor only", "budget under $5"' onkeydown="if(event.key==='Enter')addRefineTag()"/>
+        <button class="btn-ghost" onclick="addRefineTag()">+ Add</button>
+      </div>
+      <div class="refine-tags" id="refineTags"></div>
+      <div class="sort-row" style="margin-top:${refineState.tags.length?'10px':'0'}">
+        <span class="sort-lbl">Sort:</span>
+        <button class="sort-pill ${refineState.sort==='default'?'active':''}" onclick="setSort('default')">Default</button>
+        <button class="sort-pill ${refineState.sort==='time'?'active':''}" onclick="setSort('time')">⏱ Time</button>
+        <button class="sort-pill ${refineState.sort==='cost'?'active':''}" onclick="setSort('cost')">💰 Cost</button>
+        <button class="sort-pill ${refineState.sort==='difficulty'?'active':''}" onclick="setSort('difficulty')">💪 Difficulty</button>
+      </div>
+    </div>
+    <div class="activity-grid" id="activityGrid"></div>`;
+  renderTags();
+  renderActCards();
+}
+
+function addRefineTag(){
+  const input=document.getElementById('refineInput');
+  const val=input.value.trim();
+  if(!val)return;
+  if(refineState.tags.includes(val)){input.value='';return;}
+  refineState.tags.push(val);
+  input.value='';
+  renderTags();
+  // Re-fetch with new refinements
+  refetchWithRefinements();
+}
+
+function removeTag(tag){
+  refineState.tags=refineState.tags.filter(t=>t!==tag);
+  renderTags();
+  refetchWithRefinements();
+}
+
+function renderTags(){
+  const container=document.getElementById('refineTags');
+  if(!container)return;
+  container.innerHTML=refineState.tags.map(t=>`<div class="refine-tag">${t}<button onclick="removeTag('${t.replace(/'/g,"\\'")}')">×</button></div>`).join('');
+}
+
+function setSort(sort){
+  refineState.sort=sort;
+  renderActCards();
+  // Update sort pill active states
+  document.querySelectorAll('.sort-pill').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function renderActCards(){
+  const grid=document.getElementById('activityGrid');
+  if(!grid)return;
+  let acts=[...window._acts];
+  // Sort
+  const diffOrder={easy:0,medium:1,hard:2};
+  const parseCost=s=>{if(!s)return 0;const m=s.match(/[\d.]+/);return m?parseFloat(m[0]):0;};
+  const parseTime=s=>{if(!s)return 0;const h=s.match(/(\d+)\s*h/i),m=s.match(/(\d+)\s*m/i);return(h?parseInt(h[1])*60:0)+(m?parseInt(m[1]):0);};
+  if(refineState.sort==='time')acts.sort((a,b)=>parseTime(a.estimated_time)-parseTime(b.estimated_time));
+  else if(refineState.sort==='cost')acts.sort((a,b)=>parseCost(a.estimated_cost)-parseCost(b.estimated_cost));
+  else if(refineState.sort==='difficulty')acts.sort((a,b)=>(diffOrder[a.difficulty]||0)-(diffOrder[b.difficulty]||0));
+
+  if(acts.length===0){grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🔍</div><p>No activities found. Try different filters.</p></div>`;return;}
+  grid.innerHTML=acts.map((a,i)=>`
+    <div class="act-card" onclick="showDetail(${window._acts.indexOf(a)})" style="animation:fadeUp 0.4s ease both;animation-delay:${i*0.08}s">
+      <div class="act-top">
+        <span class="cat-badge">${a.category||'Activity'}</span>
+        <span class="diff-badge diff-${a.difficulty||'easy'}">${a.difficulty==='hard'?'💪 Hard':a.difficulty==='medium'?'🧠 Medium':'😌 Easy'}</span>
+      </div>
+      <div class="act-title">${a.title}</div>
+      <div class="act-desc">${a.description}</div>
+      <div class="act-meta"><span>⏱ ${a.estimated_time||'?'}</span><span>💰 ${a.estimated_cost||'Free'}</span></div>
+      <div class="act-arrow">→</div>
+    </div>`).join('');
+}
+
+async function refetchWithRefinements(){
+  if(!S.apiKey)return;
+  const grid=document.getElementById('activityGrid');
+  if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div class="spin" style="margin:0 auto 12px"></div>Refining results...</div>`;
+  const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
+  const refinCtx=refineState.tags.length?`Additional requirements: ${refineState.tags.join(', ')}. ALL suggestions must satisfy these.`:'';
+  const specificCtx=S.specific?`User specifically wants: "${S.specific}".`:'';
+  const prompt=`Suggest 4 activities for this person.
+Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}
+${specificCtx} ${refinCtx}
+Be specific. Name exact movies, games, recipes.
+Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3"],"youtube":["query 1","query 2","query 3"],"similar":["act 1","act 2"]}]}`;
+  try{
+    const text=await callGroq(prompt);
+    const parsed=parseGroqJSON(text);
+    window._acts=parsed.activities||[];
+    renderActCards();
+  }catch(err){
+    if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--red)">${err.message}</div>`;
+  }
+}
+
+function startOver(){
+  // Reset all state
+  S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=null;S.specific='';
+  refineState={tags:[],sort:'default',input:''};
+  // Reset UI
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('selected'));
+  const si=document.getElementById('specificInput');if(si)si.value='';
+  const mb=document.getElementById('moodBanner');if(mb)mb.style.display='none';
+  document.getElementById('discoverBtn').disabled=true;
+  showPage('home');
+  toast('Starting fresh! 🔄');
 }
 
 // ── DETAIL ─────────────────────────────────────────────────
