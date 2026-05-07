@@ -8,32 +8,96 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 :root {
-  --bg: #0f0f11;
-  --bg2: #16161a;
-  --bg3: #1e1e24;
-  --card: #1a1a20;
-  --border: #2a2a35;
-  --text: #f0eee8;
-  --muted: #6b6878;
-  --primary: #c8a96e;
-  --primary-dim: rgba(200,169,110,0.12);
-  --green: #4caf82;
-  --green-dim: rgba(76,175,130,0.12);
-  --red: #e05c5c;
-  --red-dim: rgba(224,92,92,0.12);
-  --blue: #6b9fd4;
-  --blue-dim: rgba(107,159,212,0.12);
+  --bg: #f5f2ed;
+  --bg2: #ede9e2;
+  --bg3: #e4dfd6;
+  --card: #ffffff;
+  --border: #d8d2c8;
+  --text: #1a1714;
+  --muted: #8a7f74;
+  --primary: #2d5a3d;
+  --primary-dim: rgba(45,90,61,0.08);
+  --green: #2d7a4f;
+  --green-dim: rgba(45,122,79,0.10);
+  --red: #c0392b;
+  --red-dim: rgba(192,57,43,0.10);
+  --blue: #2980b9;
+  --blue-dim: rgba(41,128,185,0.10);
+  --accent: #c17f3a;
   --radius: 16px;
   --radius-sm: 10px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  /* mood palette */
+  --mood-bg: #f5f2ed;
+  --mood-bg2: #ede9e2;
+  --mood-bg3: #e4dfd6;
+  --mood-card: #ffffff;
+  --mood-border: #d8d2c8;
+  --mood-text: #1a1714;
+  --mood-muted: #8a7f74;
+  --mood-primary: #2d5a3d;
+  --mood-primary-dim: rgba(45,90,61,0.08);
+}
+
+/* MOOD THEMES */
+body { transition: background 0.8s ease; }
+
+/* Happy / Playful / Grateful */
+body.mood-happy {
+  --bg: #fef9ee; --bg2: #fdf3d8; --bg3: #faedc0;
+  --card: #fffdf7; --border: #f0e4a8;
+  --primary: #c17f3a; --primary-dim: rgba(193,127,58,0.10);
+  --muted: #9a8060; --text: #2a1f0a;
+}
+/* Energetic / Motivated / Restless */
+body.mood-energetic {
+  --bg: #fff4ef; --bg2: #ffe8de; --bg3: #fdd8c8;
+  --card: #fffaf8; --border: #f5c4b0;
+  --primary: #c0440a; --primary-dim: rgba(192,68,10,0.10);
+  --muted: #9a6050; --text: #2a1008;
+}
+/* Calm / Inspired / Curious */
+body.mood-calm {
+  --bg: #eef5f9; --bg2: #ddeaf3; --bg3: #ccdeed;
+  --card: #f8fbfd; --border: #b8d4e8;
+  --primary: #1a6090; --primary-dim: rgba(26,96,144,0.10);
+  --muted: #5a7890; --text: #0a1a2a;
+}
+/* Sad / Lonely / Overwhelmed */
+body.mood-sad {
+  --bg: #f0eff8; --bg2: #e2e0f0; --bg3: #d4d0e8;
+  --card: #f8f8fc; --border: #c0bce0;
+  --primary: #4a3a8a; --primary-dim: rgba(74,58,138,0.10);
+  --muted: #6a648a; --text: #12102a;
+}
+/* Stressed / Anxious / Frustrated / Overwhelmed */
+body.mood-stressed {
+  --bg: #f8f0f0; --bg2: #f0e0e0; --bg3: #e8d0d0;
+  --card: #fdf8f8; --border: #e0b8b8;
+  --primary: #8a2020; --primary-dim: rgba(138,32,32,0.10);
+  --muted: #8a5050; --text: #2a0808;
+}
+/* Bored / Nostalgic */
+body.mood-bored {
+  --bg: #f2f0ee; --bg2: #e8e4e0; --bg3: #ddd8d2;
+  --card: #fafaf8; --border: #ccc8c0;
+  --primary: #5a4a30; --primary-dim: rgba(90,74,48,0.10);
+  --muted: #7a6a5a; --text: #1a1510;
+}
+/* Tired */
+body.mood-tired {
+  --bg: #f0eef8; --bg2: #e4e0f4; --bg3: #d8d2ec;
+  --card: #f8f7fc; --border: #c8c0e4;
+  --primary: #5a4080; --primary-dim: rgba(90,64,128,0.10);
+  --muted: #6a5a80; --text: #100820;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;} body{background:var(--bg);transition:background 0.8s ease,color 0.8s ease;}
 
 /* LAYOUT */
 .app-shell{display:flex;min-height:100vh;}
-.sidebar{width:220px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;}
+.sidebar{width:220px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;transition:background 0.8s ease,border-color 0.8s ease;}
 .main-content{margin-left:220px;flex:1;padding:32px;max-width:900px;}
 @media(max-width:768px){
   .sidebar{width:100%;min-height:auto;flex-direction:row;align-items:center;padding:12px 16px;position:sticky;top:0;border-right:none;border-bottom:1px solid var(--border);overflow-x:auto;}
@@ -46,7 +110,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-he
 
 /* LOGO */
 .logo{display:flex;align-items:center;gap:10px;margin-bottom:32px;cursor:pointer;}
-.logo-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--primary),#9b7d4a);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:16px;color:white;transition:background 0.8s ease;}
 .logo-text{font-family:'Playfair Display',serif;font-size:18px;color:var(--text);}
 
 /* NAV */
@@ -71,7 +135,7 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .hero-sub{color:var(--muted);font-size:15px;max-width:500px;}
 
 /* CARDS */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:background 0.8s ease,border-color 0.8s ease;}
 .card-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
 
 /* MOOD GRID */
@@ -123,7 +187,7 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 /* ACTIVITY CARDS */
 .activity-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
 .act-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
-.act-card::before{content:'';position:absolute;inset:0;background:var(--primary-dim);opacity:0;transition:opacity 0.2s;}
+.act-card::before{content:'';position:absolute;inset:0;background:var(--primary-dim);opacity:0;transition:opacity 0.2s;} .act-card,.card,.hist-card,.meta-block,.modal,.sidebar,.main-content{transition:background 0.8s ease,border-color 0.8s ease;}
 .act-card:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:var(--shadow);}
 .act-card:hover::before{opacity:1;}
 .act-card>*{position:relative;}
@@ -170,7 +234,7 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .btn-save.saved{background:var(--primary-dim);border-color:var(--primary);color:var(--primary);}
 
 /* HISTORY */
-.progress-bar-card{background:linear-gradient(135deg,#1a2e22,#1e2a1a);border:1px solid rgba(76,175,130,0.2);border-radius:var(--radius);padding:24px;margin-bottom:20px;}
+.progress-bar-card{background:linear-gradient(135deg,var(--primary),var(--green));border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;color:white;}
 .prog-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
 .prog-stat{text-align:center;}
 .prog-num{font-family:'Playfair Display',serif;font-size:28px;color:var(--green);}
@@ -225,9 +289,29 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
 .chart-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
 
+/* SHOPPING LINKS */
+.materials-box{background:var(--bg3);border-radius:10px;padding:14px;border:1px solid var(--border);margin-bottom:12px;font-size:13px;color:var(--text);}
+.material-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);gap:12px;}
+.material-item:last-child{border-bottom:none;}
+.material-name{font-size:13px;color:var(--text);flex:1;}
+.shop-btns{display:flex;gap:6px;flex-shrink:0;}
+.shop-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:600;text-decoration:none;transition:all 0.2s;white-space:nowrap;}
+.shop-btn-google{background:rgba(66,133,244,0.12);color:#4285f4;border:1px solid rgba(66,133,244,0.25);}
+.shop-btn-google:hover{background:rgba(66,133,244,0.2);}
+.shop-btn-coupang{background:rgba(234,76,28,0.12);color:#ea4c1c;border:1px solid rgba(234,76,28,0.25);}
+.shop-btn-coupang:hover{background:rgba(234,76,28,0.2);}
+
+/* YOUTUBE LINKS */
+.yt-link{display:flex;gap:12px;align-items:center;padding:12px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);margin-bottom:8px;text-decoration:none;color:var(--text);transition:all 0.2s;}
+.yt-link:hover{border-color:#ff4444;background:rgba(255,68,68,0.05);}
+.yt-icon{width:44px;height:44px;border-radius:8px;background:#ff0000;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;flex-shrink:0;}
+.yt-info .yt-t{font-size:13px;font-weight:500;margin-bottom:3px;}
+.yt-info .yt-s{font-size:11px;color:var(--muted);}
+.yt-tag{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(255,68,68,0.1);color:#ff4444;font-size:10px;font-weight:600;margin-bottom:4px;}
+
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:460px;width:100%;box-shadow:var(--shadow);}
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:460px;width:100%;box-shadow:var(--shadow);}
 .modal h3{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:8px;}
 .modal p{color:var(--muted);font-size:14px;margin-bottom:20px;line-height:1.6;}
 .modal-steps{background:var(--bg3);border-radius:10px;padding:16px;margin-bottom:16px;}
@@ -632,6 +716,7 @@ Return JSON: {"activities":[{"title":"string","description":"string","category":
 function startOver(){
   // Reset all state
   S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=null;S.difficulty=[];S.specific='';
+  applyMoodTheme([]);
   refineState={tags:[],sort:'default',input:''};
   // Reset UI
   document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
@@ -642,6 +727,64 @@ function startOver(){
   document.getElementById('discoverBtn').disabled=true;
   showPage('home');
   toast('Starting fresh! 🔄');
+}
+
+// ── HELPERS ───────────────────────────────────────────────
+function parseMaterials(materials){
+  if(!materials||materials==='Nothing needed'||materials==='None')return[];
+  return materials
+    .split(/[,;\n•\-]+/)
+    .map(s=>s.trim())
+    .filter(s=>s.length>2&&s.length<80);
+}
+
+function buildShoppingHTML(materials){
+  const items=parseMaterials(materials);
+  if(!items.length)return'';
+  return`<div class="materials-box">${items.map(item=>{
+    const q=encodeURIComponent(item);
+    const googleUrl=`https://www.google.com/search?q=${q}&tbm=shop`;
+    const coupangUrl=`https://www.coupang.com/np/search?q=${encodeURIComponent(item)}`;
+    return`<div class="material-item">
+      <span class="material-name">📦 ${item}</span>
+      <div class="shop-btns">
+        <a class="shop-btn shop-btn-google" href="${googleUrl}" target="_blank">🛍 Google</a>
+        <a class="shop-btn shop-btn-coupang" href="${coupangUrl}" target="_blank">🛒 Coupang</a>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function buildYouTubeHTML(title, category, difficulty, youtube){
+  // Build smart queries based on activity context
+  const diffLabel = difficulty==='long_project'?'beginner guide':difficulty==='hard'?'advanced tutorial':difficulty==='medium'?'how to':' for beginners';
+  const smartQueries = youtube && youtube.length > 0 ? youtube : [
+    `${title} ${diffLabel}`,
+    `${title} tutorial step by step`,
+    `${category} ${title} tips`
+  ];
+  // Enhance queries to be more specific
+  const enhancedQueries = smartQueries.map((q,i)=>{
+    if(i===0) return `${q} (most viewed)`;
+    if(i===1) return `${q} (beginner friendly)`;
+    return q;
+  });
+  const searchQueries = [
+    {q: smartQueries[0], label:'Most Popular', tag:'🔥 Trending'},
+    {q: smartQueries[1]||`${title} how to start`, label:'Beginner Guide', tag:'👶 Beginner'},
+    {q: smartQueries[2]||`${title} tips tricks`, label:'Tips & Tricks', tag:'💡 Tips'},
+  ];
+  return searchQueries.map(({q,label,tag})=>{
+    const url=`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}&sp=CAISAhAB`; // sorted by view count
+    return`<a class="yt-link" href="${url}" target="_blank">
+      <div class="yt-icon">▶</div>
+      <div class="yt-info">
+        <div class="yt-tag">${tag}</div>
+        <div class="yt-t">${q}</div>
+        <div class="yt-s">${label} · Sorted by views → YouTube</div>
+      </div>
+    </a>`;
+  }).join('');
 }
 
 // ── DETAIL ─────────────────────────────────────────────────
@@ -667,9 +810,9 @@ function showDetail(i){
       <div class="meta-block"><div class="meta-lbl">Difficulty</div><div class="meta-val">${a.difficulty==='long_project'?'🗓️ Epic Project':a.difficulty==='hard'?'🔥 Challenging':a.difficulty==='medium'?'🧠 Engaging':'✨ Laid-back'}</div></div>
       <div class="meta-block"><div class="meta-lbl">Materials</div><div class="meta-val">${a.materials&&a.materials!=='Nothing needed'?'See below':'Nothing needed'}</div></div>
     </div>
-    ${a.materials&&a.materials!=='Nothing needed'?`<div class="section-block"><h4>What You Need</h4><div style="background:var(--bg3);border-radius:10px;padding:14px;border:1px solid var(--border);font-size:13px;color:var(--text)">${a.materials}</div></div>`:''}
+    ${a.materials&&a.materials!=='Nothing needed'?`<div class="section-block"><h4>🛍 What You Need <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0"> — click to shop</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
     ${steps.length?`<div class="section-block"><h4>Start Now Guide</h4><div class="steps-list">${steps.map((s,i)=>`<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s.replace(/^\d+[\.\):\-]\s*/,'')}</div></div>`).join('')}</div></div>`:''}
-    ${yt.length?`<div class="section-block"><h4>▶ Watch on YouTube</h4>${yt.map(q=>`<a class="yt-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(q)}" target="_blank"><div class="yt-icon">▶</div><div class="yt-info"><div class="yt-t">${q}</div><div class="yt-s">Search on YouTube →</div></div></a>`).join('')}</div>`:''}
+    <div class="section-block"><h4>▶ Watch on YouTube <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0"> — sorted by views</span></h4>${buildYouTubeHTML(a.title,a.category,a.difficulty,yt)}</div>
     ${sim.length?`<div class="section-block"><h4>Similar Activities</h4><div>${sim.map(s=>`<span class="similar-pill">${s}</span>`).join('')}</div></div>`:''}
     <div class="action-row">
       <button class="btn-done" onclick="markDone()">✓ I Did This!</button>
@@ -834,6 +977,7 @@ function showPage(name){
   if(name==='history')renderHistory();
   if(name==='calendar')renderCalendar();
   if(name==='insights')renderInsights();
+  applyMoodTheme(S.mood);
   window.scrollTo(0,0);
 }
 
@@ -864,10 +1008,30 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 });
 
+const MOOD_THEME_MAP={
+  happy:'happy',playful:'happy',grateful:'happy',
+  energetic:'energetic',motivated:'energetic',restless:'energetic',
+  calm:'calm',inspired:'calm',curious:'calm',
+  sad:'sad',lonely:'sad',
+  stressed:'stressed',anxious:'stressed',frustrated:'stressed',overwhelmed:'stressed',
+  bored:'bored',nostalgic:'bored',
+  tired:'tired'
+};
+
+function applyMoodTheme(moods){
+  // Remove all mood classes
+  document.body.classList.remove('mood-happy','mood-energetic','mood-calm','mood-sad','mood-stressed','mood-bored','mood-tired');
+  if(moods.length>0){
+    const theme=MOOD_THEME_MAP[moods[0]];
+    if(theme)document.body.classList.add('mood-'+theme);
+  }
+}
+
 function toggleMood(v){
   const i=S.mood.indexOf(v);if(i>-1)S.mood.splice(i,1);else S.mood.push(v);
   document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
   S.mood.forEach(m=>document.getElementById('mood-'+m)?.classList.add('selected'));
+  applyMoodTheme(S.mood);
   const banner=document.getElementById('moodBanner');
   if(S.mood.length>0){
     const labels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m);
