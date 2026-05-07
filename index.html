@@ -7,173 +7,124 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
+/* ── THEMES ─────────────────────────────────────────────── */
 :root {
-  --bg: #f5f2ed;
-  --bg2: #ede9e2;
-  --bg3: #e4dfd6;
-  --card: #ffffff;
-  --border: #d8d2c8;
-  --text: #1a1714;
-  --muted: #8a7f74;
-  --primary: #2d5a3d;
-  --primary-dim: rgba(45,90,61,0.08);
-  --green: #2d7a4f;
-  --green-dim: rgba(45,122,79,0.10);
-  --red: #c0392b;
-  --red-dim: rgba(192,57,43,0.10);
-  --blue: #2980b9;
-  --blue-dim: rgba(41,128,185,0.10);
-  --accent: #c17f3a;
-  --radius: 16px;
-  --radius-sm: 10px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.08);
-  /* mood palette */
-  --mood-bg: #f5f2ed;
-  --mood-bg2: #ede9e2;
-  --mood-bg3: #e4dfd6;
-  --mood-card: #ffffff;
-  --mood-border: #d8d2c8;
-  --mood-text: #1a1714;
-  --mood-muted: #8a7f74;
-  --mood-primary: #2d5a3d;
-  --mood-primary-dim: rgba(45,90,61,0.08);
+  --bg:#f5f2ed;--bg2:#ede9e2;--bg3:#e4dfd6;--card:#ffffff;
+  --border:#d8d2c8;--text:#1a1714;--muted:#8a7f74;
+  --primary:#2d5a3d;--primary-dim:rgba(45,90,61,0.08);
+  --green:#2d7a4f;--green-dim:rgba(45,122,79,0.10);
+  --red:#c0392b;--red-dim:rgba(192,57,43,0.10);
+  --blue:#2980b9;--blue-dim:rgba(41,128,185,0.10);
+  --accent:#c17f3a;--radius:16px;--radius-sm:10px;
+  --shadow:0 4px 24px rgba(0,0,0,0.08);
+  --transition:background 0.6s ease,color 0.6s ease,border-color 0.6s ease;
 }
+/* DARK MODE */
+body.dark{
+  --bg:#0f0f11;--bg2:#16161a;--bg3:#1e1e24;--card:#1a1a20;
+  --border:#2a2a35;--text:#f0eee8;--muted:#6b6878;
+  --primary:#c8a96e;--primary-dim:rgba(200,169,110,0.12);
+  --green:#4caf82;--green-dim:rgba(76,175,130,0.12);
+  --red:#e05c5c;--red-dim:rgba(224,92,92,0.12);
+  --blue:#6b9fd4;--blue-dim:rgba(107,159,212,0.12);
+  --shadow:0 4px 24px rgba(0,0,0,0.4);
+}
+/* MOOD THEMES (light only) */
+body.mood-happy{--bg:#fef9ee;--bg2:#fdf3d8;--bg3:#faedc0;--card:#fffdf7;--border:#f0e4a8;--primary:#c17f3a;--primary-dim:rgba(193,127,58,0.10);--muted:#9a8060;--text:#2a1f0a;}
+body.mood-energetic{--bg:#fff4ef;--bg2:#ffe8de;--bg3:#fdd8c8;--card:#fffaf8;--border:#f5c4b0;--primary:#c0440a;--primary-dim:rgba(192,68,10,0.10);--muted:#9a6050;--text:#2a1008;}
+body.mood-calm{--bg:#eef5f9;--bg2:#ddeaf3;--bg3:#ccdeed;--card:#f8fbfd;--border:#b8d4e8;--primary:#1a6090;--primary-dim:rgba(26,96,144,0.10);--muted:#5a7890;--text:#0a1a2a;}
+body.mood-sad{--bg:#f0eff8;--bg2:#e2e0f0;--bg3:#d4d0e8;--card:#f8f8fc;--border:#c0bce0;--primary:#4a3a8a;--primary-dim:rgba(74,58,138,0.10);--muted:#6a648a;--text:#12102a;}
+body.mood-stressed{--bg:#f8f0f0;--bg2:#f0e0e0;--bg3:#e8d0d0;--card:#fdf8f8;--border:#e0b8b8;--primary:#8a2020;--primary-dim:rgba(138,32,32,0.10);--muted:#8a5050;--text:#2a0808;}
+body.mood-bored{--bg:#f2f0ee;--bg2:#e8e4e0;--bg3:#ddd8d2;--card:#fafaf8;--border:#ccc8c0;--primary:#5a4a30;--primary-dim:rgba(90,74,48,0.10);--muted:#7a6a5a;--text:#1a1510;}
+body.mood-tired{--bg:#f0eef8;--bg2:#e4e0f4;--bg3:#d8d2ec;--card:#f8f7fc;--border:#c8c0e4;--primary:#5a4080;--primary-dim:rgba(90,64,128,0.10);--muted:#6a5a80;--text:#100820;}
 
-/* MOOD THEMES */
-body { transition: background 0.8s ease; }
-
-/* Happy / Playful / Grateful */
-body.mood-happy {
-  --bg: #fef9ee; --bg2: #fdf3d8; --bg3: #faedc0;
-  --card: #fffdf7; --border: #f0e4a8;
-  --primary: #c17f3a; --primary-dim: rgba(193,127,58,0.10);
-  --muted: #9a8060; --text: #2a1f0a;
-}
-/* Energetic / Motivated / Restless */
-body.mood-energetic {
-  --bg: #fff4ef; --bg2: #ffe8de; --bg3: #fdd8c8;
-  --card: #fffaf8; --border: #f5c4b0;
-  --primary: #c0440a; --primary-dim: rgba(192,68,10,0.10);
-  --muted: #9a6050; --text: #2a1008;
-}
-/* Calm / Inspired / Curious */
-body.mood-calm {
-  --bg: #eef5f9; --bg2: #ddeaf3; --bg3: #ccdeed;
-  --card: #f8fbfd; --border: #b8d4e8;
-  --primary: #1a6090; --primary-dim: rgba(26,96,144,0.10);
-  --muted: #5a7890; --text: #0a1a2a;
-}
-/* Sad / Lonely / Overwhelmed */
-body.mood-sad {
-  --bg: #f0eff8; --bg2: #e2e0f0; --bg3: #d4d0e8;
-  --card: #f8f8fc; --border: #c0bce0;
-  --primary: #4a3a8a; --primary-dim: rgba(74,58,138,0.10);
-  --muted: #6a648a; --text: #12102a;
-}
-/* Stressed / Anxious / Frustrated / Overwhelmed */
-body.mood-stressed {
-  --bg: #f8f0f0; --bg2: #f0e0e0; --bg3: #e8d0d0;
-  --card: #fdf8f8; --border: #e0b8b8;
-  --primary: #8a2020; --primary-dim: rgba(138,32,32,0.10);
-  --muted: #8a5050; --text: #2a0808;
-}
-/* Bored / Nostalgic */
-body.mood-bored {
-  --bg: #f2f0ee; --bg2: #e8e4e0; --bg3: #ddd8d2;
-  --card: #fafaf8; --border: #ccc8c0;
-  --primary: #5a4a30; --primary-dim: rgba(90,74,48,0.10);
-  --muted: #7a6a5a; --text: #1a1510;
-}
-/* Tired */
-body.mood-tired {
-  --bg: #f0eef8; --bg2: #e4e0f4; --bg3: #d8d2ec;
-  --card: #f8f7fc; --border: #c8c0e4;
-  --primary: #5a4080; --primary-dim: rgba(90,64,128,0.10);
-  --muted: #6a5a80; --text: #100820;
-}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;} body{background:var(--bg);transition:background 0.8s ease,color 0.8s ease;}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:var(--transition);}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 
-/* LAYOUT */
+/* ── LAYOUT ─────────────────────────────────────────────── */
 .app-shell{display:flex;min-height:100vh;}
-.sidebar{width:220px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;transition:background 0.8s ease,border-color 0.8s ease;}
+.sidebar{width:220px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;transition:var(--transition);}
 .main-content{margin-left:220px;flex:1;padding:32px;max-width:900px;}
 @media(max-width:768px){
-  .sidebar{width:100%;min-height:auto;flex-direction:row;align-items:center;padding:12px 16px;position:sticky;top:0;border-right:none;border-bottom:1px solid var(--border);overflow-x:auto;}
+  .sidebar{width:100%;min-height:auto;flex-direction:row;align-items:center;padding:12px 16px;position:sticky;top:0;border-right:none;border-bottom:1px solid var(--border);overflow-x:auto;gap:8px;}
   .main-content{margin-left:0;padding:20px 16px;}
-  .sidebar .logo{margin-bottom:0;margin-right:16px;}
+  .logo{margin-bottom:0!important;}
   .nav-label{display:none;}
   .sidebar-footer{display:none;}
   nav{display:flex;flex-direction:row;gap:4px;flex:1;}
 }
 
-/* LOGO */
+/* ── LOGO & NAV ─────────────────────────────────────────── */
 .logo{display:flex;align-items:center;gap:10px;margin-bottom:32px;cursor:pointer;}
-.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:16px;color:white;transition:background 0.8s ease;}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:16px;color:white;transition:background 0.6s ease;}
 .logo-text{font-family:'Playfair Display',serif;font-size:18px;color:var(--text);}
-
-/* NAV */
 nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .nav-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);border:none;background:none;color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s;text-align:left;width:100%;}
 .nav-btn:hover{color:var(--text);background:var(--bg3);}
 .nav-btn.active{color:var(--primary);background:var(--primary-dim);}
 .nav-icon{font-size:16px;width:20px;text-align:center;}
 .sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);}
-.api-status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer;padding:8px;}
+.api-status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer;padding:8px;border-radius:8px;transition:background 0.2s;}
+.api-status:hover{background:var(--bg3);}
 .api-dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
 .api-dot.off{background:var(--red);}
 
-/* PAGES */
-.page{display:none;}.page.active{display:block;}
+/* ── PAGES ─────────────────────────────────────────────── */
+.page{display:none;animation:fadeIn 0.3s ease;}.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-/* HERO */
+/* ── HERO ───────────────────────────────────────────────── */
 .hero{margin-bottom:32px;}
 .hero-eyebrow{font-size:12px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
-.hero-title{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,42px);line-height:1.2;margin-bottom:10px;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,40px);line-height:1.2;margin-bottom:10px;}
 .hero-title em{font-style:italic;color:var(--primary);}
-.hero-sub{color:var(--muted);font-size:15px;max-width:500px;}
+.hero-sub{color:var(--muted);font-size:14px;max-width:500px;line-height:1.6;}
 
-/* CARDS */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:background 0.8s ease,border-color 0.8s ease;}
+/* ── CARDS ─────────────────────────────────────────────── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:var(--transition);}
 .card-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
 
-/* MOOD GRID */
+/* ── MOOD ───────────────────────────────────────────────── */
 .mood-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
 @media(max-width:600px){.mood-grid{grid-template-columns:repeat(3,1fr);}}
 .mood-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border-radius:12px;border:1.5px solid transparent;background:var(--bg3);cursor:pointer;transition:all 0.15s;font-family:'Sora',sans-serif;}
 .mood-btn:hover{border-color:var(--border);transform:translateY(-2px);}
 .mood-btn.selected{border-color:var(--primary);background:var(--primary-dim);}
-.mood-emoji{font-size:20px;}
-.mood-label{font-size:10px;font-weight:500;color:var(--muted);}
+.mood-emoji{font-size:20px;}.mood-label{font-size:10px;font-weight:500;color:var(--muted);}
 .mood-btn.selected .mood-label{color:var(--primary);}
-.mood-banner{margin-top:12px;padding:10px 14px;border-radius:10px;background:var(--primary-dim);border:1px solid rgba(200,169,110,0.2);font-size:13px;color:var(--primary);display:none;}
+.mood-banner{margin-top:12px;padding:10px 14px;border-radius:10px;background:var(--primary-dim);border:1px solid var(--border);font-size:13px;color:var(--primary);display:none;}
 
-/* PILLS */
+/* ── PILLS ─────────────────────────────────────────────── */
 .pill-row{display:flex;flex-wrap:wrap;gap:8px;}
 .pill{padding:7px 16px;border-radius:100px;border:1.5px solid var(--border);background:var(--bg3);cursor:pointer;font-family:'Sora',sans-serif;font-size:12px;font-weight:500;color:var(--muted);transition:all 0.15s;}
 .pill:hover{border-color:var(--primary);color:var(--text);}
-.pill.selected{background:var(--primary);border-color:var(--primary);color:var(--bg);}
+.pill.selected{background:var(--primary);border-color:var(--primary);color:white;}
+body.dark .pill.selected{color:var(--bg);}
 
-/* INPUT */
-.text-input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg3);font-family:'Sora',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color 0.2s;}
+/* ── INPUTS ─────────────────────────────────────────────── */
+.text-input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg3);font-family:'Sora',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color 0.2s,background 0.6s ease;}
 .text-input:focus{border-color:var(--primary);}
 .text-input::placeholder{color:var(--muted);}
 
-/* BUTTONS */
-.btn-primary{width:100%;padding:14px;border-radius:var(--radius-sm);background:var(--primary);color:var(--bg);border:none;cursor:pointer;font-family:'Sora',sans-serif;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;margin-top:8px;}
-.btn-primary:hover{background:#d4b87a;transform:translateY(-1px);box-shadow:0 8px 24px rgba(200,169,110,0.3);}
+/* ── BUTTONS ─────────────────────────────────────────────── */
+.btn-primary{width:100%;padding:14px;border-radius:var(--radius-sm);background:var(--primary);color:white;border:none;cursor:pointer;font-family:'Sora',sans-serif;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;margin-top:8px;}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,0.15);}
 .btn-primary:disabled{opacity:0.3;cursor:not-allowed;transform:none;box-shadow:none;}
 .btn-ghost{padding:8px 16px;border-radius:var(--radius-sm);background:var(--bg3);color:var(--text);border:1px solid var(--border);cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;}
 .btn-ghost:hover{border-color:var(--primary);color:var(--primary);}
 .btn-icon{padding:8px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;font-size:14px;transition:all 0.2s;color:var(--muted);}
 .btn-icon:hover{border-color:var(--primary);color:var(--primary);}
 
-/* DIVIDER */
+/* ── SURPRISE ME ─────────────────────────────────────────── */
+.surprise-btn{width:100%;padding:18px;border-radius:var(--radius);background:linear-gradient(135deg,var(--primary),var(--green));color:white;border:none;cursor:pointer;font-family:'Playfair Display',serif;font-size:18px;font-style:italic;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
+.surprise-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.15);}
+
+/* ── DIVIDER ─────────────────────────────────────────────── */
 .divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px;margin:8px 0;}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
 
-/* LOADING */
+/* ── LOADING ─────────────────────────────────────────────── */
 .loading{text-align:center;padding:60px 20px;}
 .spin{width:36px;height:36px;margin:0 auto 20px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 0.7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -184,34 +135,45 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .dots span:nth-child(2){animation-delay:0.15s;}.dots span:nth-child(3){animation-delay:0.3s;}
 @keyframes pulse{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
 
-/* ACTIVITY CARDS */
+/* ── ACTIVITY CARDS ─────────────────────────────────────── */
 .activity-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
-.act-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
-.act-card::before{content:'';position:absolute;inset:0;background:var(--primary-dim);opacity:0;transition:opacity 0.2s;} .act-card,.card,.hist-card,.meta-block,.modal,.sidebar,.main-content{transition:background 0.8s ease,border-color 0.8s ease;}
-.act-card:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:var(--shadow);}
-.act-card:hover::before{opacity:1;}
-.act-card>*{position:relative;}
+.act-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;transform-style:preserve-3d;}
+.act-card:hover{border-color:var(--primary);transform:translateY(-4px) scale(1.01);box-shadow:0 12px 40px rgba(0,0,0,0.12);}
+.act-card::after{content:'→';position:absolute;right:16px;bottom:16px;width:28px;height:28px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-size:12px;opacity:0;transition:opacity 0.2s;display:flex;align-items:center;justify-content:center;}
+.act-card:hover::after{opacity:1;}
 .act-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
 .cat-badge{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;padding:3px 10px;border-radius:100px;background:var(--bg3);border:1px solid var(--border);}
 .diff-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:100px;}
 .diff-easy{background:var(--green-dim);color:var(--green);}
-.diff-medium{background:rgba(200,169,110,0.15);color:var(--primary);}
+.diff-medium{background:var(--primary-dim);color:var(--primary);}
 .diff-hard{background:var(--red-dim);color:var(--red);}
 .diff-long_project{background:var(--blue-dim);color:var(--blue);}
 .act-title{font-family:'Playfair Display',serif;font-size:17px;margin-bottom:6px;line-height:1.3;}
 .act-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:14px;}
 .act-meta{display:flex;gap:12px;font-size:11px;color:var(--muted);}
-.act-arrow{position:absolute;right:16px;bottom:16px;width:28px;height:28px;border-radius:50%;background:var(--primary);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:12px;opacity:0;transition:opacity 0.2s;}
-.act-card:hover .act-arrow{opacity:1;}
+.why-tag{margin-top:8px;font-size:11px;color:var(--primary);font-style:italic;opacity:0.8;}
 
-/* DETAIL */
-.detail-nav{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
-.detail-header{margin-bottom:24px;}
+/* ── REFINE BAR ─────────────────────────────────────────── */
+.refine-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
+.refine-input-row{display:flex;gap:8px;margin-bottom:10px;}
+.refine-input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg3);font-family:'Sora',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color 0.2s;}
+.refine-input:focus{border-color:var(--primary);}
+.refine-input::placeholder{color:var(--muted);}
+.refine-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.refine-tag{display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;background:var(--primary-dim);border:1px solid var(--border);font-size:12px;color:var(--primary);}
+.refine-tag button{background:none;border:none;cursor:pointer;color:var(--primary);font-size:14px;line-height:1;padding:0;}
+.sort-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:10px;}
+.sort-lbl{font-size:11px;color:var(--muted);font-weight:600;}
+.sort-pill{padding:5px 12px;border-radius:100px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;font-family:'Sora',sans-serif;font-size:11px;font-weight:500;color:var(--muted);transition:all 0.15s;}
+.sort-pill:hover{border-color:var(--primary);color:var(--primary);}
+.sort-pill.active{background:var(--primary);border-color:var(--primary);color:white;}
+
+/* ── DETAIL ─────────────────────────────────────────────── */
 .detail-title{font-family:'Playfair Display',serif;font-size:32px;margin:10px 0 8px;line-height:1.2;}
 .detail-desc{color:var(--muted);font-size:15px;margin-bottom:20px;line-height:1.6;}
 .meta-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px;}
 @media(min-width:600px){.meta-grid{grid-template-columns:repeat(4,1fr);}}
-.meta-block{background:var(--bg3);border-radius:10px;padding:14px;border:1px solid var(--border);}
+.meta-block{background:var(--bg3);border-radius:10px;padding:14px;border:1px solid var(--border);transition:var(--transition);}
 .meta-lbl{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
 .meta-val{font-size:13px;font-weight:600;color:var(--text);}
 .section-block{margin-bottom:24px;}
@@ -220,30 +182,60 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .step-row{display:flex;gap:12px;align-items:flex-start;}
 .step-n{width:24px;height:24px;border-radius:50%;background:var(--primary-dim);color:var(--primary);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
 .step-t{font-size:13px;color:var(--text);line-height:1.5;}
+
+/* ── SHOPPING ─────────────────────────────────────────────── */
+.materials-box{background:var(--bg3);border-radius:10px;padding:4px 14px;border:1px solid var(--border);margin-bottom:12px;}
+.material-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:12px;}
+.material-item:last-child{border-bottom:none;}
+.material-name{font-size:13px;color:var(--text);flex:1;}
+.shop-btns{display:flex;gap:6px;flex-shrink:0;}
+.shop-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:600;text-decoration:none;transition:all 0.2s;white-space:nowrap;}
+.shop-btn-google{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(41,128,185,0.2);}
+.shop-btn-google:hover{background:rgba(41,128,185,0.2);}
+.shop-btn-coupang{background:var(--red-dim);color:var(--red);border:1px solid rgba(192,57,43,0.2);}
+.shop-btn-coupang:hover{background:rgba(192,57,43,0.2);}
+
+/* ── YOUTUBE ─────────────────────────────────────────────── */
 .yt-link{display:flex;gap:12px;align-items:center;padding:12px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);margin-bottom:8px;text-decoration:none;color:var(--text);transition:all 0.2s;}
 .yt-link:hover{border-color:#ff4444;background:rgba(255,68,68,0.05);}
-.yt-icon{width:40px;height:40px;border-radius:8px;background:#ff0000;display:flex;align-items:center;justify-content:center;font-size:16px;color:white;flex-shrink:0;}
-.yt-info .yt-t{font-size:13px;font-weight:500;margin-bottom:2px;}
-.yt-info .yt-s{font-size:11px;color:var(--muted);}
+.yt-icon{width:44px;height:44px;border-radius:8px;background:#ff0000;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;flex-shrink:0;}
+.yt-tag{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(255,68,68,0.1);color:#ff4444;font-size:10px;font-weight:600;margin-bottom:4px;}
+.yt-t{font-size:13px;font-weight:500;margin-bottom:3px;}
+.yt-s{font-size:11px;color:var(--muted);}
 .similar-pill{display:inline-flex;padding:6px 14px;border-radius:100px;background:var(--bg3);border:1px solid var(--border);font-size:12px;color:var(--muted);margin:4px;}
-.action-row{display:flex;gap:10px;margin-top:16px;}
-.btn-done{flex:1;padding:14px;border-radius:var(--radius-sm);background:var(--primary);color:var(--bg);border:none;cursor:pointer;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;}
-.btn-done:hover{background:#d4b87a;}
-.btn-save{flex:1;padding:14px;border-radius:var(--radius-sm);background:var(--bg3);color:var(--text);border:1px solid var(--border);cursor:pointer;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;}
+
+/* ── ACTION BUTTONS ─────────────────────────────────────── */
+.action-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.btn-done{flex:1;min-width:140px;padding:14px;border-radius:var(--radius-sm);background:var(--primary);color:white;border:none;cursor:pointer;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;}
+.btn-done:hover{opacity:0.9;}
+.btn-save{flex:1;min-width:140px;padding:14px;border-radius:var(--radius-sm);background:var(--bg3);color:var(--text);border:1px solid var(--border);cursor:pointer;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;}
 .btn-save:hover{border-color:var(--primary);color:var(--primary);}
 .btn-save.saved{background:var(--primary-dim);border-color:var(--primary);color:var(--primary);}
+.btn-share{padding:14px 18px;border-radius:var(--radius-sm);background:var(--bg3);color:var(--text);border:1px solid var(--border);cursor:pointer;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;}
+.btn-share:hover{border-color:var(--accent);color:var(--accent);}
 
-/* HISTORY */
-.progress-bar-card{background:linear-gradient(135deg,var(--primary),var(--green));border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;color:white;}
+/* ── HISTORY ─────────────────────────────────────────────── */
+.progress-bar-card{background:linear-gradient(135deg,var(--primary),var(--green));border-radius:var(--radius);padding:24px;margin-bottom:20px;color:white;}
 .prog-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
 .prog-stat{text-align:center;}
-.prog-num{font-family:'Playfair Display',serif;font-size:28px;color:var(--green);}
-.prog-lbl{font-size:11px;color:var(--muted);margin-top:2px;}
-.prog-bar-wrap{background:rgba(255,255,255,0.08);border-radius:100px;height:6px;overflow:hidden;}
-.prog-bar{height:100%;background:var(--green);border-radius:100px;transition:width 0.8s ease;}
+.prog-num{font-family:'Playfair Display',serif;font-size:28px;}
+.prog-lbl{font-size:11px;opacity:0.8;margin-top:2px;}
+.prog-bar-wrap{background:rgba(255,255,255,0.2);border-radius:100px;height:6px;overflow:hidden;}
+.prog-bar{height:100%;background:white;border-radius:100px;transition:width 0.8s ease;}
+.streak-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;background:rgba(255,255,255,0.2);font-size:12px;font-weight:600;margin-top:12px;}
+
+/* ── WEEKLY SUMMARY ─────────────────────────────────────── */
+.weekly-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+.weekly-title{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.weekly-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+.weekly-stat{text-align:center;background:var(--bg3);border-radius:10px;padding:12px;}
+.weekly-num{font-family:'Playfair Display',serif;font-size:22px;color:var(--primary);}
+.weekly-lbl{font-size:10px;color:var(--muted);margin-top:2px;}
+.weekly-insight{font-size:13px;color:var(--muted);line-height:1.5;padding:10px;background:var(--primary-dim);border-radius:8px;border-left:3px solid var(--primary);}
+
 .hist-tabs{display:flex;gap:4px;margin-bottom:16px;background:var(--bg3);padding:4px;border-radius:10px;}
 .hist-tab{flex:1;padding:7px;border-radius:8px;border:none;cursor:pointer;font-family:'Sora',sans-serif;font-size:12px;font-weight:500;background:none;color:var(--muted);transition:all 0.2s;}
-.hist-tab.active{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,0.3);}
+.hist-tab.active{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,0.1);}
 .hist-list{display:flex;flex-direction:column;gap:10px;}
 .hist-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;transition:all 0.2s;}
 .hist-card:hover{border-color:var(--primary);}
@@ -254,13 +246,12 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .hist-bottom{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
 .status-badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:0.04em;}
 .status-done{background:var(--green-dim);color:var(--green);}
-.status-saved{background:rgba(200,169,110,0.12);color:var(--primary);}
+.status-saved{background:var(--primary-dim);color:var(--primary);}
 .stars{display:flex;gap:2px;}
-.star{font-size:14px;cursor:pointer;transition:transform 0.1s;color:var(--border);}
-.star.on{color:var(--primary);}
+.star{font-size:15px;cursor:pointer;transition:transform 0.1s;}
 .star:hover{transform:scale(1.2);}
 
-/* CALENDAR */
+/* ── CALENDAR ─────────────────────────────────────────────── */
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .cal-month{font-family:'Playfair Display',serif;font-size:20px;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
@@ -268,10 +259,10 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .cal-cell{min-height:80px;background:var(--bg3);border-radius:8px;padding:8px;cursor:pointer;transition:all 0.2s;border:1px solid transparent;}
 .cal-cell:hover{border-color:var(--border);}
 .cal-cell.selected{border-color:var(--primary);background:var(--primary-dim);}
-.cal-cell.today .cal-date{background:var(--primary);color:var(--bg);border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
+.cal-cell.today .cal-date-num{background:var(--primary);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
 .cal-cell.empty{background:transparent;cursor:default;}
-.cal-date{font-size:12px;font-weight:600;margin-bottom:4px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
-.cal-chip{font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;background:var(--primary-dim);color:var(--primary);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cal-date-num{font-size:12px;font-weight:600;margin-bottom:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
+.cal-chip{font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;background:var(--primary-dim);color:var(--primary);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .cal-chip.done{background:var(--green-dim);color:var(--green);}
 .cal-modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:16px;}
 .cal-modal-title{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
@@ -280,38 +271,30 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .cal-act-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;}
 .cal-act-dot.done{background:var(--green);}
 
-/* INSIGHTS */
+/* ── INSIGHTS ─────────────────────────────────────────────── */
 .insights-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
 @media(min-width:600px){.insights-grid{grid-template-columns:repeat(4,1fr);}}
 .insight-stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;text-align:center;}
 .insight-num{font-family:'Playfair Display',serif;font-size:28px;color:var(--primary);}
 .insight-lbl{font-size:11px;color:var(--muted);margin-top:2px;}
 .chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
-.chart-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.chart-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;}
 
-/* SHOPPING LINKS */
-.materials-box{background:var(--bg3);border-radius:10px;padding:14px;border:1px solid var(--border);margin-bottom:12px;font-size:13px;color:var(--text);}
-.material-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);gap:12px;}
-.material-item:last-child{border-bottom:none;}
-.material-name{font-size:13px;color:var(--text);flex:1;}
-.shop-btns{display:flex;gap:6px;flex-shrink:0;}
-.shop-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:600;text-decoration:none;transition:all 0.2s;white-space:nowrap;}
-.shop-btn-google{background:rgba(66,133,244,0.12);color:#4285f4;border:1px solid rgba(66,133,244,0.25);}
-.shop-btn-google:hover{background:rgba(66,133,244,0.2);}
-.shop-btn-coupang{background:rgba(234,76,28,0.12);color:#ea4c1c;border:1px solid rgba(234,76,28,0.25);}
-.shop-btn-coupang:hover{background:rgba(234,76,28,0.2);}
+/* ── SETTINGS ─────────────────────────────────────────────── */
+.settings-section{margin-bottom:24px;}
+.settings-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);}
+.settings-row:last-child{border-bottom:none;}
+.settings-label{font-size:14px;font-weight:500;color:var(--text);}
+.settings-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.toggle{width:44px;height:24px;border-radius:12px;background:var(--border);cursor:pointer;position:relative;transition:background 0.2s;border:none;flex-shrink:0;}
+.toggle.on{background:var(--primary);}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:white;transition:transform 0.2s;}
+.toggle.on::after{transform:translateX(20px);}
 
-/* YOUTUBE LINKS */
-.yt-link{display:flex;gap:12px;align-items:center;padding:12px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);margin-bottom:8px;text-decoration:none;color:var(--text);transition:all 0.2s;}
-.yt-link:hover{border-color:#ff4444;background:rgba(255,68,68,0.05);}
-.yt-icon{width:44px;height:44px;border-radius:8px;background:#ff0000;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;flex-shrink:0;}
-.yt-info .yt-t{font-size:13px;font-weight:500;margin-bottom:3px;}
-.yt-info .yt-s{font-size:11px;color:var(--muted);}
-.yt-tag{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(255,68,68,0.1);color:#ff4444;font-size:10px;font-weight:600;margin-bottom:4px;}
-
-/* MODAL */
+/* ── MODALS ─────────────────────────────────────────────── */
 .modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:460px;width:100%;box-shadow:var(--shadow);}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:480px;width:100%;box-shadow:var(--shadow);transition:var(--transition);}
 .modal h3{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:8px;}
 .modal p{color:var(--muted);font-size:14px;margin-bottom:20px;line-height:1.6;}
 .modal-steps{background:var(--bg3);border-radius:10px;padding:16px;margin-bottom:16px;}
@@ -319,37 +302,63 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .modal-steps a{color:var(--primary);}
 .modal-note{font-size:11px;color:var(--muted);margin-top:8px;text-align:center;}
 
-/* REFINE BAR */
-.refine-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
-.refine-input-row{display:flex;gap:8px;margin-bottom:10px;}
-.refine-input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg3);font-family:'Sora',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color 0.2s;}
-.refine-input:focus{border-color:var(--primary);}
-.refine-input::placeholder{color:var(--muted);}
-.refine-tags{display:flex;flex-wrap:wrap;gap:6px;}
-.refine-tag{display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;background:var(--primary-dim);border:1px solid rgba(200,169,110,0.3);font-size:12px;color:var(--primary);}
-.refine-tag button{background:none;border:none;cursor:pointer;color:var(--primary);font-size:14px;line-height:1;padding:0;}
-.refine-tag button:hover{color:var(--red);}
-.sort-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
-.sort-lbl{font-size:11px;color:var(--muted);font-weight:600;}
-.sort-pill{padding:5px 12px;border-radius:100px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;font-family:'Sora',sans-serif;font-size:11px;font-weight:500;color:var(--muted);transition:all 0.15s;}
-.sort-pill:hover{border-color:var(--primary);color:var(--primary);}
-.sort-pill.active{background:var(--primary);border-color:var(--primary);color:var(--bg);}
+/* ── ONBOARDING ─────────────────────────────────────────── */
+.onboarding-step{display:none;}.onboarding-step.active{display:block;}
+.onboard-icon{font-size:48px;margin-bottom:16px;text-align:center;}
+.onboard-title{font-family:'Playfair Display',serif;font-size:24px;margin-bottom:8px;text-align:center;}
+.onboard-sub{color:var(--muted);font-size:14px;text-align:center;margin-bottom:24px;line-height:1.6;}
+.onboard-options{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px;}
+.onboard-pill{padding:8px 18px;border-radius:100px;border:1.5px solid var(--border);background:var(--bg3);cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;color:var(--muted);transition:all 0.15s;}
+.onboard-pill:hover{border-color:var(--primary);color:var(--text);}
+.onboard-pill.selected{background:var(--primary);border-color:var(--primary);color:white;}
+.onboard-progress{display:flex;gap:6px;justify-content:center;margin-bottom:24px;}
+.onboard-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background 0.2s;}
+.onboard-dot.active{background:var(--primary);}
 
-/* RESULTS HEADER */
+/* ── MOOD CHECKIN ─────────────────────────────────────────── */
+.checkin-overlay{position:fixed;inset:0;z-index:250;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;}
+.checkin-modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:400px;width:100%;text-align:center;box-shadow:var(--shadow);}
+.checkin-modal h3{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:8px;}
+.checkin-modal p{color:var(--muted);font-size:14px;margin-bottom:24px;}
+.checkin-moods{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;}
+.checkin-mood{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:10px;border:1.5px solid transparent;background:var(--bg3);cursor:pointer;transition:all 0.15s;}
+.checkin-mood:hover{border-color:var(--border);}
+.checkin-mood.selected{border-color:var(--primary);background:var(--primary-dim);}
+.checkin-emoji{font-size:22px;}
+.checkin-label{font-size:10px;color:var(--muted);font-weight:500;}
+.checkin-mood.selected .checkin-label{color:var(--primary);}
+.rating-stars{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.r-star{font-size:28px;cursor:pointer;transition:transform 0.1s;opacity:0.3;}
+.r-star.on{opacity:1;}
+.r-star:hover{transform:scale(1.2);}
+
+/* ── SHARE CARD ─────────────────────────────────────────── */
+.share-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;}
+.share-modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;max-width:420px;width:100%;box-shadow:var(--shadow);}
+.share-card{border-radius:16px;padding:28px;background:linear-gradient(135deg,var(--primary),var(--green));color:white;margin-bottom:16px;text-align:center;}
+.share-card-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7;margin-bottom:8px;}
+.share-card-title{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:6px;font-style:italic;}
+.share-card-sub{font-size:13px;opacity:0.8;margin-bottom:16px;}
+.share-card-mood{font-size:28px;margin-bottom:4px;}
+.share-card-footer{font-size:11px;opacity:0.6;margin-top:16px;}
+.share-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.share-platform-btn{flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.share-platform-btn:hover{border-color:var(--primary);color:var(--primary);}
+
+/* ── RESULTS HEADER ─────────────────────────────────────── */
 .results-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
 .results-header h2{font-family:'Playfair Display',serif;font-size:24px;}
 .results-meta{color:var(--muted);font-size:12px;margin-top:4px;text-transform:capitalize;}
 
-/* EMPTY */
+/* ── EMPTY ─────────────────────────────────────────────── */
 .empty{text-align:center;padding:60px 20px;color:var(--muted);}
 .empty-icon{font-size:48px;margin-bottom:12px;}
-.empty p{font-size:14px;}
 
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;z-index:300;background:var(--card);border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:10px;font-size:14px;box-shadow:var(--shadow);transform:translateY(80px);opacity:0;transition:all 0.3s;max-width:300px;}
+/* ── TOAST ─────────────────────────────────────────────── */
+.toast{position:fixed;bottom:24px;right:24px;z-index:400;background:var(--card);border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:10px;font-size:14px;box-shadow:var(--shadow);transform:translateY(80px);opacity:0;transition:all 0.3s;max-width:300px;}
 .toast.show{transform:translateY(0);opacity:1;}
 
-/* ANIMATIONS */
+/* ── ANIMATIONS ─────────────────────────────────────────── */
 .reveal{opacity:0;transform:translateY(12px);transition:all 0.35s ease;}
 .reveal.in{opacity:1;transform:translateY(0);}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
@@ -357,8 +366,16 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 </head>
 <body>
 
-<!-- API MODAL -->
-<div class="modal-overlay" id="apiModal">
+<!-- ONBOARDING MODAL -->
+<div class="modal-overlay" id="onboardingModal" style="display:none">
+  <div class="modal" style="max-width:520px">
+    <div class="onboard-progress" id="onboardProgress"></div>
+    <div id="onboardingSteps"></div>
+  </div>
+</div>
+
+<!-- API KEY MODAL -->
+<div class="modal-overlay" id="apiModal" style="display:none">
   <div class="modal">
     <h3>Welcome to MoodPick ✦</h3>
     <p>Uses Groq AI — completely free, no credit card needed.</p>
@@ -367,7 +384,7 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
         <li>Go to <a href="https://console.groq.com" target="_blank">console.groq.com</a></li>
         <li>Sign in with Google</li>
         <li>Click <strong>API Keys → Create API Key</strong></li>
-        <li>Copy the key below</li>
+        <li>Copy and paste below</li>
       </ol>
     </div>
     <input class="text-input" type="password" id="apiKeyInput" placeholder="gsk_..." style="margin-bottom:12px"/>
@@ -376,8 +393,37 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
   </div>
 </div>
 
+<!-- MOOD CHECKIN MODAL -->
+<div class="checkin-overlay" id="checkinOverlay" style="display:none">
+  <div class="checkin-modal">
+    <div style="font-size:40px;margin-bottom:12px">🎉</div>
+    <h3>How do you feel now?</h3>
+    <p>You just completed <strong id="checkinActivityName"></strong>. Did your mood change?</p>
+    <div class="checkin-moods" id="checkinMoods"></div>
+    <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em">Rate this activity</div>
+    <div class="rating-stars" id="checkinStars"></div>
+    <button class="btn-primary" onclick="submitCheckin()" id="checkinSubmitBtn" style="margin-top:0" disabled>Save & Continue →</button>
+    <button class="btn-ghost" onclick="skipCheckin()" style="width:100%;margin-top:8px;justify-content:center">Skip</button>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="share-overlay" id="shareOverlay" style="display:none">
+  <div class="share-modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <span style="font-size:13px;font-weight:600;color:var(--muted)">SHARE ACTIVITY</span>
+      <button class="btn-icon" onclick="closeShare()">✕</button>
+    </div>
+    <div class="share-card" id="shareCardEl"></div>
+    <div class="share-btns">
+      <button class="share-platform-btn" onclick="shareToKakao()">💬 KakaoTalk</button>
+      <button class="share-platform-btn" onclick="shareToTwitter()">🐦 Twitter/X</button>
+      <button class="share-platform-btn" onclick="copyShareLink()">🔗 Copy Link</button>
+    </div>
+  </div>
+</div>
+
 <div class="app-shell">
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="logo" onclick="showPage('home')">
       <div class="logo-mark">✦</div>
@@ -388,6 +434,7 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
       <button class="nav-btn" id="nav-history" onclick="showPage('history')"><span class="nav-icon">📋</span><span class="nav-label">History</span></button>
       <button class="nav-btn" id="nav-calendar" onclick="showPage('calendar')"><span class="nav-icon">📅</span><span class="nav-label">Calendar</span></button>
       <button class="nav-btn" id="nav-insights" onclick="showPage('insights')"><span class="nav-icon">📊</span><span class="nav-label">Insights</span></button>
+      <button class="nav-btn" id="nav-settings" onclick="showPage('settings')"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></button>
     </nav>
     <div class="sidebar-footer">
       <div class="api-status" onclick="showApiModal()" id="apiStatusEl">
@@ -397,7 +444,6 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="main-content">
 
     <!-- HOME -->
@@ -407,6 +453,10 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
         <h1 class="hero-title">What should you do<br><em>right now?</em></h1>
         <p class="hero-sub">Tell us your mood and we'll find the perfect activity — with YouTube guides, shopping links, and step-by-step instructions.</p>
       </div>
+
+      <button class="surprise-btn reveal" onclick="surpriseMe()" style="transition-delay:0.03s">
+        🎲 Surprise Me — Just Pick Something!
+      </button>
 
       <div class="card reveal" style="transition-delay:0.05s">
         <div class="card-title">How are you feeling? <span style="font-weight:400;text-transform:none;letter-spacing:0">Pick all that apply</span></div>
@@ -418,10 +468,9 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 
       <div class="card reveal" style="transition-delay:0.08s">
         <div class="card-title" style="margin-bottom:10px">Already know what you want?</div>
-        <input class="text-input" id="specificInput" placeholder='e.g. "watch a movie", "draw something", "go for a walk"...'/>
+        <input class="text-input" id="specificInput" placeholder='e.g. "watch a movie", "draw something"...'/>
         <div id="specificHint" style="display:none;margin-top:8px;font-size:12px;color:var(--primary)">✨ We'll find the best match!</div>
       </div>
-
       <div class="card reveal" style="transition-delay:0.11s">
         <div class="card-title" style="margin-bottom:14px">How much time do you have?</div>
         <div class="pill-row" id="timeGroup"></div>
@@ -479,6 +528,53 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
       <div id="insightsContent"></div>
     </div>
 
+    <!-- SETTINGS -->
+    <div class="page" id="page-settings">
+      <div class="hero"><div class="hero-eyebrow">✦ Preferences</div><h1 class="hero-title">App <em>Settings</em></h1></div>
+      <div class="card">
+        <div class="settings-section">
+          <div class="settings-title">Appearance</div>
+          <div class="settings-row">
+            <div><div class="settings-label">Dark Mode</div><div class="settings-sub">Switch between light and dark theme</div></div>
+            <button class="toggle" id="darkModeToggle" onclick="toggleDarkMode()"></button>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-label">Mood-reactive colors</div><div class="settings-sub">Background changes with your mood selection</div></div>
+            <button class="toggle on" id="moodColorToggle" onclick="toggleMoodColors()"></button>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-title">API Connection</div>
+          <div class="settings-row">
+            <div><div class="settings-label">Groq API Key</div><div class="settings-sub" id="apiKeyPreview">Not connected</div></div>
+            <button class="btn-ghost" onclick="showApiModal()">Change</button>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-title">Preferences</div>
+          <div class="settings-row">
+            <div><div class="settings-label">Remember last filters</div><div class="settings-sub">Pre-fill your last used mood and filters</div></div>
+            <button class="toggle on" id="filterMemoryToggle" onclick="toggleFilterMemory()"></button>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-label">Mood check-in after activities</div><div class="settings-sub">Ask how you feel after completing an activity</div></div>
+            <button class="toggle on" id="checkinToggle" onclick="toggleCheckin()"></button>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-title">Data</div>
+          <div class="settings-row">
+            <div><div class="settings-label">Reset onboarding</div><div class="settings-sub">Show the onboarding survey again</div></div>
+            <button class="btn-ghost" onclick="resetOnboarding()">Reset</button>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-label" style="color:var(--red)">Clear all history</div><div class="settings-sub">Delete all saved activities</div></div>
+            <button class="btn-ghost" style="color:var(--red);border-color:var(--red)" onclick="clearHistory()">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -491,8 +587,13 @@ let S = {
   current:null,
   history: JSON.parse(localStorage.getItem('mp_history')||'[]'),
   apiKey: localStorage.getItem('mp_groq_key')||'',
+  settings: JSON.parse(localStorage.getItem('mp_settings')||'{"darkMode":false,"moodColors":true,"filterMemory":true,"checkin":true}'),
+  onboardingDone: localStorage.getItem('mp_onboarded')==='true',
+  lastFilters: JSON.parse(localStorage.getItem('mp_lastfilters')||'{}'),
   calMonth: new Date(),
-  calSelected: null
+  calSelected: null,
+  checkinData: {activityId:null,mood:null,rating:0},
+  shareActivity: null
 };
 
 // ── CONFIG ─────────────────────────────────────────────────
@@ -501,17 +602,176 @@ const TIME=[{v:'flash',l:'⚡ <10 min'},{v:'short',l:'🕐 10–30 min'},{v:'med
 const BUDGET=[{v:'free',l:'🆓 Free'},{v:'low',l:'💵 Under $10'},{v:'medium',l:'💰 $10–50'},{v:'high',l:'💎 $50+'}];
 const PEOPLE=[{v:'alone',l:'🧍 Solo'},{v:'partner',l:'💑 Partner'},{v:'friends',l:'👥 Friends'},{v:'family',l:'👨‍👩‍👧 Family'},{v:'group',l:'🎊 Group'}];
 const PREF=[{v:'creative',l:'🎨 Creative'},{v:'active',l:'🏃 Active'},{v:'relaxing',l:'🧘 Relaxing'},{v:'social',l:'💬 Social'},{v:'learning',l:'📚 Learning'},{v:'entertainment',l:'🎬 Entertainment'},{v:'food',l:'🍳 Food'},{v:'music',l:'🎵 Music'},{v:'nature',l:'🌲 Nature'},{v:'gaming',l:'🎮 Gaming'},{v:'anything',l:'🎲 Anything'}];
-
 const DIFF=[{v:'easy',l:'😌 Easy'},{v:'medium',l:'🧠 Medium'},{v:'hard',l:'💪 Hard'},{v:'long_project',l:'🗓️ Long Project'}];
+const MOOD_THEME={happy:'happy',playful:'happy',grateful:'happy',energetic:'energetic',motivated:'energetic',restless:'energetic',calm:'calm',inspired:'calm',curious:'calm',sad:'sad',lonely:'sad',stressed:'stressed',anxious:'stressed',frustrated:'stressed',overwhelmed:'stressed',bored:'bored',nostalgic:'bored',tired:'tired'};
+
+// ── ONBOARDING ─────────────────────────────────────────────
+const ONBOARD_STEPS = [
+  {
+    icon:'✦', title:'Welcome to MoodPick', sub:'Find the perfect activity for any mood, budget, and situation — with step-by-step guides and YouTube tutorials.',
+    type:'info', btn:'Get Started'
+  },
+  {
+    icon:'🎭', title:'What\'s your vibe?', sub:'What kind of activities do you usually enjoy? (Pick all that apply)',
+    type:'multi', key:'prefTypes',
+    options:['🎨 Creative','🏃 Active','🧘 Relaxing','💬 Social','📚 Learning','🎮 Gaming','🍳 Food & Cooking','🎵 Music','🌲 Nature']
+  },
+  {
+    icon:'💰', title:'What\'s your usual budget?', sub:'This helps us tailor recommendations to what\'s realistic for you.',
+    type:'single', key:'budgetPref',
+    options:['🆓 Free activities','💵 Under $10','💰 $10–50','💎 No limit']
+  },
+  {
+    icon:'⏰', title:'How much free time do you usually have?', sub:'We\'ll remember this as your default.',
+    type:'single', key:'timePref',
+    options:['⚡ Under 30 min','🕐 30–90 min','🌙 A few hours','☀️ Full day sometimes']
+  },
+  {
+    icon:'🎉', title:'You\'re all set!', sub:'MoodPick is personalized just for you. Your preferences are saved and will be used to make better recommendations.',
+    type:'finish', btn:'Start Exploring'
+  }
+];
+
+let onboardStep = 0;
+let onboardAnswers = {};
+
+function startOnboarding(){
+  onboardStep = 0;
+  onboardAnswers = {};
+  document.getElementById('onboardingModal').style.display = 'flex';
+  renderOnboardStep();
+}
+
+function renderOnboardStep(){
+  const step = ONBOARD_STEPS[onboardStep];
+  const dots = ONBOARD_STEPS.map((_,i) => `<div class="onboard-dot ${i===onboardStep?'active':''}"></div>`).join('');
+  document.getElementById('onboardProgress').innerHTML = dots;
+
+  let optionsHTML = '';
+  if(step.type === 'multi' || step.type === 'single'){
+    const selected = onboardAnswers[step.key] || [];
+    optionsHTML = `<div class="onboard-options">${step.options.map(o=>`<button class="onboard-pill ${selected.includes(o)?'selected':''}" onclick="selectOnboard('${step.key}','${o}','${step.type}')">${o}</button>`).join('')}</div>`;
+  }
+
+  document.getElementById('onboardingSteps').innerHTML = `
+    <div class="onboard-icon">${step.icon}</div>
+    <div class="onboard-title">${step.title}</div>
+    <div class="onboard-sub">${step.sub}</div>
+    ${optionsHTML}
+    <div style="display:flex;gap:8px">
+      ${onboardStep>0?`<button class="btn-ghost" onclick="onboardBack()" style="flex:1;justify-content:center">← Back</button>`:''}
+      <button class="btn-primary" onclick="onboardNext()" style="flex:2">${step.btn || 'Continue →'}</button>
+    </div>`;
+}
+
+function selectOnboard(key, val, type){
+  if(type==='single'){
+    onboardAnswers[key]=[val];
+  } else {
+    if(!onboardAnswers[key])onboardAnswers[key]=[];
+    const i=onboardAnswers[key].indexOf(val);
+    if(i>-1)onboardAnswers[key].splice(i,1);else onboardAnswers[key].push(val);
+  }
+  renderOnboardStep();
+}
+
+function onboardNext(){
+  if(onboardStep < ONBOARD_STEPS.length - 1){
+    onboardStep++;
+    renderOnboardStep();
+  } else {
+    // Save preferences
+    localStorage.setItem('mp_onboard_answers', JSON.stringify(onboardAnswers));
+    localStorage.setItem('mp_onboarded', 'true');
+    S.onboardingDone = true;
+    document.getElementById('onboardingModal').style.display = 'none';
+    // Show API modal if no key
+    if(!S.apiKey) document.getElementById('apiModal').style.display = 'flex';
+    toast('Welcome to MoodPick! 🎉');
+  }
+}
+
+function onboardBack(){
+  if(onboardStep > 0){ onboardStep--; renderOnboardStep(); }
+}
+
+function resetOnboarding(){
+  localStorage.removeItem('mp_onboarded');
+  S.onboardingDone = false;
+  startOnboarding();
+}
+
+// ── SETTINGS ───────────────────────────────────────────────
+function saveSettings(){ localStorage.setItem('mp_settings', JSON.stringify(S.settings)); }
+
+function toggleDarkMode(){
+  S.settings.darkMode = !S.settings.darkMode;
+  applySettings();
+  saveSettings();
+}
+
+function toggleMoodColors(){
+  S.settings.moodColors = !S.settings.moodColors;
+  applySettings();
+  saveSettings();
+}
+
+function toggleFilterMemory(){
+  S.settings.filterMemory = !S.settings.filterMemory;
+  document.getElementById('filterMemoryToggle').className='toggle'+(S.settings.filterMemory?' on':'');
+  saveSettings();
+}
+
+function toggleCheckin(){
+  S.settings.checkin = !S.settings.checkin;
+  document.getElementById('checkinToggle').className='toggle'+(S.settings.checkin?' on':'');
+  saveSettings();
+}
+
+function applySettings(){
+  // Dark mode
+  if(S.settings.darkMode){
+    document.body.classList.add('dark');
+    document.body.classList.remove('mood-happy','mood-energetic','mood-calm','mood-sad','mood-stressed','mood-bored','mood-tired');
+  } else {
+    document.body.classList.remove('dark');
+    if(S.settings.moodColors) applyMoodTheme(S.mood);
+  }
+  // Update toggles
+  document.getElementById('darkModeToggle').className='toggle'+(S.settings.darkMode?' on':'');
+  document.getElementById('moodColorToggle').className='toggle'+(S.settings.moodColors?' on':'');
+  document.getElementById('filterMemoryToggle').className='toggle'+(S.settings.filterMemory?' on':'');
+  document.getElementById('checkinToggle').className='toggle'+(S.settings.checkin?' on':'');
+  // API key preview
+  const keyEl = document.getElementById('apiKeyPreview');
+  if(keyEl) keyEl.textContent = S.apiKey ? S.apiKey.substring(0,12)+'...' : 'Not connected';
+}
+
+function clearHistory(){
+  if(confirm('Clear all activity history? This cannot be undone.')){
+    S.history=[];saveHistory();renderHistory();toast('History cleared');
+  }
+}
+
+// ── MOOD THEME ─────────────────────────────────────────────
+function applyMoodTheme(moods){
+  if(S.settings.darkMode) return;
+  document.body.classList.remove('mood-happy','mood-energetic','mood-calm','mood-sad','mood-stressed','mood-bored','mood-tired');
+  if(!S.settings.moodColors) return;
+  if(moods.length>0){
+    const theme=MOOD_THEME[moods[0]];
+    if(theme) document.body.classList.add('mood-'+theme);
+  }
+}
 
 // ── API ────────────────────────────────────────────────────
-function showApiModal(){document.getElementById('apiModal').style.display='flex';}
+function showApiModal(){ document.getElementById('apiModal').style.display='flex'; }
 function saveApiKey(){
   const k=document.getElementById('apiKeyInput').value.trim();
   if(!k.startsWith('gsk_')){toast('Please enter a valid Groq key (starts with gsk_)');return;}
   S.apiKey=k;localStorage.setItem('mp_groq_key',k);
   document.getElementById('apiModal').style.display='none';
-  updateApiStatus();toast('Connected! Ready to explore 🎉');
+  updateApiStatus();applySettings();toast('Connected! Ready to explore 🎉');
 }
 function updateApiStatus(){
   const dot=document.getElementById('apiDot'),txt=document.getElementById('apiStatusText');
@@ -526,11 +786,10 @@ async function callGroq(prompt){
     body:JSON.stringify({
       model:'llama-3.1-8b-instant',
       messages:[
-        {role:'system',content:'You are a JSON API. Return only valid JSON with no newlines inside string values. Use "|" as separator in arrays of steps instead of newlines.'},
+        {role:'system',content:'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values.'},
         {role:'user',content:prompt}
       ],
-      temperature:0.7,
-      max_tokens:3000,
+      temperature:0.7,max_tokens:3000,
       response_format:{type:'json_object'}
     })
   });
@@ -539,14 +798,11 @@ async function callGroq(prompt){
   return d.choices[0].message.content;
 }
 
-function parseGroqJSON(text){
-  // Remove fences
+function safeJSON(text){
   text=text.replace(/```json\s*/gi,'').replace(/```\s*/gi,'').trim();
-  // Find JSON boundaries
   const s=text.indexOf('{'),e=text.lastIndexOf('}');
   if(s<0||e<0)throw new Error('No JSON found');
   text=text.slice(s,e+1);
-  // State machine: replace control chars inside strings
   let out='',inStr=false,esc=false;
   for(let i=0;i<text.length;i++){
     const ch=text[i],code=text.charCodeAt(i);
@@ -559,34 +815,60 @@ function parseGroqJSON(text){
   return JSON.parse(out);
 }
 
+// ── SURPRISE ME ────────────────────────────────────────────
+async function surpriseMe(){
+  if(!S.apiKey){showApiModal();return;}
+  // Random mood + filters
+  const rMood=MOODS[Math.floor(Math.random()*MOODS.length)].v;
+  const rTime=TIME[Math.floor(Math.random()*TIME.length)].v;
+  const rBudget=BUDGET[Math.floor(Math.random()*BUDGET.length)].v;
+  const rPeople=PEOPLE[Math.floor(Math.random()*PEOPLE.length)].v;
+  const rPref=PREF[Math.floor(Math.random()*PREF.length)].v;
+  S.mood=[rMood];S.time=rTime;S.budget=rBudget;S.people=rPeople;S.preference=rPref;
+  applyMoodTheme(S.mood);
+  toast('🎲 Picking something random for you...');
+  await getRecommendations();
+}
+
 // ── RECOMMENDATIONS ────────────────────────────────────────
 async function getRecommendations(){
   if(!S.apiKey){showApiModal();return;}
+
+  // Save last filters
+  if(S.settings.filterMemory){
+    const filters={mood:S.mood,time:S.time,budget:S.budget,people:S.people,preference:S.preference,difficulty:S.difficulty};
+    localStorage.setItem('mp_lastfilters',JSON.stringify(filters));
+  }
+
   showPage('results');
   document.getElementById('resultsContent').innerHTML=`<div class="loading"><div class="spin"></div><h3>Finding perfect activities...</h3><p>AI is personalizing your picks</p><div class="dots"><span></span><span></span><span></span></div></div>`;
 
   const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
-  const specificCtx=S.specific?`User specifically wants: "${S.specific}". Give 4 specific variations. Name exact movies, games, recipes, playlists.`:'';
+  const specificCtx=S.specific?`User specifically wants: "${S.specific}". Give 4 specific variations. Name exact movies, games, recipes.`:'';
+
+  // Build history context for personalization
+  const histCtx = S.history.length > 0 ?
+    `User history: ${S.history.slice(0,5).map(h=>`"${h.title}" (rated ${h.rating||'unrated'}/5, ${h.completed?'completed':'saved'})`).join(', ')}. Avoid suggesting these exact activities.` : '';
+
+  // Current time context
+  const hour = new Date().getHours();
+  const timeCtx = hour < 9 ? 'It is early morning.' : hour < 12 ? 'It is morning.' : hour < 17 ? 'It is afternoon.' : hour < 21 ? 'It is evening.' : 'It is late night. Suggest quieter activities.';
 
   const prompt=`Suggest 4 activities for this person.
-Mood: ${moodLabels||'any'}
-Time: ${S.time||'any'} (flash=under 10min, short=10-30min, medium=30-90min, long=1.5-3hrs, day=full day)
-Budget: ${S.budget||'any'} (free=no cost, low=under $10, medium=$10-50, high=$50+)
-People: ${S.people||'any'}
-Preference: ${S.preference||'any'}
-${S.difficulty.length?`Difficulty/Energy: ${S.difficulty.join(', ')} — ONLY suggest activities matching these levels. long_project means multi-day commitment.`:''}
+Mood: ${moodLabels||'any'}, Time: ${S.time||'any'} (flash=<10min, short=10-30min, medium=30-90min, long=1.5-3hrs, day=full day), Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}
+${S.difficulty.length?`Difficulty: ${S.difficulty.join(', ')} only.`:''}
+${timeCtx}
+${histCtx}
 ${specificCtx}
 
-Be very specific. Name exact movies, games, recipes, apps.
-For steps use an array of strings, not newlines.
-For youtube use 3 specific search queries.
+For each activity add a "why" field: one sentence explaining why this fits their current mood specifically.
+For steps use an array of strings. For youtube use 3 search queries sorted by relevance.
 
-Return JSON object with this exact structure:
-{"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3","step 4"],"youtube":["query 1","query 2","query 3"],"similar":["activity 1","activity 2","activity 3"]}]}`;
+Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3","step 4"],"youtube":["query 1","query 2","query 3"],"similar":["act 1","act 2","act 3"],"why":"why this fits their mood"}]}`;
 
   try{
     const text=await callGroq(prompt);
-    const parsed=parseGroqJSON(text);
+    const parsed=safeJSON(text);
     window._acts=parsed.activities||[];
     renderResults(window._acts);
   }catch(err){
@@ -594,11 +876,11 @@ Return JSON object with this exact structure:
   }
 }
 
-// Refine state
-let refineState={tags:[],sort:'default',input:''};
+// ── RESULTS ────────────────────────────────────────────────
+let refineState={tags:[],sort:'default'};
 
 function renderResults(acts,resetRefine=true){
-  if(resetRefine)refineState={tags:[],sort:'default',input:''};
+  if(resetRefine)refineState={tags:[],sort:'default'};
   window._acts=acts;
   const moodText=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(' & ');
   const sub=[S.specific,moodText,S.preference,S.time].filter(Boolean).join(' · ');
@@ -620,64 +902,48 @@ function renderResults(acts,resetRefine=true){
         <button class="btn-ghost" onclick="addRefineTag()">+ Add</button>
       </div>
       <div class="refine-tags" id="refineTags"></div>
-      <div class="sort-row" style="margin-top:${refineState.tags.length?'10px':'0'}">
+      <div class="sort-row">
         <span class="sort-lbl">Sort:</span>
-        <button class="sort-pill ${refineState.sort==='default'?'active':''}" onclick="setSort('default')">Default</button>
-        <button class="sort-pill ${refineState.sort==='time'?'active':''}" onclick="setSort('time')">⏱ Time</button>
-        <button class="sort-pill ${refineState.sort==='cost'?'active':''}" onclick="setSort('cost')">💰 Cost</button>
-        <button class="sort-pill ${refineState.sort==='difficulty'?'active':''}" onclick="setSort('difficulty')">💪 Difficulty</button>
+        <button class="sort-pill active" onclick="setSort('default',this)">Default</button>
+        <button class="sort-pill" onclick="setSort('time',this)">⏱ Time</button>
+        <button class="sort-pill" onclick="setSort('cost',this)">💰 Cost</button>
+        <button class="sort-pill" onclick="setSort('difficulty',this)">💪 Effort</button>
       </div>
     </div>
     <div class="activity-grid" id="activityGrid"></div>`;
-  renderTags();
   renderActCards();
 }
 
 function addRefineTag(){
   const input=document.getElementById('refineInput');
-  const val=input.value.trim();
-  if(!val)return;
-  if(refineState.tags.includes(val)){input.value='';return;}
-  refineState.tags.push(val);
+  const val=input.value.trim();if(!val)return;
+  if(!refineState.tags.includes(val))refineState.tags.push(val);
   input.value='';
-  renderTags();
-  // Re-fetch with new refinements
-  refetchWithRefinements();
+  renderTags();refetchWithRefinements();
 }
-
 function removeTag(tag){
   refineState.tags=refineState.tags.filter(t=>t!==tag);
-  renderTags();
-  refetchWithRefinements();
+  renderTags();refetchWithRefinements();
 }
-
 function renderTags(){
-  const container=document.getElementById('refineTags');
-  if(!container)return;
-  container.innerHTML=refineState.tags.map(t=>`<div class="refine-tag">${t}<button onclick="removeTag('${t.replace(/'/g,"\\'")}')">×</button></div>`).join('');
+  const c=document.getElementById('refineTags');if(!c)return;
+  c.innerHTML=refineState.tags.map(t=>`<div class="refine-tag">${t}<button onclick="removeTag('${t.replace(/'/g,"\\'")}')">×</button></div>`).join('');
 }
-
-function setSort(sort){
+function setSort(sort,el){
   refineState.sort=sort;
-  renderActCards();
-  // Update sort pill active states
   document.querySelectorAll('.sort-pill').forEach(p=>p.classList.remove('active'));
-  event.target.classList.add('active');
+  if(el)el.classList.add('active');
+  renderActCards();
 }
-
 function renderActCards(){
-  const grid=document.getElementById('activityGrid');
-  if(!grid)return;
+  const grid=document.getElementById('activityGrid');if(!grid)return;
   let acts=[...window._acts];
-  // Sort
-  const diffOrder={easy:0,medium:1,hard:2};
+  const diffOrder={easy:0,medium:1,hard:2,long_project:3};
   const parseCost=s=>{if(!s)return 0;const m=s.match(/[\d.]+/);return m?parseFloat(m[0]):0;};
   const parseTime=s=>{if(!s)return 0;const h=s.match(/(\d+)\s*h/i),m=s.match(/(\d+)\s*m/i);return(h?parseInt(h[1])*60:0)+(m?parseInt(m[1]):0);};
   if(refineState.sort==='time')acts.sort((a,b)=>parseTime(a.estimated_time)-parseTime(b.estimated_time));
   else if(refineState.sort==='cost')acts.sort((a,b)=>parseCost(a.estimated_cost)-parseCost(b.estimated_cost));
   else if(refineState.sort==='difficulty')acts.sort((a,b)=>(diffOrder[a.difficulty]||0)-(diffOrder[b.difficulty]||0));
-
-  if(acts.length===0){grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🔍</div><p>No activities found. Try different filters.</p></div>`;return;}
   grid.innerHTML=acts.map((a,i)=>`
     <div class="act-card" onclick="showDetail(${window._acts.indexOf(a)})" style="animation:fadeUp 0.4s ease both;animation-delay:${i*0.08}s">
       <div class="act-top">
@@ -686,108 +952,41 @@ function renderActCards(){
       </div>
       <div class="act-title">${a.title}</div>
       <div class="act-desc">${a.description}</div>
-      <div class="act-meta"><span>⏱ ${a.estimated_time||'?'}</span><span>💰 ${a.estimated_cost||'Free'}</span></div>
-      <div class="act-arrow">→</div>
+      ${a.why?`<div class="why-tag">✦ ${a.why}</div>`:''}
+      <div class="act-meta" style="margin-top:10px"><span>⏱ ${a.estimated_time||'?'}</span><span>💰 ${a.estimated_cost||'Free'}</span></div>
     </div>`).join('');
 }
 
 async function refetchWithRefinements(){
   if(!S.apiKey)return;
   const grid=document.getElementById('activityGrid');
-  if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div class="spin" style="margin:0 auto 12px"></div>Refining results...</div>`;
+  if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div class="spin" style="margin:0 auto 12px"></div>Refining...</div>`;
   const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
-  const refinCtx=refineState.tags.length?`Additional requirements: ${refineState.tags.join(', ')}. ALL suggestions must satisfy these.`:'';
-  const specificCtx=S.specific?`User specifically wants: "${S.specific}".`:'';
-  const prompt=`Suggest 4 activities for this person.
-Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}, Difficulty: ${S.difficulty.length?S.difficulty.join(', '):'any'}
-${specificCtx} ${refinCtx}
-Be specific. Name exact movies, games, recipes.
-Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3"],"youtube":["query 1","query 2","query 3"],"similar":["act 1","act 2"]}]}`;
-  try{
-    const text=await callGroq(prompt);
-    const parsed=parseGroqJSON(text);
-    window._acts=parsed.activities||[];
-    renderActCards();
-  }catch(err){
-    if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--red)">${err.message}</div>`;
-  }
-}
-
-function startOver(){
-  // Reset all state
-  S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=null;S.difficulty=[];S.specific='';
-  applyMoodTheme([]);
-  refineState={tags:[],sort:'default',input:''};
-  // Reset UI
-  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
-  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('selected'));
-  document.querySelectorAll('#diffGroup .pill').forEach(p=>p.classList.remove('selected'));
-  const si=document.getElementById('specificInput');if(si)si.value='';
-  const mb=document.getElementById('moodBanner');if(mb)mb.style.display='none';
-  document.getElementById('discoverBtn').disabled=true;
-  showPage('home');
-  toast('Starting fresh! 🔄');
-}
-
-// ── HELPERS ───────────────────────────────────────────────
-function parseMaterials(materials){
-  if(!materials||materials==='Nothing needed'||materials==='None')return[];
-  return materials
-    .split(/[,;\n•\-]+/)
-    .map(s=>s.trim())
-    .filter(s=>s.length>2&&s.length<80);
-}
-
-function buildShoppingHTML(materials){
-  const items=parseMaterials(materials);
-  if(!items.length)return'';
-  return`<div class="materials-box">${items.map(item=>{
-    const q=encodeURIComponent(item);
-    const googleUrl=`https://www.google.com/search?q=${q}&tbm=shop`;
-    const coupangUrl=`https://www.coupang.com/np/search?q=${encodeURIComponent(item)}`;
-    return`<div class="material-item">
-      <span class="material-name">📦 ${item}</span>
-      <div class="shop-btns">
-        <a class="shop-btn shop-btn-google" href="${googleUrl}" target="_blank">🛍 Google</a>
-        <a class="shop-btn shop-btn-coupang" href="${coupangUrl}" target="_blank">🛒 Coupang</a>
-      </div>
-    </div>`;
-  }).join('')}</div>`;
-}
-
-function buildYouTubeHTML(title, category, difficulty, youtube){
-  // Build smart queries based on activity context
-  const diffLabel = difficulty==='long_project'?'beginner guide':difficulty==='hard'?'advanced tutorial':difficulty==='medium'?'how to':' for beginners';
-  const smartQueries = youtube && youtube.length > 0 ? youtube : [
-    `${title} ${diffLabel}`,
-    `${title} tutorial step by step`,
-    `${category} ${title} tips`
-  ];
-  // Enhance queries to be more specific
-  const enhancedQueries = smartQueries.map((q,i)=>{
-    if(i===0) return `${q} (most viewed)`;
-    if(i===1) return `${q} (beginner friendly)`;
-    return q;
-  });
-  const searchQueries = [
-    {q: smartQueries[0], label:'Most Popular', tag:'🔥 Trending'},
-    {q: smartQueries[1]||`${title} how to start`, label:'Beginner Guide', tag:'👶 Beginner'},
-    {q: smartQueries[2]||`${title} tips tricks`, label:'Tips & Tricks', tag:'💡 Tips'},
-  ];
-  return searchQueries.map(({q,label,tag})=>{
-    const url=`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}&sp=CAISAhAB`; // sorted by view count
-    return`<a class="yt-link" href="${url}" target="_blank">
-      <div class="yt-icon">▶</div>
-      <div class="yt-info">
-        <div class="yt-tag">${tag}</div>
-        <div class="yt-t">${q}</div>
-        <div class="yt-s">${label} · Sorted by views → YouTube</div>
-      </div>
-    </a>`;
-  }).join('');
+  const prompt=`Suggest 4 activities. Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}. Extra requirements: ${refineState.tags.join(', ')}. ALL suggestions must satisfy these. Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2"],"youtube":["q1","q2","q3"],"similar":["s1","s2"],"why":"why this fits"}]}`;
+  try{const text=await callGroq(prompt);const parsed=safeJSON(text);window._acts=parsed.activities||[];renderActCards();}
+  catch(err){if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--red)">${err.message}</div>`;}
 }
 
 // ── DETAIL ─────────────────────────────────────────────────
+function parseMaterials(m){
+  if(!m||m==='Nothing needed'||m==='None')return[];
+  return m.split(/[,;\n•\-]+/).map(s=>s.trim()).filter(s=>s.length>2&&s.length<80);
+}
+function buildShoppingHTML(materials){
+  const items=parseMaterials(materials);if(!items.length)return'';
+  return`<div class="materials-box">${items.map(item=>{
+    const q=encodeURIComponent(item);
+    return`<div class="material-item"><span class="material-name">📦 ${item}</span><div class="shop-btns"><a class="shop-btn shop-btn-google" href="https://www.google.com/search?q=${q}&tbm=shop" target="_blank">🛍 Google</a><a class="shop-btn shop-btn-coupang" href="https://www.coupang.com/np/search?q=${q}" target="_blank">🛒 Coupang</a></div></div>`;
+  }).join('')}</div>`;
+}
+function buildYouTubeHTML(title,category,difficulty,youtube){
+  const diffLabel=difficulty==='long_project'?'beginner guide':difficulty==='hard'?'advanced tutorial':'how to for beginners';
+  const queries=youtube&&youtube.length>0?youtube:[`${title} ${diffLabel}`,`${title} tutorial`,`${category} ${title} tips`];
+  const tags=['🔥 Most Viewed','👶 Beginner','💡 Tips & Tricks'];
+  const labels=['Sorted by views','Beginner friendly','Tips & tricks'];
+  return queries.slice(0,3).map((q,i)=>`<a class="yt-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(q)}&sp=CAISAhAB" target="_blank"><div class="yt-icon">▶</div><div><div class="yt-tag">${tags[i]||tags[0]}</div><div class="yt-t">${q}</div><div class="yt-s">${labels[i]||labels[0]} → YouTube</div></div></a>`).join('');
+}
+
 function showDetail(i){
   const a=window._acts[i];S.current=a;
   const isSaved=S.history.some(h=>h.title===a.title&&!h.completed);
@@ -796,32 +995,32 @@ function showDetail(i){
   const sim=Array.isArray(a.similar)?a.similar:[];
 
   document.getElementById('detailContent').innerHTML=`
-    <div class="detail-nav">
-      <button class="btn-ghost" onclick="showPage('results')">← Results</button>
-    </div>
-    <div class="detail-header">
+    <div style="margin-bottom:24px"><button class="btn-ghost" onclick="showPage('results')">← Results</button></div>
+    <div>
       <span class="cat-badge">${a.category||'Activity'}</span>
       <div class="detail-title">${a.title}</div>
       <div class="detail-desc">${a.description}</div>
+      ${a.why?`<div style="padding:10px 14px;border-radius:10px;background:var(--primary-dim);border:1px solid var(--border);font-size:13px;color:var(--primary);margin-bottom:20px;font-style:italic">✦ ${a.why}</div>`:''}
     </div>
     <div class="meta-grid">
       <div class="meta-block"><div class="meta-lbl">Time</div><div class="meta-val">⏱ ${a.estimated_time||'?'}</div></div>
       <div class="meta-block"><div class="meta-lbl">Cost</div><div class="meta-val">💰 ${a.estimated_cost||'Free'}</div></div>
       <div class="meta-block"><div class="meta-lbl">Difficulty</div><div class="meta-val">${a.difficulty==='long_project'?'🗓️ Epic Project':a.difficulty==='hard'?'🔥 Challenging':a.difficulty==='medium'?'🧠 Engaging':'✨ Laid-back'}</div></div>
-      <div class="meta-block"><div class="meta-lbl">Materials</div><div class="meta-val">${a.materials&&a.materials!=='Nothing needed'?'See below':'Nothing needed'}</div></div>
+      <div class="meta-block"><div class="meta-lbl">Materials</div><div class="meta-val">${parseMaterials(a.materials).length?'See below':'Nothing needed'}</div></div>
     </div>
-    ${a.materials&&a.materials!=='Nothing needed'?`<div class="section-block"><h4>🛍 What You Need <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0"> — click to shop</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
+    ${parseMaterials(a.materials).length?`<div class="section-block"><h4>🛍 What You Need <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">click to shop</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
     ${steps.length?`<div class="section-block"><h4>Start Now Guide</h4><div class="steps-list">${steps.map((s,i)=>`<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s.replace(/^\d+[\.\):\-]\s*/,'')}</div></div>`).join('')}</div></div>`:''}
-    <div class="section-block"><h4>▶ Watch on YouTube <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0"> — sorted by views</span></h4>${buildYouTubeHTML(a.title,a.category,a.difficulty,yt)}</div>
+    <div class="section-block"><h4>▶ Watch on YouTube <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">sorted by views</span></h4>${buildYouTubeHTML(a.title,a.category,a.difficulty,yt)}</div>
     ${sim.length?`<div class="section-block"><h4>Similar Activities</h4><div>${sim.map(s=>`<span class="similar-pill">${s}</span>`).join('')}</div></div>`:''}
     <div class="action-row">
       <button class="btn-done" onclick="markDone()">✓ I Did This!</button>
       <button class="btn-save ${isSaved?'saved':''}" id="saveBtn" onclick="saveActivity()">${isSaved?'✓ Saved':'🔖 Save for Later'}</button>
+      <button class="btn-share" onclick="openShare()">↗ Share</button>
     </div>`;
   showPage('detail');
 }
 
-// ── HISTORY ACTIONS ────────────────────────────────────────
+// ── SAVE / DONE ────────────────────────────────────────────
 function saveActivity(){
   const a=S.current;if(!a)return;
   if(S.history.some(h=>h.title===a.title)){toast('Already in history!');return;}
@@ -830,25 +1029,165 @@ function saveActivity(){
   const btn=document.getElementById('saveBtn');if(btn){btn.textContent='✓ Saved';btn.classList.add('saved');}
   toast('Saved! 🔖');
 }
+
 function markDone(){
   const a=S.current;if(!a)return;
   const ex=S.history.find(h=>h.title===a.title);
+  const id=ex?ex.id:Date.now();
   if(ex){ex.completed=true;saveHistory();}
-  else{S.history.unshift({...a,id:Date.now(),completed:true,rating:0,date:new Date().toISOString(),mood:S.mood.join(',')});saveHistory();}
-  toast('Marked as done! 🎉');showPage('history');
+  else{S.history.unshift({...a,id,completed:true,rating:0,date:new Date().toISOString(),mood:S.mood.join(',')});saveHistory();}
+  // Show mood check-in if enabled
+  if(S.settings.checkin){
+    showCheckin(a.title, id);
+  } else {
+    toast('Marked as done! 🎉');showPage('history');
+  }
 }
+
 function saveHistory(){localStorage.setItem('mp_history',JSON.stringify(S.history));}
 
-// ── HISTORY PAGE ───────────────────────────────────────────
+// ── MOOD CHECK-IN ──────────────────────────────────────────
+const CHECKIN_MOODS=[{v:'happy',e:'😊',l:'Happy'},{v:'calm',e:'🌿',l:'Calm'},{v:'energetic',e:'⚡',l:'Energized'},{v:'satisfied',e:'😌',l:'Content'},{v:'tired',e:'😴',l:'Tired'},{v:'bored',e:'😐',l:'Still bored'},{v:'stressed',e:'😤',l:'Still stressed'},{v:'better',e:'🙂',l:'A bit better'}];
+
+function showCheckin(activityName, activityId){
+  S.checkinData={activityId, mood:null, rating:0};
+  document.getElementById('checkinActivityName').textContent=`"${activityName}"`;
+  document.getElementById('checkinMoods').innerHTML=CHECKIN_MOODS.map(m=>`<div class="checkin-mood" onclick="selectCheckinMood('${m.v}',this)" id="cm-${m.v}"><span class="checkin-emoji">${m.e}</span><span class="checkin-label">${m.l}</span></div>`).join('');
+  document.getElementById('checkinStars').innerHTML=[1,2,3,4,5].map(s=>`<span class="r-star" onclick="setCheckinRating(${s})" id="rs-${s}">⭐</span>`).join('');
+  updateCheckinStars();
+  document.getElementById('checkinOverlay').style.display='flex';
+}
+
+function selectCheckinMood(v,el){
+  S.checkinData.mood=v;
+  document.querySelectorAll('.checkin-mood').forEach(m=>m.classList.remove('selected'));
+  el.classList.add('selected');
+  checkCheckinReady();
+}
+
+function setCheckinRating(r){
+  S.checkinData.rating=r;
+  updateCheckinStars();
+  checkCheckinReady();
+}
+
+function updateCheckinStars(){
+  [1,2,3,4,5].forEach(s=>{
+    const el=document.getElementById('rs-'+s);
+    if(el)el.className='r-star'+(s<=S.checkinData.rating?' on':'');
+  });
+}
+
+function checkCheckinReady(){
+  const btn=document.getElementById('checkinSubmitBtn');
+  if(btn)btn.disabled=!S.checkinData.mood||!S.checkinData.rating;
+}
+
+function submitCheckin(){
+  const item=S.history.find(h=>h.id===S.checkinData.activityId);
+  if(item){
+    item.rating=S.checkinData.rating;
+    item.moodAfter=S.checkinData.mood;
+    saveHistory();
+  }
+  document.getElementById('checkinOverlay').style.display='none';
+  toast(`Rated ${S.checkinData.rating}⭐ — thanks for sharing! 🎉`);
+  showPage('history');
+}
+
+function skipCheckin(){
+  document.getElementById('checkinOverlay').style.display='none';
+  toast('Activity completed! 🎉');
+  showPage('history');
+}
+
+// ── SHARE ──────────────────────────────────────────────────
+function openShare(){
+  const a=S.current;if(!a)return;
+  S.shareActivity=a;
+  const moodEmoji=S.mood.length>0?MOODS.find(x=>x.v===S.mood[0])?.e||'✨':'✨';
+  const moodLabel=S.mood.length>0?S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(' & '):'Good vibes';
+  document.getElementById('shareCardEl').innerHTML=`
+    <div class="share-card-eyebrow">MoodPick Activity</div>
+    <div class="share-card-mood">${moodEmoji}</div>
+    <div class="share-card-title">${a.title}</div>
+    <div class="share-card-sub">Feeling ${moodLabel} · ${a.estimated_time||'?'} · ${a.estimated_cost||'Free'}</div>
+    <div style="display:flex;justify-content:center;gap:8px;margin-top:12px">
+      ${[1,2,3,4,5].map(s=>`<span style="opacity:${s<=(a.rating||0)?1:0.3}">⭐</span>`).join('')}
+    </div>
+    <div class="share-card-footer">moodpick.app · ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>`;
+  document.getElementById('shareOverlay').style.display='flex';
+}
+
+function closeShare(){document.getElementById('shareOverlay').style.display='none';}
+
+function shareToTwitter(){
+  const a=S.shareActivity;if(!a)return;
+  const text=encodeURIComponent(`Just tried "${a.title}" with MoodPick! 🎯 ${a.estimated_time||''} · ${a.estimated_cost||'Free'}\n\n#MoodPick #ActivityRecommender`);
+  window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');
+}
+
+function shareToKakao(){
+  const a=S.shareActivity;if(!a)return;
+  const text=encodeURIComponent(`MoodPick이 추천한 활동: "${a.title}" 🎯\n${a.estimated_time||''} · ${a.estimated_cost||'무료'}\n\n#MoodPick`);
+  window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');
+  toast('Opening share... (KakaoTalk SDK required for native share)');
+}
+
+function copyShareLink(){
+  const a=S.shareActivity;if(!a)return;
+  const text=`MoodPick: "${a.title}" — ${a.description} (${a.estimated_time||'?'}, ${a.estimated_cost||'Free'})`;
+  navigator.clipboard.writeText(text).then(()=>toast('Copied to clipboard! 📋')).catch(()=>toast('Could not copy'));
+}
+
+// ── HISTORY ────────────────────────────────────────────────
+function buildWeeklySummary(){
+  const now=new Date();
+  const weekAgo=new Date(now-7*24*60*60*1000);
+  const weekItems=S.history.filter(h=>new Date(h.date)>=weekAgo);
+  const weekDone=weekItems.filter(h=>h.completed);
+  const weekRated=weekItems.filter(h=>h.rating>0);
+  const weekAvg=weekRated.length?(weekRated.reduce((s,h)=>s+h.rating,0)/weekRated.length).toFixed(1):'—';
+  const topMood=weekItems.reduce((acc,h)=>{if(h.mood)h.mood.split(',').forEach(m=>{if(m)acc[m]=(acc[m]||0)+1;});return acc;},{});
+  const topMoodKey=Object.keys(topMood).sort((a,b)=>topMood[b]-topMood[a])[0];
+  const topMoodLabel=topMoodKey?MOODS.find(x=>x.v===topMoodKey)?.l:'N/A';
+  const topCat=weekDone.reduce((acc,h)=>{if(h.category)acc[h.category]=(acc[h.category]||0)+1;return acc;},{});
+  const topCatKey=Object.keys(topCat).sort((a,b)=>topCat[b]-topCat[a])[0]||'—';
+  const insight=weekDone.length===0?`You haven't completed any activities this week. Try the "Surprise Me" button!`:weekDone.length<3?`Good start! You completed ${weekDone.length} activit${weekDone.length===1?'y':'ies'} this week. Keep it up!`:`Great week! You completed ${weekDone.length} activities. Your favorite category was ${topCatKey}.`;
+
+  return`<div class="weekly-card">
+    <div class="weekly-title">📆 This Week's Summary</div>
+    <div class="weekly-stats">
+      <div class="weekly-stat"><div class="weekly-num">${weekDone.length}</div><div class="weekly-lbl">Completed</div></div>
+      <div class="weekly-stat"><div class="weekly-num">${weekAvg}</div><div class="weekly-lbl">Avg Rating</div></div>
+      <div class="weekly-stat"><div class="weekly-num">${topMoodLabel}</div><div class="weekly-lbl">Top Mood</div></div>
+    </div>
+    <div class="weekly-insight">${insight}</div>
+  </div>`;
+}
+
 function renderHistory(filter='all'){
   const items=filter==='done'?S.history.filter(h=>h.completed):filter==='saved'?S.history.filter(h=>!h.completed):S.history;
   const done=S.history.filter(h=>h.completed).length;
   const rated=S.history.filter(h=>h.rating>0);
   const avg=rated.length?(rated.reduce((s,h)=>s+h.rating,0)/rated.length).toFixed(1):'—';
   const progress=Math.min((done/10)*100,100);
+  // Calculate streak
+  let streak=0;
+  const today=new Date().toDateString();
+  const sortedDone=[...S.history.filter(h=>h.completed)].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  let checkDate=new Date();
+  for(const item of sortedDone){
+    if(new Date(item.date).toDateString()===checkDate.toDateString()){
+      streak++;
+      checkDate=new Date(checkDate-86400000);
+    } else break;
+  }
+
   let html='';
+  html+=buildWeeklySummary();
   if(S.history.length>0){
-    html+=`<div class="progress-bar-card"><div class="prog-stats"><div class="prog-stat"><div class="prog-num">${done}</div><div class="prog-lbl">Completed</div></div><div class="prog-stat"><div class="prog-num">${S.history.length}</div><div class="prog-lbl">Total Saved</div></div><div class="prog-stat"><div class="prog-num">${avg}</div><div class="prog-lbl">Avg Rating</div></div></div><div style="font-size:11px;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between"><span>${done} done</span><span>Next milestone: ${Math.ceil(Math.max(done,1)/10)*10} 🎯</span></div><div class="prog-bar-wrap"><div class="prog-bar" style="width:${progress}%"></div></div></div>`;
+    html+=`<div class="progress-bar-card"><div class="prog-stats"><div class="prog-stat"><div class="prog-num">${done}</div><div class="prog-lbl">Completed</div></div><div class="prog-stat"><div class="prog-num">${S.history.length}</div><div class="prog-lbl">Total Saved</div></div><div class="prog-stat"><div class="prog-num">${avg}</div><div class="prog-lbl">Avg Rating</div></div></div><div style="font-size:11px;opacity:0.8;margin-bottom:8px;display:flex;justify-content:space-between"><span>${done} done</span><span>Next milestone: ${Math.ceil(Math.max(done,1)/10)*10} 🎯</span></div><div class="prog-bar-wrap"><div class="prog-bar" style="width:${progress}%"></div></div>${streak>0?`<div class="streak-badge">🔥 ${streak} day streak!</div>`:''}</div>`;
   }
   html+=`<div class="hist-tabs"><button class="hist-tab ${filter==='all'?'active':''}" onclick="renderHistory('all')">All (${S.history.length})</button><button class="hist-tab ${filter==='saved'?'active':''}" onclick="renderHistory('saved')">Saved (${S.history.filter(h=>!h.completed).length})</button><button class="hist-tab ${filter==='done'?'active':''}" onclick="renderHistory('done')">Done (${done})</button></div>`;
   if(items.length===0){html+=`<div class="empty"><div class="empty-icon">📭</div><p>No activities yet. Start exploring!</p></div>`;}
@@ -856,22 +1195,43 @@ function renderHistory(filter='all'){
     html+=`<div class="hist-list">`;
     items.forEach(item=>{
       const date=new Date(item.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-      html+=`<div class="hist-card"><div class="hist-top"><div><div class="hist-title">${item.title}</div><div class="hist-date">${date} · ${item.category||'Activity'}</div></div><span class="status-badge ${item.completed?'status-done':'status-saved'}">${item.completed?'Done':'Saved'}</span></div><div class="hist-desc">${(item.description||'').substring(0,100)}...</div><div class="hist-bottom"><div class="stars">${[1,2,3,4,5].map(s=>`<span class="star ${s<=(item.rating||0)?'on':''}" onclick="rateItem(${item.id},${s})">${s<=(item.rating||0)?'★':'☆'}</span>`).join('')}</div>${!item.completed?`<button class="btn-ghost" style="padding:4px 12px;font-size:11px" onclick="markHistDone(${item.id})">Mark done</button>`:''}<button class="btn-ghost" style="padding:4px 12px;font-size:11px;color:var(--red);border-color:var(--red);margin-left:auto" onclick="deleteItem(${item.id})">Delete</button></div></div>`;
+      const moodAfterLabel=item.moodAfter?MOODS.find(x=>x.v===item.moodAfter)?.l||item.moodAfter:'';
+      html+=`<div class="hist-card">
+        <div class="hist-top"><div><div class="hist-title">${item.title}</div><div class="hist-date">${date} · ${item.category||'Activity'}${moodAfterLabel?` · felt ${moodAfterLabel} after`:''}</div></div>
+        <span class="status-badge ${item.completed?'status-done':'status-saved'}">${item.completed?'Done':'Saved'}</span></div>
+        <div class="hist-desc">${(item.description||'').substring(0,100)}...</div>
+        <div class="hist-bottom">
+          <div class="stars">${[1,2,3,4,5].map(s=>`<span class="star" onclick="rateItem(${item.id},${s})" style="color:${s<=(item.rating||0)?'var(--primary)':'var(--border)'}">${s<=(item.rating||0)?'★':'☆'}</span>`).join('')}</div>
+          ${!item.completed?`<button class="btn-ghost" style="padding:4px 12px;font-size:11px" onclick="markHistDone(${item.id})">Mark done</button>`:''}
+          <button class="btn-ghost" style="padding:4px 12px;font-size:11px" onclick="openShareFromHistory(${item.id})">↗ Share</button>
+          <button class="btn-ghost" style="padding:4px 12px;font-size:11px;color:var(--red);border-color:var(--red);margin-left:auto" onclick="deleteItem(${item.id})">Delete</button>
+        </div>
+      </div>`;
     });
     html+=`</div>`;
   }
   document.getElementById('historyContent').innerHTML=html;
 }
+
 function rateItem(id,r){const h=S.history.find(h=>h.id===id);if(h){h.rating=r;saveHistory();renderHistory();}}
-function markHistDone(id){const h=S.history.find(h=>h.id===id);if(h){h.completed=true;saveHistory();renderHistory();toast('Done! 🎉');}}
+function markHistDone(id){
+  const h=S.history.find(h=>h.id===id);
+  if(h){
+    h.completed=true;saveHistory();
+    if(S.settings.checkin)showCheckin(h.title,id);
+    else{renderHistory();toast('Done! 🎉');}
+  }
+}
 function deleteItem(id){S.history=S.history.filter(h=>h.id!==id);saveHistory();renderHistory();toast('Deleted');}
+function openShareFromHistory(id){
+  const item=S.history.find(h=>h.id===id);
+  if(item){S.current=item;openShare();}
+}
 
 // ── CALENDAR ───────────────────────────────────────────────
 function renderCalendar(){
-  const month=S.calMonth;
-  const year=month.getFullYear(),mon=month.getMonth();
-  const first=new Date(year,mon,1),last=new Date(year,mon+1,0);
-  const pad=first.getDay();
+  const month=S.calMonth,year=month.getFullYear(),mon=month.getMonth();
+  const first=new Date(year,mon,1),last=new Date(year,mon+1,0),pad=first.getDay();
   document.getElementById('calMonth').textContent=month.toLocaleDateString('en-US',{month:'long',year:'numeric'});
   const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   let html=days.map(d=>`<div class="cal-day-label">${d}</div>`).join('');
@@ -882,45 +1242,29 @@ function renderCalendar(){
     const dateStr=date.toISOString().split('T')[0];
     const isToday=date.toDateString()===today.toDateString();
     const isSelected=S.calSelected===dateStr;
-    const dayItems=S.history.filter(h=>{
-      const hDate=new Date(h.date).toISOString().split('T')[0];
-      return hDate===dateStr;
-    });
+    const dayItems=S.history.filter(h=>new Date(h.date).toISOString().split('T')[0]===dateStr);
     html+=`<div class="cal-cell${isToday?' today':''}${isSelected?' selected':''}" onclick="selectCalDay('${dateStr}')">
-      <div class="cal-date">${d}</div>
+      <div class="cal-date-num">${d}</div>
       ${dayItems.slice(0,2).map(h=>`<div class="cal-chip ${h.completed?'done':''}">${h.title.substring(0,12)}${h.title.length>12?'...':''}</div>`).join('')}
-      ${dayItems.length>2?`<div style="font-size:9px;color:var(--muted)">+${dayItems.length-2} more</div>`:''}
+      ${dayItems.length>2?`<div style="font-size:9px;color:var(--muted)">+${dayItems.length-2}</div>`:''}
     </div>`;
   }
   document.getElementById('calGrid').innerHTML=html;
   if(S.calSelected)renderCalModal();
 }
-
-function selectCalDay(dateStr){
-  S.calSelected=S.calSelected===dateStr?null:dateStr;
-  renderCalendar();
-}
-
+function selectCalDay(dateStr){S.calSelected=S.calSelected===dateStr?null:dateStr;renderCalendar();}
 function renderCalModal(){
-  const dateStr=S.calSelected;
-  if(!dateStr){document.getElementById('calModal').innerHTML='';return;}
+  const dateStr=S.calSelected;if(!dateStr){document.getElementById('calModal').innerHTML='';return;}
   const date=new Date(dateStr);
   const items=S.history.filter(h=>new Date(h.date).toISOString().split('T')[0]===dateStr);
   const label=date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
   let html=`<div class="cal-modal"><div class="cal-modal-title">${label}<button class="btn-icon" onclick="S.calSelected=null;renderCalendar()">✕</button></div>`;
-  if(items.length===0){html+=`<div style="color:var(--muted);font-size:13px;padding:16px 0">No activities on this day.</div>`;}
-  else{items.forEach(item=>{
-    html+=`<div class="cal-act-item"><div class="cal-act-dot ${item.completed?'done':''}"></div><div><div style="font-size:13px;font-weight:500">${item.title}</div><div style="font-size:11px;color:var(--muted)">${item.category||'Activity'} · ${item.completed?'✓ Done':'Saved'}</div></div></div>`;
-  });}
+  if(!items.length)html+=`<div style="color:var(--muted);font-size:13px;padding:16px 0">No activities on this day.</div>`;
+  else items.forEach(item=>{html+=`<div class="cal-act-item"><div class="cal-act-dot ${item.completed?'done':''}"></div><div><div style="font-size:13px;font-weight:500">${item.title}</div><div style="font-size:11px;color:var(--muted)">${item.category||'Activity'} · ${item.completed?'✓ Done':'Saved'}</div></div></div>`;});
   html+=`</div>`;
   document.getElementById('calModal').innerHTML=html;
 }
-
-function changeMonth(dir){
-  S.calMonth=new Date(S.calMonth.getFullYear(),S.calMonth.getMonth()+dir,1);
-  S.calSelected=null;
-  renderCalendar();
-}
+function changeMonth(dir){S.calMonth=new Date(S.calMonth.getFullYear(),S.calMonth.getMonth()+dir,1);S.calSelected=null;renderCalendar();}
 
 // ── INSIGHTS ───────────────────────────────────────────────
 function renderInsights(){
@@ -929,43 +1273,26 @@ function renderInsights(){
   const rated=S.history.filter(h=>h.rating>0);
   const avg=rated.length?(rated.reduce((s,h)=>s+h.rating,0)/rated.length).toFixed(1):'—';
   const cats=[...new Set(S.history.map(h=>h.category).filter(Boolean))].length;
-
-  let html=`<div class="insights-grid">
-    <div class="insight-stat"><div class="insight-num">${done}</div><div class="insight-lbl">Completed</div></div>
-    <div class="insight-stat"><div class="insight-num">${total}</div><div class="insight-lbl">Total Saved</div></div>
-    <div class="insight-stat"><div class="insight-num">${avg}</div><div class="insight-lbl">Avg Rating</div></div>
-    <div class="insight-stat"><div class="insight-num">${cats}</div><div class="insight-lbl">Categories</div></div>
-  </div>`;
-
-  if(S.history.length<2){
-    html+=`<div class="empty"><div class="empty-icon">📊</div><p>Save more activities to see insights!</p></div>`;
-    document.getElementById('insightsContent').innerHTML=html;
-    return;
-  }
-
-  html+=`<div class="chart-card"><div class="chart-title">📂 Activities by Category</div><canvas id="catChart" height="200"></canvas></div>`;
-  html+=`<div class="chart-card"><div class="chart-title">⭐ Rating Distribution</div><canvas id="ratingChart" height="200"></canvas></div>`;
-  html+=`<div class="chart-card"><div class="chart-title">🎭 Mood Patterns</div><canvas id="moodChart" height="200"></canvas></div>`;
-
+  let html=`<div class="insights-grid"><div class="insight-stat"><div class="insight-num">${done}</div><div class="insight-lbl">Completed</div></div><div class="insight-stat"><div class="insight-num">${total}</div><div class="insight-lbl">Total Saved</div></div><div class="insight-stat"><div class="insight-num">${avg}</div><div class="insight-lbl">Avg Rating</div></div><div class="insight-stat"><div class="insight-num">${cats}</div><div class="insight-lbl">Categories</div></div></div>`;
+  if(S.history.length<2){html+=`<div class="empty"><div class="empty-icon">📊</div><p>Save more activities to see insights!</p></div>`;document.getElementById('insightsContent').innerHTML=html;return;}
+  html+=`<div class="chart-card"><div class="chart-title">📂 Activities by Category</div><canvas id="catChart" height="200"></canvas></div><div class="chart-card"><div class="chart-title">⭐ Rating Distribution</div><canvas id="ratingChart" height="200"></canvas></div><div class="chart-card"><div class="chart-title">😊 Mood Before vs After</div><canvas id="moodChart" height="200"></canvas></div>`;
   document.getElementById('insightsContent').innerHTML=html;
-
+  const isDark=document.body.classList.contains('dark');
+  const tickColor=isDark?'#6b6878':'#8a7f74';
+  const gridColor=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
+  const primary=getComputedStyle(document.documentElement).getPropertyValue('--primary').trim()||'#2d5a3d';
   // Category chart
-  const catCounts={};
-  S.history.filter(h=>h.completed&&h.category).forEach(h=>{catCounts[h.category]=(catCounts[h.category]||0)+1;});
+  const catCounts={};S.history.filter(h=>h.completed&&h.category).forEach(h=>{catCounts[h.category]=(catCounts[h.category]||0)+1;});
   const catLabels=Object.keys(catCounts).slice(0,6);
-  const catData=catLabels.map(c=>catCounts[c]);
-  new Chart(document.getElementById('catChart'),{type:'bar',data:{labels:catLabels,datasets:[{data:catData,backgroundColor:'rgba(200,169,110,0.6)',borderColor:'rgba(200,169,110,1)',borderWidth:1,borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:'#6b6878'},grid:{color:'rgba(255,255,255,0.05)'}},x:{ticks:{color:'#6b6878'},grid:{display:false}}}}});
-
+  new Chart(document.getElementById('catChart'),{type:'bar',data:{labels:catLabels,datasets:[{data:catLabels.map(c=>catCounts[c]),backgroundColor:'rgba(45,90,61,0.6)',borderColor:'rgba(45,90,61,1)',borderWidth:1,borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{display:false}}}}});
   // Rating chart
-  const ratingCounts=[0,0,0,0,0];
-  S.history.filter(h=>h.rating>0).forEach(h=>{ratingCounts[h.rating-1]++;});
-  new Chart(document.getElementById('ratingChart'),{type:'bar',data:{labels:['1⭐','2⭐','3⭐','4⭐','5⭐'],datasets:[{data:ratingCounts,backgroundColor:['#e05c5c80','#c17f3a80','#c8a96e80','#4caf8280','#4caf82cc'],borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:'#6b6878'},grid:{color:'rgba(255,255,255,0.05)'}},x:{ticks:{color:'#6b6878'},grid:{display:false}}}}});
-
-  // Mood chart
-  const moodCounts={};
-  S.history.forEach(h=>{if(h.mood)h.mood.split(',').forEach(m=>{if(m)moodCounts[m]=(moodCounts[m]||0)+1;});});
-  const topMoods=Object.entries(moodCounts).sort((a,b)=>b[1]-a[1]).slice(0,6);
-  new Chart(document.getElementById('moodChart'),{type:'doughnut',data:{labels:topMoods.map(m=>{const found=MOODS.find(x=>x.v===m[0]);return found?found.e+' '+found.l:m[0];}),datasets:[{data:topMoods.map(m=>m[1]),backgroundColor:['rgba(200,169,110,0.7)','rgba(76,175,130,0.7)','rgba(107,159,212,0.7)','rgba(224,92,92,0.7)','rgba(200,169,110,0.4)','rgba(76,175,130,0.4)']}]},options:{plugins:{legend:{labels:{color:'#f0eee8',font:{family:'Sora',size:12}}}}}});
+  const rc=[0,0,0,0,0];S.history.filter(h=>h.rating>0).forEach(h=>{rc[h.rating-1]++;});
+  new Chart(document.getElementById('ratingChart'),{type:'bar',data:{labels:['1⭐','2⭐','3⭐','4⭐','5⭐'],datasets:[{data:rc,backgroundColor:['rgba(192,57,43,0.6)','rgba(193,127,58,0.6)','rgba(200,169,110,0.6)','rgba(45,122,79,0.6)','rgba(45,90,61,0.8)'],borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{display:false}}}}});
+  // Mood chart - before vs after
+  const moodBefore={},moodAfter={};
+  S.history.forEach(h=>{if(h.mood)h.mood.split(',').forEach(m=>{if(m)moodBefore[m]=(moodBefore[m]||0)+1;});if(h.moodAfter)moodAfter[h.moodAfter]=(moodAfter[h.moodAfter]||0)+1;});
+  const topMoods=Object.keys({...moodBefore,...moodAfter}).slice(0,6);
+  new Chart(document.getElementById('moodChart'),{type:'doughnut',data:{labels:topMoods.map(m=>{const f=MOODS.find(x=>x.v===m);return f?f.e+' '+f.l:m;}),datasets:[{data:topMoods.map(m=>moodBefore[m]||0),backgroundColor:['rgba(45,90,61,0.7)','rgba(76,175,130,0.7)','rgba(107,159,212,0.7)','rgba(192,57,43,0.7)','rgba(200,169,110,0.7)','rgba(90,64,128,0.7)'],label:'Before'}]},options:{plugins:{legend:{labels:{color:isDark?'#f0eee8':'#1a1714',font:{family:'Sora',size:12}}}}}});
 }
 
 // ── NAVIGATION ─────────────────────────────────────────────
@@ -981,10 +1308,28 @@ function showPage(name){
   window.scrollTo(0,0);
 }
 
+function startOver(){
+  S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=null;S.difficulty=[];S.specific='';
+  refineState={tags:[],sort:'default'};
+  applyMoodTheme([]);
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('selected'));
+  const si=document.getElementById('specificInput');if(si)si.value='';
+  const mb=document.getElementById('moodBanner');if(mb)mb.style.display='none';
+  document.getElementById('discoverBtn').disabled=true;
+  showPage('home');toast('Starting fresh! 🔄');
+}
+
 // ── SETUP ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
-  if(!S.apiKey)document.getElementById('apiModal').style.display='flex';
-  else document.getElementById('apiModal').style.display='none';
+  // Onboarding or API modal
+  if(!S.onboardingDone){
+    startOnboarding();
+  } else if(!S.apiKey){
+    document.getElementById('apiModal').style.display='flex';
+  }
+
+  applySettings();
   updateApiStatus();
 
   // Mood grid
@@ -993,8 +1338,20 @@ document.addEventListener('DOMContentLoaded',()=>{
   // Pill groups
   const rp=(id,opts,key)=>{document.getElementById(id).innerHTML=opts.map(o=>`<button class="pill" onclick="selPill('${key}','${o.v}',this)">${o.l}</button>`).join('');};
   rp('timeGroup',TIME,'time');rp('budgetGroup',BUDGET,'budget');rp('peopleGroup',PEOPLE,'people');rp('prefGroup',PREF,'preference');
-  // Difficulty is multi-select so different handler
   document.getElementById('diffGroup').innerHTML=DIFF.map(o=>`<button class="pill" onclick="toggleDiff('${o.v}',this)" id="diff-${o.v}">${o.l}</button>`).join('');
+
+  // Restore filter memory
+  if(S.settings.filterMemory && Object.keys(S.lastFilters).length>0){
+    const lf=S.lastFilters;
+    if(lf.mood){S.mood=lf.mood;S.mood.forEach(m=>document.getElementById('mood-'+m)?.classList.add('selected'));applyMoodTheme(S.mood);}
+    if(lf.time){S.time=lf.time;document.querySelector(`#timeGroup .pill[onclick*="${lf.time}"]`)?.classList.add('selected');}
+    if(lf.budget){S.budget=lf.budget;document.querySelector(`#budgetGroup .pill[onclick*="${lf.budget}"]`)?.classList.add('selected');}
+    if(lf.people){S.people=lf.people;document.querySelector(`#peopleGroup .pill[onclick*="${lf.people}"]`)?.classList.add('selected');}
+    if(lf.preference){S.preference=lf.preference;document.querySelector(`#prefGroup .pill[onclick*="${lf.preference}"]`)?.classList.add('selected');}
+    if(lf.difficulty){S.difficulty=lf.difficulty;S.difficulty.forEach(d=>document.getElementById('diff-'+d)?.classList.add('selected'));}
+    checkReady();
+    if(S.mood.length>0){const labels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m);const banner=document.getElementById('moodBanner');if(banner){banner.textContent='✦ Restored your last filters — '+labels.join(' & ');banner.style.display='block';}}
+  }
 
   // Specific input
   document.getElementById('specificInput').addEventListener('input',function(){
@@ -1008,36 +1365,14 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 });
 
-const MOOD_THEME_MAP={
-  happy:'happy',playful:'happy',grateful:'happy',
-  energetic:'energetic',motivated:'energetic',restless:'energetic',
-  calm:'calm',inspired:'calm',curious:'calm',
-  sad:'sad',lonely:'sad',
-  stressed:'stressed',anxious:'stressed',frustrated:'stressed',overwhelmed:'stressed',
-  bored:'bored',nostalgic:'bored',
-  tired:'tired'
-};
-
-function applyMoodTheme(moods){
-  // Remove all mood classes
-  document.body.classList.remove('mood-happy','mood-energetic','mood-calm','mood-sad','mood-stressed','mood-bored','mood-tired');
-  if(moods.length>0){
-    const theme=MOOD_THEME_MAP[moods[0]];
-    if(theme)document.body.classList.add('mood-'+theme);
-  }
-}
-
 function toggleMood(v){
   const i=S.mood.indexOf(v);if(i>-1)S.mood.splice(i,1);else S.mood.push(v);
   document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
   S.mood.forEach(m=>document.getElementById('mood-'+m)?.classList.add('selected'));
   applyMoodTheme(S.mood);
   const banner=document.getElementById('moodBanner');
-  if(S.mood.length>0){
-    const labels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m);
-    banner.textContent='✦ Tailoring recommendations for '+labels.join(' & ')+' vibes';
-    banner.style.display='block';
-  }else{banner.style.display='none';}
+  if(S.mood.length>0){const labels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m);banner.textContent='✦ Tailoring for '+labels.join(' & ')+' vibes';banner.style.display='block';}
+  else banner.style.display='none';
   checkReady();
 }
 
