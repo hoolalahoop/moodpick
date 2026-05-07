@@ -359,20 +359,21 @@ User situation:
 ${specificContext}
 
 Be hyper-specific. Name exact movies, games, recipes, playlists, apps, etc.
-For each activity include 3 YouTube search terms to find tutorials or related videos.
+For each activity include 3 YouTube search terms.
 
-Return ONLY valid JSON, no markdown, no extra text:
+CRITICAL: Return ONLY a JSON object. No markdown. No backticks. No newlines inside string values - use a pipe | character instead of newline in start_guide steps. Example: "Step 1: do this | Step 2: do that | Step 3: finish up"
+
 {
   "activities": [
     {
       "title": "Specific activity name",
       "description": "2 sentences on why this fits their mood",
       "category": "Category",
-      "estimated_time": "e.g. 45 min",
-      "estimated_cost": "e.g. Free",
-      "difficulty": "easy OR medium OR hard",
+      "estimated_time": "45 min",
+      "estimated_cost": "Free",
+      "difficulty": "easy",
       "materials": "What they need or Nothing needed",
-      "start_guide": "Step 1: action\nStep 2: action\nStep 3: action\nStep 4: action",
+      "start_guide": "Step 1: action | Step 2: action | Step 3: action | Step 4: action",
       "youtube_searches": ["search term 1", "search term 2", "search term 3"],
       "similar_activities": ["Similar 1", "Similar 2", "Similar 3"]
     }
@@ -381,18 +382,28 @@ Return ONLY valid JSON, no markdown, no extra text:
 
   try {
     const text = await callGroq(prompt);
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Could not parse response. Please try again.');
-    const cleaned = jsonMatch[0]
-      .replace(/[ --]/g, '')
-      .replace(/\n/g, '__NEWLINE__')
-      .replace(/
-/g, ' ')
-      .replace(//g, '')
-      .replace(/	/g, ' ')
-      .replace(/__NEWLINE__/g, '\n');
-    const parsed = JSON.parse(cleaned);
+    // Robust JSON parsing - character by character to handle control chars
+    let jsonStr = text.replace(/```json/g,'').replace(/```/g,'');
+    const s = jsonStr.indexOf('{');
+    const e = jsonStr.lastIndexOf('}');
+    if (s===-1||e===-1) throw new Error('No JSON found. Please try again.');
+    jsonStr = jsonStr.substring(s, e+1);
+    let inStr=false, esc=false, result='';
+    for(let i=0;i<jsonStr.length;i++){
+      const c=jsonStr[i],code=jsonStr.charCodeAt(i);
+      if(esc){result+=c;esc=false;continue;}
+      if(c==='\\'){result+=c;esc=true;continue;}
+      if(c==='"'){inStr=!inStr;result+=c;continue;}
+      if(inStr&&code<32){result+=' ';continue;}
+      result+=c;
+    }
+    const parsed = JSON.parse(result);
+    if(parsed.activities){
+      parsed.activities=parsed.activities.map(a=>({...a,start_guide:(a.start_guide||'').split(' | ')}));
+    }
     window._currentActivities = parsed.activities || [];
+    renderResults(parsed.activities || []);
+  } catch  parsed.activities || [];
     renderResults(parsed.activities || []);
   } catch (err) {
     document.getElementById('resultsContent').innerHTML = `
@@ -443,7 +454,7 @@ function showDetail(index) {
   const a = window._currentActivities[index];
   state.currentActivity = a;
   const isSaved = state.history.some(h => h.title === a.title && !h.completed);
-  const steps = (a.start_guide || '').split('\n').filter(s => s.trim());
+  const steps = Array.isArray(a.start_guide) ? a.start_guide.filter(s=>s.trim()) : (a.start_guide||'').split('|').map(s=>s.trim()).filter(Boolean);
   document.getElementById('detailContent').innerHTML = `
     <div class="detail-back">
       <button class="btn-secondary" onclick="showPage('results')">← Back to results</button>
