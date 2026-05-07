@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoodPick — What should you do right now?</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --card: #ffffff;
+    --text: #1a1714;
+    --muted: #8a7f74;
+    --border: #e8e2d9;
+    --primary: #2d5a3d;
+    --primary-light: #e8f0eb;
+    --accent: #c17f3a;
+    --accent-light: #fdf3e7;
+    --radius: 16px;
+    --shadow: 0 2px 20px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* MOOD BACKGROUND */
+  .mood-bg {
+    position: fixed; inset: 0; z-index: -1;
+    transition: background 0.8s ease;
+    background: linear-gradient(135deg, #f7f5f0 0%, #ede8e0 100%);
+  }
+  .mood-bg.tired { background: linear-gradient(135deg, #e8e6f0 0%, #d8d4e8 100%); }
+  .mood-bg.stressed { background: linear-gradient(135deg, #f0e8e8 0%, #e8d4d4 100%); }
+  .mood-bg.happy { background: linear-gradient(135deg, #f0f5e8 0%, #e4efd4 100%); }
+  .mood-bg.energetic { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); }
+  .mood-bg.calm { background: linear-gradient(135deg, #e8f0f5 0%, #d4e4ef 100%); }
+  .mood-bg.bored { background: linear-gradient(135deg, #f0ede8 0%, #e4ddd4 100%); }
+  .mood-bg.sad { background: linear-gradient(135deg, #e8eaf5 0%, #d4d8ef 100%); }
+  .mood-bg.anxious { background: linear-gradient(135deg, #f5ede8 0%, #edd4c8 100%); }
+
+  /* HEADER */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(20px);
+    background: rgba(247, 245, 240, 0.85);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px; color: var(--primary);
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer;
+  }
+  .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  nav { display: flex; gap: 4px; }
+  nav button {
+    background: none; border: none; cursor: pointer;
+    padding: 8px 14px; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+    color: var(--muted); transition: all 0.2s;
+  }
+  nav button:hover { color: var(--text); background: var(--border); }
+  nav button.active { color: var(--primary); background: var(--primary-light); }
+
+  /* MAIN */
+  main { max-width: 680px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero { text-align: center; margin-bottom: 40px; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 16px; border-radius: 100px;
+    background: var(--card); border: 1px solid var(--border);
+    font-size: 13px; color: var(--muted); margin-bottom: 20px;
+    transition: all 0.4s;
+  }
+  .hero-tag span { font-weight: 500; color: var(--primary); }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 6vw, 48px);
+    line-height: 1.2; color: var(--text);
+    margin-bottom: 12px;
+  }
+  h1 em { font-style: italic; color: var(--primary); }
+  .hero p { color: var(--muted); font-size: 16px; max-width: 420px; margin: 0 auto; }
+
+  /* CARD */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 13px; font-weight: 600;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: 0.06em; margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .section-label small { font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+  /* MOOD GRID */
+  .mood-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  @media (min-width: 480px) { .mood-grid { grid-template-columns: repeat(6, 1fr); } }
+  .mood-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 12px 8px; border-radius: 12px;
+    border: 2px solid transparent;
+    background: var(--bg); cursor: pointer;
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .mood-btn:hover { background: var(--border); transform: translateY(-2px); }
+  .mood-btn.selected { border-color: var(--primary); background: var(--primary-light); }
+  .mood-btn .emoji { font-size: 22px; }
+  .mood-btn .label { font-size: 11px; font-weight: 500; color: var(--muted); }
+  .mood-btn.selected .label { color: var(--primary); }
+
+  /* OPTION PILLS */
+  .pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    padding: 8px 16px; border-radius: 100px;
+    border: 1.5px solid var(--border);
+    background: var(--bg); cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--muted); transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .pill:hover { border-color: var(--primary); color: var(--text); }
+  .pill.selected { background: var(--primary); border-color: var(--primary); color: white; }
+
+  /* SPECIFIC INPUT */
+  .specific-input {
+    width: 100%; padding: 12px 16px;
+    border: 1.5px solid var(--border); border-radius: 12px;
+    background: var(--bg); font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--text); outline: none;
+    transition: border-color 0.2s;
+  }
+  .specific-input:focus { border-color: var(--primary); }
+  .specific-input::placeholder { color: var(--muted); }
+
+  /* CTA BUTTON */
+  .btn-primary {
+    width: 100%; padding: 16px; border-radius: 14px;
+    background: var(--primary); color: white; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s; margin-top: 8px;
+  }
+  .btn-primary:hover { background: #1f3f2b; transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-secondary {
+    padding: 10px 20px; border-radius: 12px;
+    background: var(--bg); color: var(--text); border: 1.5px solid var(--border);
+    cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+    transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+
+  /* DIVIDER */
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    color: var(--muted); font-size: 13px; margin: 4px 0;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* LOADING */
+  .loading-state {
+    text-align: center; padding: 60px 20px;
+  }
+  .spinner {
+    width: 40px; height: 40px; margin: 0 auto 20px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-state h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; margin-bottom: 8px;
+  }
+  .loading-state p { color: var(--muted); font-size: 14px; }
+  .loading-dots { display: flex; gap: 6px; justify-content: center; margin-top: 16px; }
+  .loading-dots span {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--primary); opacity: 0.4;
+    animation: pulse 0.8s ease-in-out infinite;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes pulse { 0%,100%{opacity:0.4;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
+
+  /* RESULTS */
+  .results-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .results-header h2 {
+    font-family: 'DM Serif Display', serif; font-size: 26px;
+  }
+  .activity-grid { display: grid; gap: 12px; }
+  .activity-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px; cursor: pointer;
+    transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .activity-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--primary-light); opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .activity-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+  .activity-card:hover::before { opacity: 1; }
+  .activity-card > * { position: relative; }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .category-badge {
+    padding: 4px 10px; border-radius: 100px;
+    background: var(--bg); border: 1px solid var(--border);
+    font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .diff-badge {
+    font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 100px;
+  }
+  .diff-easy { background: #e8f5e9; color: #2e7d32; }
+  .diff-medium { background: #fff3e0; color: #e65100; }
+  .diff-hard { background: #fce4ec; color: #c62828; }
+  .activity-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; margin-bottom: 6px; line-height: 1.3;
+  }
+  .activity-desc { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 14px; }
+  .card-meta { display: flex; gap: 16px; font-size: 12px; color: var(--muted); }
+  .card-meta span { display: flex; align-items: center; gap: 4px; }
+  .card-arrow {
+    position: absolute; right: 22px; bottom: 22px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--primary); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; opacity: 0; transition: opacity 0.2s;
+  }
+  .activity-card:hover .card-arrow { opacity: 1; }
+
+  /* ACTIVITY DETAIL */
+  .detail-back { margin-bottom: 24px; }
+  .detail-header { margin-bottom: 24px; }
+  .detail-header .category-badge { margin-bottom: 12px; display: inline-block; }
+  .detail-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 30px; margin-bottom: 8px; line-height: 1.2;
+  }
+  .detail-desc { color: var(--muted); font-size: 15px; margin-bottom: 20px; }
+  .meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 24px; }
+  .meta-block {
+    background: var(--bg); border-radius: 12px; padding: 14px;
+    border: 1px solid var(--border);
+  }
+  .meta-block .meta-label { font-size: 11px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .meta-block .meta-val { font-size: 14px; font-weight: 600; color: var(--text); }
+  .detail-section { margin-bottom: 24px; }
+  .detail-section h4 {
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px;
+  }
+  .start-steps { display: flex; flex-direction: column; gap: 10px; }
+  .step-item { display: flex; gap: 12px; align-items: flex-start; }
+  .step-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--primary-light); color: var(--primary);
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
+  }
+  .step-text { font-size: 14px; color: var(--text); line-height: 1.5; }
+  .similar-list { display: flex; flex-direction: column; gap: 8px; }
+  .similar-item {
+    padding: 12px 16px; border-radius: 10px;
+    background: var(--bg); border: 1px solid var(--border);
+    font-size: 14px; color: var(--text);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .action-btns { display: flex; gap: 10px; }
+  .btn-done {
+    flex: 1; padding: 14px; border-radius: 12px;
+    background: var(--primary); color: white; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn-done:hover { background: #1f3f2b; }
+  .btn-save {
+    flex: 1; padding: 14px; border-radius: 12px;
+    background: var(--bg); color: var(--text);
+    border: 1.5px solid var(--border); cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn-save:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-save.saved { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+
+  /* HISTORY */
+  .history-header { margin-bottom: 24px; }
+  .history-header h2 { font-family: 'DM Serif Display', serif; font-size: 28px; margin-bottom: 4px; }
+  .history-header p { color: var(--muted); font-size: 14px; }
+  .history-tabs { display: flex; gap: 4px; margin-bottom: 20px; background: var(--bg); padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
+  .hist-tab {
+    flex: 1; padding: 8px; border-radius: 8px; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    background: none; color: var(--muted); transition: all 0.2s;
+  }
+  .hist-tab.active { background: var(--card); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .history-list { display: flex; flex-direction: column; gap: 10px; }
+  .hist-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px; cursor: pointer; transition: all 0.2s;
+  }
+  .hist-card:hover { border-color: var(--primary); }
+  .hist-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .hist-title { font-weight: 600; font-size: 15px; }
+  .hist-date { font-size: 12px; color: var(--muted); }
+  .hist-desc { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  .hist-meta { display: flex; gap: 12px; align-items: center; }
+  .hist-status {
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .hist-status.completed { background: #e8f5e9; color: #2e7d32; }
+  .hist-status.saved { background: var(--accent-light); color: var(--accent); }
+  .stars { display: flex; gap: 2px; }
+  .star { font-size: 13px; cursor: pointer; transition: transform 0.1s; }
+  .star:hover { transform: scale(1.2); }
+  .empty-state {
+    text-align: center; padding: 60px 20px; color: var(--muted);
+  }
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  /* PROGRESS */
+  .progress-card {
+    background: linear-gradient(135deg, var(--primary) 0%, #1f3f2b 100%);
+    border-radius: var(--radius); padding: 24px; margin-bottom: 16px; color: white;
+  }
+  .progress-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
+  .prog-stat { text-align: center; }
+  .prog-stat .num { font-family: 'DM Serif Display', serif; font-size: 28px; }
+  .prog-stat .lbl { font-size: 12px; opacity: 0.7; }
+  .progress-bar-wrap { background: rgba(255,255,255,0.2); border-radius: 100px; height: 6px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: white; border-radius: 100px; transition: width 0.8s ease; }
+
+  /* API KEY MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal {
+    background: var(--card); border-radius: 20px; padding: 32px;
+    max-width: 440px; width: 100%; box-shadow: var(--shadow-lg);
+  }
+  .modal h3 { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 8px; }
+  .modal p { color: var(--muted); font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+  .modal input {
+    width: 100%; padding: 12px 16px; border-radius: 12px;
+    border: 1.5px solid var(--border); background: var(--bg);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.2s; margin-bottom: 12px;
+  }
+  .modal input:focus { border-color: var(--primary); }
+  .modal-note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .modal-note a { color: var(--primary); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 300;
+    background: var(--text); color: white; padding: 12px 20px;
+    border-radius: 12px; font-size: 14px; font-weight: 500;
+    transform: translateY(80px); opacity: 0; transition: all 0.3s;
+    max-width: 300px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(16px); transition: all 0.4s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* API KEY WARNING */
+  .api-warning {
+    background: var(--accent-light); border: 1px solid #e8c97a;
+    border-radius: 12px; padding: 14px 16px; margin-bottom: 16px;
+    font-size: 13px; color: #7a5a1a;
+    display: flex; align-items: center; gap: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="mood-bg" id="moodBg"></div>
+
+<!-- API KEY MODAL -->
+<div class="modal-overlay" id="apiModal">
+  <div class="modal">
+    <h3>Welcome to MoodPick ✦</h3>
+    <p>MoodPick uses Claude AI to give you personalized activity recommendations. Enter your Anthropic API key to get started — it's stored only in your browser.</p>
+    <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." />
+    <button class="btn-primary" onclick="saveApiKey()">Start Exploring →</button>
+    <p class="modal-note">Get your free API key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>. Your key never leaves your device.</p>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo" onclick="showPage('home')">
+    <div class="logo-dot"></div>
+    MoodPick
+  </div>
+  <nav>
+    <button onclick="showPage('home')" class="active" id="nav-home">Discover</button>
+    <button onclick="showPage('history')" id="nav-history">History</button>
+  </nav>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- HOME PAGE -->
+  <div class="page active" id="page-home">
+    <div class="hero reveal">
+      <div class="hero-tag" id="heroTag">✦ <span id="heroMoodText">Tell us how you feel</span></div>
+      <h1>What should you do<br><em>right now?</em></h1>
+      <p>Tell us your mood and we'll find the perfect activity you can start immediately.</p>
+    </div>
+
+    <div class="card reveal" style="transition-delay:0.05s">
+      <div class="section-label">How are you feeling? <small>Pick all that apply</small></div>
+      <div class="mood-grid" id="moodGrid"></div>
+      <div id="moodBanner" style="display:none;margin-top:14px;padding:12px 16px;border-radius:12px;background:var(--primary-light);border:1px solid #c8dece;font-size:13px;color:var(--primary);font-weight:500;"></div>
+    </div>
+
+    <div class="divider">or tell us more</div>
+
+    <div class="card reveal" style="transition-delay:0.1s">
+      <div class="section-label" style="margin-bottom:10px">Already know what you want?</div>
+      <input class="specific-input" id="specificInput" placeholder='e.g. "watch a movie", "draw something", "go for a walk"...' />
+      <div id="specificHint" style="display:none;margin-top:8px;font-size:12px;color:var(--primary)">✨ We'll give you specific ideas for this!</div>
+    </div>
+
+    <div class="card reveal" style="transition-delay:0.15s">
+      <div class="section-label" style="margin-bottom:16px">How much time do you have?</div>
+      <div class="pill-group" id="timeGroup"></div>
+    </div>
+
+    <div class="card reveal" style="transition-delay:0.2s">
+      <div class="section-label" style="margin-bottom:16px">What's your budget?</div>
+      <div class="pill-group" id="budgetGroup"></div>
+    </div>
+
+    <div class="card reveal" style="transition-delay:0.25s">
+      <div class="section-label" style="margin-bottom:16px">Who's joining?</div>
+      <div class="pill-group" id="peopleGroup"></div>
+    </div>
+
+    <div class="card reveal" style="transition-delay:0.3s">
+      <div class="section-label" style="margin-bottom:16px">What type of activity?</div>
+      <div class="pill-group" id="prefGroup"></div>
+    </div>
+
+    <div class="reveal" style="transition-delay:0.35s">
+      <button class="btn-primary" id="discoverBtn" onclick="getRecommendations()" disabled>
+        ✦ Find My Perfect Activity
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULTS PAGE -->
+  <div class="page" id="page-results">
+    <div id="resultsContent"></div>
+  </div>
+
+  <!-- DETAIL PAGE -->
+  <div class="page" id="page-detail">
+    <div id="detailContent"></div>
+  </div>
+
+  <!-- HISTORY PAGE -->
+  <div class="page" id="page-history">
+    <div class="history-header">
+      <h2>Your History</h2>
+      <p>Track your activities and rate your experiences</p>
+    </div>
+    <div id="historyContent"></div>
+  </div>
+
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────
+let state = {
+  mood: [],
+  time: null,
+  budget: null,
+  people: null,
+  preference: null,
+  specific: '',
+  currentActivity: null,
+  history: JSON.parse(localStorage.getItem('moodpick_history') || '[]'),
+  apiKey: localStorage.getItem('moodpick_apikey') || ''
+};
+
+// ─── CONFIG ──────────────────────────────────────────────
+const MOODS = [
+  { value: 'happy',       emoji: '😊', label: 'Happy' },
+  { value: 'energetic',   emoji: '⚡', label: 'Energetic' },
+  { value: 'calm',        emoji: '🌿', label: 'Calm' },
+  { value: 'inspired',    emoji: '✨', label: 'Inspired' },
+  { value: 'playful',     emoji: '🎉', label: 'Playful' },
+  { value: 'curious',     emoji: '🔍', label: 'Curious' },
+  { value: 'motivated',   emoji: '🔥', label: 'Motivated' },
+  { value: 'bored',       emoji: '😐', label: 'Bored' },
+  { value: 'restless',    emoji: '🦋', label: 'Restless' },
+  { value: 'tired',       emoji: '😴', label: 'Tired' },
+  { value: 'stressed',    emoji: '😤', label: 'Stressed' },
+  { value: 'anxious',     emoji: '😰', label: 'Anxious' },
+  { value: 'sad',         emoji: '🌧️', label: 'Sad' },
+  { value: 'lonely',      emoji: '🫂', label: 'Lonely' },
+  { value: 'grateful',    emoji: '🙏', label: 'Grateful' },
+  { value: 'nostalgic',   emoji: '🌅', label: 'Nostalgic' },
+  { value: 'frustrated',  emoji: '😠', label: 'Frustrated' },
+  { value: 'overwhelmed', emoji: '🌊', label: 'Overwhelmed' },
+];
+
+const TIME_OPTIONS = [
+  { value: 'flash', label: '⚡ Under 10 min' },
+  { value: 'short', label: '🕐 10–30 min' },
+  { value: 'medium', label: '⏱ 30–90 min' },
+  { value: 'long', label: '🌙 1.5–3 hrs' },
+  { value: 'day', label: '☀️ Full day' },
+];
+
+const BUDGET_OPTIONS = [
+  { value: 'free', label: '🆓 Free' },
+  { value: 'low', label: '💵 $1–10' },
+  { value: 'medium', label: '💰 $10–50' },
+  { value: 'high', label: '💎 $50+' },
+];
+
+const PEOPLE_OPTIONS = [
+  { value: 'alone', label: '🧍 Solo' },
+  { value: 'partner', label: '💑 With partner' },
+  { value: '2-3', label: '👥 2–3 friends' },
+  { value: 'family', label: '👨‍👩‍👧 Family' },
+  { value: 'group', label: '🎊 Big group' },
+];
+
+const PREF_OPTIONS = [
+  { value: 'creative', label: '🎨 Creative' },
+  { value: 'active', label: '🏃 Active' },
+  { value: 'relaxing', label: '🧘 Relaxing' },
+  { value: 'social', label: '💬 Social' },
+  { value: 'learning', label: '📚 Learning' },
+  { value: 'entertainment', label: '🎬 Entertainment' },
+  { value: 'food', label: '🍳 Food & Drinks' },
+  { value: 'music', label: '🎵 Music' },
+  { value: 'nature', label: '🌲 Nature' },
+  { value: 'tech', label: '🎮 Tech & Gaming' },
+  { value: 'anything', label: '🎲 Surprise me' },
+];
+
+const MOOD_BG_MAP = {
+  tired: 'tired', stressed: 'stressed', anxious: 'stressed', frustrated: 'stressed',
+  happy: 'happy', playful: 'happy', grateful: 'happy',
+  energetic: 'energetic', motivated: 'energetic', restless: 'energetic',
+  calm: 'calm', inspired: 'calm', curious: 'calm',
+  bored: 'bored', nostalgic: 'bored',
+  sad: 'sad', lonely: 'sad', overwhelmed: 'sad',
+};
+
+// ─── INIT ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  if (!state.apiKey) {
+    document.getElementById('apiModal').style.display = 'flex';
+  } else {
+    document.getElementById('apiModal').style.display = 'none';
+  }
+  renderMoodGrid();
+  renderPillGroups();
+  setupSpecificInput();
+  setupReveal();
+});
+
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key || !key.startsWith('sk-ant')) {
+    showToast('Please enter a valid Anthropic API key');
+    return;
+  }
+  state.apiKey = key;
+  localStorage.setItem('moodpick_apikey', key);
+  document.getElementById('apiModal').style.display = 'none';
+  showToast('API key saved! You\'re ready to go 🎉');
+}
+
+// ─── RENDER INPUTS ────────────────────────────────────────
+function renderMoodGrid() {
+  const grid = document.getElementById('moodGrid');
+  grid.innerHTML = MOODS.map(m => `
+    <button class="mood-btn" onclick="toggleMood('${m.value}')" id="mood-${m.value}">
+      <span class="emoji">${m.emoji}</span>
+      <span class="label">${m.label}</span>
+    </button>
+  `).join('');
+}
+
+function toggleMood(value) {
+  const idx = state.mood.indexOf(value);
+  if (idx > -1) state.mood.splice(idx, 1);
+  else state.mood.push(value);
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  state.mood.forEach(m => document.getElementById(`mood-${m}`)?.classList.add('selected'));
+  updateMoodUI();
+  checkReady();
+}
+
+function updateMoodUI() {
+  const bg = document.getElementById('moodBg');
+  bg.className = 'mood-bg';
+  if (state.mood.length > 0) {
+    const bgClass = MOOD_BG_MAP[state.mood[0]] || '';
+    if (bgClass) bg.classList.add(bgClass);
+  }
+  const tag = document.getElementById('heroTag');
+  const tagText = document.getElementById('heroMoodText');
+  const banner = document.getElementById('moodBanner');
+  if (state.mood.length > 0) {
+    const labels = state.mood.map(m => MOODS.find(x => x.value === m)?.label || m);
+    tagText.textContent = `Feeling ${labels.join(' & ')}`;
+    banner.style.display = 'block';
+    banner.textContent = `We'll tailor your recommendations for ${labels.join(' & ')} vibes ✦`;
+  } else {
+    tagText.textContent = 'Tell us how you feel';
+    banner.style.display = 'none';
+  }
+}
+
+function renderPillGroups() {
+  renderPills('timeGroup', TIME_OPTIONS, 'time');
+  renderPills('budgetGroup', BUDGET_OPTIONS, 'budget');
+  renderPills('peopleGroup', PEOPLE_OPTIONS, 'people');
+  renderPills('prefGroup', PREF_OPTIONS, 'preference');
+}
+
+function renderPills(containerId, options, key) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = options.map(o => `
+    <button class="pill" onclick="selectPill('${key}', '${o.value}', this)">${o.label}</button>
+  `).join('');
+}
+
+function selectPill(key, value, el) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  state[key] = value;
+  checkReady();
+}
+
+function setupSpecificInput() {
+  const input = document.getElementById('specificInput');
+  const hint = document.getElementById('specificHint');
+  input.addEventListener('input', () => {
+    state.specific = input.value.trim();
+    hint.style.display = state.specific ? 'block' : 'none';
+    checkReady();
+  });
+}
+
+function checkReady() {
+  const hasSpecific = state.specific.length > 0;
+  const hasFilters = state.mood.length > 0 && state.time && state.budget && state.people && state.preference;
+  document.getElementById('discoverBtn').disabled = !(hasSpecific || hasFilters);
+}
+
+// ─── API CALL ─────────────────────────────────────────────
+async function getRecommendations() {
+  if (!state.apiKey) {
+    document.getElementById('apiModal').style.display = 'flex';
+    return;
+  }
+
+  showPage('results');
+  document.getElementById('resultsContent').innerHTML = `
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <h3>Finding perfect activities...</h3>
+      <p>Analyzing your mood and preferences</p>
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+    </div>`;
+
+  const moodLabels = state.mood.map(m => MOODS.find(x => x.value === m)?.label || m).join(', ');
+  const specificContext = state.specific
+    ? `The user specifically wants to "${state.specific}". Give 4 specific variations within this activity type.`
+    : '';
+
+  const prompt = `You are MoodPick, an activity recommender. Suggest exactly 4 specific, immediately actionable activities.
+
+User's situation:
+- Mood: ${moodLabels || 'not specified'}
+- Available time: ${state.time || 'not specified'} (flash=under 10min, short=10-30min, medium=30-90min, long=1.5-3hrs, day=full day)
+- Budget: ${state.budget || 'not specified'} (free=no cost, low=$1-10, medium=$10-50, high=$50+)
+- People: ${state.people || 'not specified'}
+- Preference type: ${state.preference || 'not specified'}
+${specificContext}
+
+Be hyper-specific. Instead of "watch a movie" say the actual movie title and where to watch it.
+Instead of "play a game" name the exact game and how to start.
+
+Return ONLY valid JSON in this exact format:
+{
+  "activities": [
+    {
+      "title": "Activity name",
+      "description": "2-sentence description of why this fits their mood/situation",
+      "category": "Category name",
+      "estimated_time": "e.g. 30 min",
+      "estimated_cost": "e.g. Free or $5",
+      "difficulty": "easy|medium|hard",
+      "materials": "What you need (or 'Nothing needed')",
+      "start_guide": "Step 1: ...\nStep 2: ...\nStep 3: ...",
+      "similar_activities": ["Similar activity 1", "Similar activity 2", "Similar activity 3"]
+    }
+  ]
+}`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': state.apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error?.message || 'API error');
+    }
+
+    const data = await response.json();
+    const text = data.content[0].text;
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Invalid response format');
+    const parsed = JSON.parse(jsonMatch[0]);
+    renderResults(parsed.activities || []);
+  } catch (err) {
+    document.getElementById('resultsContent').innerHTML = `
+      <div class="loading-state">
+        <div style="font-size:48px;margin-bottom:16px">⚠️</div>
+        <h3>Something went wrong</h3>
+        <p style="margin-bottom:16px">${err.message}</p>
+        <button class="btn-secondary" onclick="showPage('home')">← Go back</button>
+      </div>`;
+  }
+}
+
+// ─── RENDER RESULTS ───────────────────────────────────────
+function renderResults(activities) {
+  const moodText = state.mood.map(m => MOODS.find(x => x.value === m)?.label || m).join(' & ');
+  const subtitle = [state.specific, moodText, state.preference, state.time].filter(Boolean).join(' · ');
+
+  document.getElementById('resultsContent').innerHTML = `
+    <div class="results-header">
+      <div>
+        <button class="btn-secondary" onclick="showPage('home')" style="margin-bottom:12px">← Back</button>
+        <h2>${state.specific ? `Ideas for "${state.specific}"` : 'Your Activities'}</h2>
+        <p style="color:var(--muted);font-size:13px;margin-top:4px">${subtitle}</p>
+      </div>
+      <button class="btn-secondary" onclick="getRecommendations()">↻ Refresh</button>
+    </div>
+    <div class="activity-grid">
+      ${activities.map((a, i) => `
+        <div class="activity-card" onclick="showDetail(${i})" style="animation:fadeUp 0.4s ease both;animation-delay:${i*0.08}s">
+          <div class="card-top">
+            <span class="category-badge">${a.category || 'Activity'}</span>
+            <span class="diff-badge diff-${a.difficulty || 'easy'}">${
+              a.difficulty === 'hard' ? '💪 Challenging' :
+              a.difficulty === 'medium' ? '🧠 Engaging' : '😌 Laid-back'
+            }</span>
+          </div>
+          <div class="activity-title">${a.title}</div>
+          <div class="activity-desc">${a.description}</div>
+          <div class="card-meta">
+            <span>⏱ ${a.estimated_time || '?'}</span>
+            <span>💰 ${a.estimated_cost || 'Free'}</span>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
+      `).join('')}
+    </div>`;
+
+  window._currentActivities = activities;
+}
+
+// ─── DETAIL ───────────────────────────────────────────────
+function showDetail(index) {
+  const a = window._currentActivities[index];
+  state.currentActivity = a;
+  const isSaved = state.history.some(h => h.title === a.title && !h.completed);
+  const steps = (a.start_guide || '').split('\n').filter(s => s.trim());
+
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-back">
+      <button class="btn-secondary" onclick="showPage('results')">← Back to results</button>
+    </div>
+    <div class="detail-header">
+      <span class="category-badge">${a.category || 'Activity'}</span>
+      <div class="detail-title">${a.title}</div>
+      <div class="detail-desc">${a.description}</div>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-block"><div class="meta-label">Time</div><div class="meta-val">⏱ ${a.estimated_time || '?'}</div></div>
+      <div class="meta-block"><div class="meta-label">Cost</div><div class="meta-val">💰 ${a.estimated_cost || 'Free'}</div></div>
+      <div class="meta-block"><div class="meta-label">Difficulty</div><div class="meta-val">${a.difficulty || 'Easy'}</div></div>
+      <div class="meta-block"><div class="meta-label">Materials</div><div class="meta-val">${a.materials ? 'See below' : 'None'}</div></div>
+    </div>
+    ${a.materials ? `
+    <div class="detail-section">
+      <h4>What You Need</h4>
+      <div style="background:var(--bg);border-radius:12px;padding:14px;border:1px solid var(--border);font-size:14px;color:var(--text)">${a.materials}</div>
+    </div>` : ''}
+    ${steps.length > 0 ? `
+    <div class="detail-section">
+      <h4>Start Now Guide</h4>
+      <div class="start-steps">
+        ${steps.map((s, i) => `
+          <div class="step-item">
+            <div class="step-num">${i+1}</div>
+            <div class="step-text">${s.replace(/^\d+[\.\)]\s*/, '')}</div>
+          </div>`).join('')}
+      </div>
+    </div>` : ''}
+    ${a.similar_activities?.length ? `
+    <div class="detail-section">
+      <h4>Similar Activities</h4>
+      <div class="similar-list">
+        ${a.similar_activities.map(s => `<div class="similar-item">${s} <span style="color:var(--muted)">→</span></div>`).join('')}
+      </div>
+    </div>` : ''}
+    <div class="action-btns">
+      <button class="btn-done" onclick="markDone()">✓ I Did This!</button>
+      <button class="btn-save ${isSaved ? 'saved' : ''}" id="saveBtn" onclick="saveActivity()">
+        ${isSaved ? '✓ Saved' : '🔖 Save for Later'}
+      </button>
+    </div>`;
+
+  showPage('detail');
+}
+
+// ─── HISTORY ACTIONS ─────────────────────────────────────
+function saveActivity() {
+  const a = state.currentActivity;
+  if (!a) return;
+  const existing = state.history.find(h => h.title === a.title);
+  if (existing) {
+    showToast('Already in your history!');
+    return;
+  }
+  const entry = {
+    ...a, id: Date.now(), completed: false, rating: 0,
+    date: new Date().toISOString(),
+    mood: state.mood.join(','), time: state.time, budget: state.budget
+  };
+  state.history.unshift(entry);
+  saveHistory();
+  const btn = document.getElementById('saveBtn');
+  if (btn) { btn.textContent = '✓ Saved'; btn.classList.add('saved'); }
+  showToast('Saved to your history! 🔖');
+}
+
+function markDone() {
+  const a = state.currentActivity;
+  if (!a) return;
+  const existing = state.history.find(h => h.title === a.title);
+  if (existing) {
+    existing.completed = true;
+    saveHistory();
+  } else {
+    const entry = {
+      ...a, id: Date.now(), completed: true, rating: 0,
+      date: new Date().toISOString(),
+      mood: state.mood.join(',')
+    };
+    state.history.unshift(entry);
+    saveHistory();
+  }
+  showToast('Marked as done! Great job 🎉');
+  showPage('history');
+}
+
+function saveHistory() {
+  localStorage.setItem('moodpick_history', JSON.stringify(state.history));
+}
+
+// ─── HISTORY PAGE ─────────────────────────────────────────
+function renderHistory(filter = 'all') {
+  const items = filter === 'done' ? state.history.filter(h => h.completed)
+    : filter === 'saved' ? state.history.filter(h => !h.completed)
+    : state.history;
+
+  const completed = state.history.filter(h => h.completed).length;
+  const total = state.history.length;
+  const progress = total > 0 ? Math.min((completed / 10) * 100, 100) : 0;
+
+  let html = '';
+
+  if (total > 0) {
+    html += `
+    <div class="progress-card">
+      <div class="progress-stats">
+        <div class="prog-stat"><div class="num">${completed}</div><div class="lbl">Completed</div></div>
+        <div class="prog-stat"><div class="num">${total}</div><div class="lbl">Saved</div></div>
+        <div class="prog-stat"><div class="num">${avgRating()}</div><div class="lbl">Avg Rating</div></div>
+      </div>
+      <div style="font-size:12px;opacity:0.7;margin-bottom:8px;display:flex;justify-content:space-between">
+        <span>${completed} done</span><span>Next milestone: ${Math.ceil(completed/10)*10} 🎯</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" style="width:${progress}%"></div>
+      </div>
+    </div>`;
+  }
+
+  html += `
+  <div class="history-tabs">
+    <button class="hist-tab ${filter==='all'?'active':''}" onclick="renderHistory('all')">All (${state.history.length})</button>
+    <button class="hist-tab ${filter==='saved'?'active':''}" onclick="renderHistory('saved')">Saved (${state.history.filter(h=>!h.completed).length})</button>
+    <button class="hist-tab ${filter==='done'?'active':''}" onclick="renderHistory('done')">Done (${completed})</button>
+  </div>`;
+
+  if (items.length === 0) {
+    html += `<div class="empty-state"><div class="empty-icon">📭</div><p>No activities yet.<br>Start exploring to build your history!</p></div>`;
+  } else {
+    html += `<div class="history-list">`;
+    items.forEach(item => {
+      const date = new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      html += `
+      <div class="hist-card">
+        <div class="hist-card-top">
+          <div>
+            <div class="hist-title">${item.title}</div>
+            <div class="hist-date">${date} · ${item.category || 'Activity'}</div>
+          </div>
+          <span class="hist-status ${item.completed ? 'completed' : 'saved'}">${item.completed ? 'Done' : 'Saved'}</span>
+        </div>
+        <div class="hist-desc">${item.description?.substring(0, 100)}...</div>
+        <div class="hist-meta">
+          <div class="stars">${[1,2,3,4,5].map(s => `<span class="star" onclick="rateItem(${item.id}, ${s})" style="color:${s<=(item.rating||0)?'#c17f3a':'#ddd'}">${s<=(item.rating||0)?'★':'☆'}</span>`).join('')}</div>
+          ${!item.completed ? `<button class="btn-secondary" style="padding:4px 12px;font-size:12px" onclick="markItemDone(${item.id})">Mark done</button>` : ''}
+          <button class="btn-secondary" style="padding:4px 12px;font-size:12px;margin-left:auto;color:#c0392b;border-color:#c0392b" onclick="deleteItem(${item.id})">Delete</button>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  document.getElementById('historyContent').innerHTML = html;
+}
+
+function avgRating() {
+  const rated = state.history.filter(h => h.rating > 0);
+  if (!rated.length) return '—';
+  return (rated.reduce((s, h) => s + h.rating, 0) / rated.length).toFixed(1);
+}
+
+function rateItem(id, rating) {
+  const item = state.history.find(h => h.id === id);
+  if (item) { item.rating = rating; saveHistory(); renderHistory(); }
+}
+
+function markItemDone(id) {
+  const item = state.history.find(h => h.id === id);
+  if (item) { item.completed = true; saveHistory(); renderHistory(); showToast('Marked as done! 🎉'); }
+}
+
+function deleteItem(id) {
+  state.history = state.history.filter(h => h.id !== id);
+  saveHistory(); renderHistory(); showToast('Deleted');
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(`page-${name}`)?.classList.add('active');
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  const navBtn = document.getElementById(`nav-${name}`);
+  if (navBtn) navBtn.classList.add('active');
+  if (name === 'history') renderHistory();
+  window.scrollTo(0, 0);
+}
+
+// ─── SCROLL REVEAL ────────────────────────────────────────
+function setupReveal() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+// ─── TOAST ────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── CSS ANIMATION ────────────────────────────────────────
+const style = document.createElement('style');
+style.textContent = `@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
