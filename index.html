@@ -898,7 +898,7 @@ function renderResults(acts,resetRefine=true){
     </div>
     <div class="refine-bar">
       <div class="refine-input-row">
-        <input class="refine-input" id="refineInput" placeholder='Refine... e.g. "no screens", "outdoor only", "budget under $5"' onkeydown="if(event.key==='Enter')addRefineTag()"/>
+        <input class="refine-input" id="refineInput" placeholder='e.g. "no screens", "outdoor only", "under 30 min", "family friendly"' onkeydown="if(event.key==='Enter'){event.preventDefault();addRefineTag();}"/>
         <button class="btn-ghost" onclick="addRefineTag()">+ Add</button>
       </div>
       <div class="refine-tags" id="refineTags"></div>
@@ -921,13 +921,15 @@ function addRefineTag(){
   input.value='';
   renderTags();refetchWithRefinements();
 }
-function removeTag(tag){
-  refineState.tags=refineState.tags.filter(t=>t!==tag);
-  renderTags();refetchWithRefinements();
+function removeTag(idx){
+  refineState.tags.splice(idx,1);
+  renderTags();
+  if(refineState.tags.length===0){renderActCards();}
+  else{refetchWithRefinements();}
 }
 function renderTags(){
   const c=document.getElementById('refineTags');if(!c)return;
-  c.innerHTML=refineState.tags.map(t=>`<div class="refine-tag">${t}<button onclick="removeTag('${t.replace(/'/g,"\\'")}')">×</button></div>`).join('');
+  c.innerHTML=refineState.tags.map((t,i)=>`<div class="refine-tag">${t}<button onclick="removeTag(${i})">×</button></div>`).join('');
 }
 function setSort(sort,el){
   refineState.sort=sort;
@@ -958,13 +960,31 @@ function renderActCards(){
 }
 
 async function refetchWithRefinements(){
-  if(!S.apiKey)return;
+  if(!S.apiKey){toast('No API key — connect Groq first');showApiModal();return;}
+  if(refineState.tags.length===0){renderActCards();return;}
   const grid=document.getElementById('activityGrid');
-  if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div class="spin" style="margin:0 auto 12px"></div>Refining...</div>`;
+  if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div class="spin" style="margin:0 auto 12px"></div><p>Finding activities matching: <strong>${refineState.tags.join(', ')}</strong></p></div>`;
   const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
-  const prompt=`Suggest 4 activities. Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}. Extra requirements: ${refineState.tags.join(', ')}. ALL suggestions must satisfy these. Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2"],"youtube":["q1","q2","q3"],"similar":["s1","s2"],"why":"why this fits"}]}`;
-  try{const text=await callGroq(prompt);const parsed=safeJSON(text);window._acts=parsed.activities||[];renderActCards();}
-  catch(err){if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--red)">${err.message}</div>`;}
+  const prompt=`Suggest exactly 4 activities for this person.
+Mood: ${moodLabels||'any'}
+Time: ${S.time||'any'} (flash=under 10min, short=10-30min, medium=30-90min, long=1.5-3hrs, day=full day)
+Budget: ${S.budget||'any'} (free=no cost, low=under $10, medium=$10-50, high=$50+)
+People: ${S.people||'any'}
+Preference: ${S.preference||'any'}
+
+IMPORTANT - All activities MUST satisfy these extra requirements: ${refineState.tags.join(', ')}
+Do not suggest anything that contradicts these requirements.
+
+Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3"],"youtube":["specific query 1","specific query 2","specific query 3"],"similar":["similar 1","similar 2"],"why":"one sentence why this fits their mood and requirements"}]}`;
+  try{
+    const text=await callGroq(prompt);
+    const parsed=safeJSON(text);
+    window._acts=parsed.activities||[];
+    renderActCards();
+    toast(`Found ${window._acts.length} activities matching your filters ✓`);
+  } catch(err){
+    if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:20px"><p style="color:var(--red);margin-bottom:12px">Error: ${err.message}</p><button class="btn-ghost" onclick="refetchWithRefinements()">↻ Try again</button></div>`;
+  }
 }
 
 // ── DETAIL ─────────────────────────────────────────────────
@@ -979,12 +999,46 @@ function buildShoppingHTML(materials){
     return`<div class="material-item"><span class="material-name">📦 ${item}</span><div class="shop-btns"><a class="shop-btn shop-btn-google" href="https://www.google.com/search?q=${q}&tbm=shop" target="_blank">🛍 Google</a><a class="shop-btn shop-btn-coupang" href="https://www.coupang.com/np/search?q=${q}" target="_blank">🛒 Coupang</a></div></div>`;
   }).join('')}</div>`;
 }
-function buildYouTubeHTML(title,category,difficulty,youtube){
-  const diffLabel=difficulty==='long_project'?'beginner guide':difficulty==='hard'?'advanced tutorial':'how to for beginners';
-  const queries=youtube&&youtube.length>0?youtube:[`${title} ${diffLabel}`,`${title} tutorial`,`${category} ${title} tips`];
-  const tags=['🔥 Most Viewed','👶 Beginner','💡 Tips & Tricks'];
-  const labels=['Sorted by views','Beginner friendly','Tips & tricks'];
-  return queries.slice(0,3).map((q,i)=>`<a class="yt-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(q)}&sp=CAISAhAB" target="_blank"><div class="yt-icon">▶</div><div><div class="yt-tag">${tags[i]||tags[0]}</div><div class="yt-t">${q}</div><div class="yt-s">${labels[i]||labels[0]} → YouTube</div></div></a>`).join('');
+function buildYouTubeHTML(title, category, difficulty, aiQueries, materials, description){
+  // Build hyper-specific queries using actual activity data
+  const diffLabel = difficulty==='long_project'?'beginner step by step':difficulty==='hard'?'advanced tutorial':difficulty==='medium'?'how to tutorial':'easy beginner guide';
+
+  // Clean the title for better search
+  const cleanTitle = title.replace(/['"]/g,'').trim();
+  const cleanCat = (category||'').toLowerCase();
+
+  // Build 3 very specific queries
+  const queries = [
+    // Query 1: Most popular - exact title + tutorial sorted by views
+    `${cleanTitle} ${diffLabel}`,
+    // Query 2: Use AI query if good, otherwise build from description
+    (aiQueries && aiQueries[0] && aiQueries[0].length > 5 && aiQueries[0] !== cleanTitle)
+      ? aiQueries[0]
+      : `how to ${cleanTitle.toLowerCase()} for beginners`,
+    // Query 3: Tips/tricks or materials-based
+    (aiQueries && aiQueries[1] && aiQueries[1].length > 5)
+      ? aiQueries[1]
+      : `${cleanTitle} tips and tricks ${new Date().getFullYear()}`
+  ];
+
+  const configs = [
+    {tag:'🔥 Most Viewed', label:'Sorted by view count', sort:'&sp=CAISAhAB'},
+    {tag:'📚 How To', label:'Step-by-step tutorial', sort:'&sp=CAISAhAB'},
+    {tag:'💡 Tips & Tricks', label:'Expert tips', sort:'&sp=CAISAhAB'},
+  ];
+
+  return queries.slice(0,3).map((q,i)=>{
+    const cfg = configs[i] || configs[0];
+    const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}${cfg.sort}`;
+    return `<a class="yt-link" href="${url}" target="_blank">
+      <div class="yt-icon">▶</div>
+      <div>
+        <div class="yt-tag">${cfg.tag}</div>
+        <div class="yt-t">${q}</div>
+        <div class="yt-s">${cfg.label} → YouTube</div>
+      </div>
+    </a>`;
+  }).join('');
 }
 
 function showDetail(i){
@@ -1010,7 +1064,7 @@ function showDetail(i){
     </div>
     ${parseMaterials(a.materials).length?`<div class="section-block"><h4>🛍 What You Need <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">click to shop</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
     ${steps.length?`<div class="section-block"><h4>Start Now Guide</h4><div class="steps-list">${steps.map((s,i)=>`<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s.replace(/^\d+[\.\):\-]\s*/,'')}</div></div>`).join('')}</div></div>`:''}
-    <div class="section-block"><h4>▶ Watch on YouTube <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">sorted by views</span></h4>${buildYouTubeHTML(a.title,a.category,a.difficulty,yt)}</div>
+    <div class="section-block"><h4>▶ Watch on YouTube <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">sorted by views</span></h4>${buildYouTubeHTML(a.title,a.category,a.difficulty,yt,a.materials,a.description)}</div>
     ${sim.length?`<div class="section-block"><h4>Similar Activities</h4><div>${sim.map(s=>`<span class="similar-pill">${s}</span>`).join('')}</div></div>`:''}
     <div class="action-row">
       <button class="btn-done" onclick="markDone()">✓ I Did This!</button>
