@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Poow</title>
+<title>MoodPick</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
@@ -19,7 +19,6 @@
   --shadow:0 4px 24px rgba(0,0,0,0.08);
   --transition:background 0.6s ease,color 0.6s ease,border-color 0.6s ease;
 }
-/* DARK MODE */
 body.dark{
   --bg:#0f0f11;--bg2:#16161a;--bg3:#1e1e24;--card:#1a1a20;
   --border:#2a2a35;--text:#f0eee8;--muted:#6b6878;
@@ -29,7 +28,6 @@ body.dark{
   --blue:#6b9fd4;--blue-dim:rgba(107,159,212,0.12);
   --shadow:0 4px 24px rgba(0,0,0,0.4);
 }
-/* MOOD THEMES (light only) */
 body.mood-happy{--bg:#fef9ee;--bg2:#fdf3d8;--bg3:#faedc0;--card:#fffdf7;--border:#f0e4a8;--primary:#c17f3a;--primary-dim:rgba(193,127,58,0.10);--muted:#9a8060;--text:#2a1f0a;}
 body.mood-energetic{--bg:#fff4ef;--bg2:#ffe8de;--bg3:#fdd8c8;--card:#fffaf8;--border:#f5c4b0;--primary:#c0440a;--primary-dim:rgba(192,68,10,0.10);--muted:#9a6050;--text:#2a1008;}
 body.mood-calm{--bg:#eef5f9;--bg2:#ddeaf3;--bg3:#ccdeed;--card:#f8fbfd;--border:#b8d4e8;--primary:#1a6090;--primary-dim:rgba(26,96,144,0.10);--muted:#5a7890;--text:#0a1a2a;}
@@ -47,7 +45,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-he
 .sidebar{width:220px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;transition:var(--transition);}
 .main-content{margin-left:220px;flex:1;padding:32px;max-width:900px;}
 @media(max-width:768px){
-  .sidebar{width:100%;min-height:auto;flex-direction:row;align-items:center;padding:12px 16px;position:sticky;top:0;border-right:none;border-bottom:1px solid var(--border);overflow-x:auto;gap:8px;}
+  .sidebar{width:100%;min-height:auto;flex-direction:row;align-items:center;padding:12px 16px;position:sticky;top:0;border-right:none;border-bottom:1px solid var(--border);overflow-x:auto;gap:8px;z-index:100;}
   .main-content{margin-left:0;padding:20px 16px;}
   .logo{margin-bottom:0!important;}
   .nav-label{display:none;}
@@ -74,6 +72,10 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .page{display:none;animation:fadeIn 0.3s ease;}.page.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
+/* ── CARDS ─────────────────────────────────────────────── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:var(--transition);}
+.card-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+
 /* ── HERO ───────────────────────────────────────────────── */
 .hero{margin-bottom:32px;}
 .hero-eyebrow{font-size:12px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
@@ -81,19 +83,125 @@ nav{display:flex;flex-direction:column;gap:4px;flex:1;}
 .hero-title em{font-style:italic;color:var(--primary);}
 .hero-sub{color:var(--muted);font-size:14px;max-width:500px;line-height:1.6;}
 
-/* ── CARDS ─────────────────────────────────────────────── */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:var(--transition);}
-.card-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+/* ─────────────────────────────────────────────────────────
+   MOOD-FIRST FLOW — SCREEN 1: Immersive Mood Selection
+   ───────────────────────────────────────────────────────── */
+.mood-screen{
+  min-height:calc(100vh - 80px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:24px 0 48px;
+}
+@media(max-width:768px){.mood-screen{min-height:auto;padding:16px 0 32px;}}
 
-/* ── MOOD ───────────────────────────────────────────────── */
-.mood-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
-@media(max-width:600px){.mood-grid{grid-template-columns:repeat(3,1fr);}}
-.mood-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border-radius:12px;border:1.5px solid transparent;background:var(--bg3);cursor:pointer;transition:all 0.15s;font-family:'Sora',sans-serif;}
-.mood-btn:hover{border-color:var(--border);transform:translateY(-2px);}
-.mood-btn.selected{border-color:var(--primary);background:var(--primary-dim);}
-.mood-emoji{font-size:20px;}.mood-label{font-size:10px;font-weight:500;color:var(--muted);}
-.mood-btn.selected .mood-label{color:var(--primary);}
-.mood-banner{margin-top:12px;padding:10px 14px;border-radius:10px;background:var(--primary-dim);border:1px solid var(--border);font-size:13px;color:var(--primary);display:none;}
+.mood-screen-header{
+  text-align:center;
+  margin-bottom:40px;
+}
+.mood-screen-eyebrow{
+  font-size:11px;font-weight:600;color:var(--primary);
+  text-transform:uppercase;letter-spacing:0.12em;margin-bottom:14px;opacity:0.8;
+}
+.mood-screen-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,4.5vw,44px);
+  line-height:1.2;color:var(--text);
+  margin-bottom:10px;
+}
+.mood-screen-title em{font-style:italic;color:var(--primary);}
+.mood-screen-sub{
+  color:var(--muted);font-size:14px;line-height:1.7;
+  max-width:400px;margin:0 auto;
+}
+
+/* Large Mood Cards */
+.mood-card-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:20px;
+}
+@media(min-width:640px){.mood-card-grid{grid-template-columns:repeat(4,1fr);gap:12px;}}
+@media(min-width:900px){.mood-card-grid{grid-template-columns:repeat(6,1fr);}}
+
+.mood-card{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:18px 10px;border-radius:14px;
+  border:1.5px solid var(--border);
+  background:var(--card);
+  cursor:pointer;transition:all 0.18s;
+  font-family:'Sora',sans-serif;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.mood-card:hover{
+  border-color:var(--primary);
+  transform:translateY(-3px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.10);
+  background:var(--primary-dim);
+}
+.mood-card.selected{
+  border-color:var(--primary);
+  background:var(--primary-dim);
+  box-shadow:0 4px 16px rgba(0,0,0,0.10);
+}
+.mood-card-emoji{font-size:26px;line-height:1;}
+.mood-card-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.02em;}
+.mood-card.selected .mood-card-label{color:var(--primary);}
+
+/* Continue button on mood screen */
+.mood-continue-area{
+  text-align:center;margin-top:8px;
+}
+.mood-selected-banner{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 18px;border-radius:100px;
+  background:var(--primary-dim);border:1px solid var(--border);
+  font-size:13px;color:var(--primary);margin-bottom:16px;
+  opacity:0;transition:opacity 0.3s;
+}
+.mood-selected-banner.visible{opacity:1;}
+
+/* ─────────────────────────────────────────────────────────
+   SCREEN 2: Refinement
+   ───────────────────────────────────────────────────────── */
+.refine-screen-header{
+  margin-bottom:28px;
+}
+.refine-back{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--muted);cursor:pointer;
+  background:none;border:none;font-family:'Sora',sans-serif;
+  margin-bottom:20px;padding:0;transition:color 0.2s;
+}
+.refine-back:hover{color:var(--primary);}
+
+.refine-mood-recap{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;flex-wrap:wrap;
+}
+.refine-mood-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:100px;
+  background:var(--primary);color:white;
+  font-size:13px;font-weight:600;
+}
+.refine-mood-chip span{font-size:16px;}
+
+/* Refinement fields grid */
+.refine-fields{display:flex;flex-direction:column;gap:20px;margin-bottom:24px;}
+.refine-field-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;}
+
+/* ── COLLAPSIBLE ENERGY ─────────────────────────────────── */
+.energy-toggle-btn{
+  width:100%;padding:10px;border-radius:var(--radius-sm);
+  background:transparent;color:var(--muted);
+  border:1.5px dashed var(--border);cursor:pointer;
+  font-family:'Sora',sans-serif;font-size:13px;font-weight:500;
+  transition:all 0.2s;text-align:center;
+}
+.energy-toggle-btn:hover{border-color:var(--primary);color:var(--primary);}
+.energy-panel{display:none;margin-top:8px;}
 
 /* ── PILLS ─────────────────────────────────────────────── */
 .pill-row{display:flex;flex-wrap:wrap;gap:8px;}
@@ -137,17 +245,14 @@ body.dark .pill.selected{color:var(--bg);}
 
 /* ── ACTIVITY CARDS ─────────────────────────────────────── */
 .activity-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
-.act-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;transform-style:preserve-3d;}
+.act-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;}
 .act-card:hover{border-color:var(--primary);transform:translateY(-4px) scale(1.01);box-shadow:0 12px 40px rgba(0,0,0,0.12);}
-.act-card::after{content:'→';position:absolute;right:16px;bottom:16px;width:28px;height:28px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-size:12px;opacity:0;transition:opacity 0.2s;display:flex;align-items:center;justify-content:center;}
-.act-card:hover::after{opacity:1;}
 .act-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
 .cat-badge{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;padding:3px 10px;border-radius:100px;background:var(--bg3);border:1px solid var(--border);}
 .diff-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:100px;}
 .diff-easy{background:var(--green-dim);color:var(--green);}
 .diff-medium{background:var(--primary-dim);color:var(--primary);}
 .diff-hard{background:var(--red-dim);color:var(--red);}
-.diff-long_project{background:var(--blue-dim);color:var(--blue);}
 .diff-long_project{background:var(--blue-dim);color:var(--blue);}
 .act-title{font-family:'Playfair Display',serif;font-size:17px;margin-bottom:6px;line-height:1.3;}
 .act-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:14px;}
@@ -224,6 +329,14 @@ body.dark .pill.selected{color:var(--bg);}
 .prog-bar-wrap{background:rgba(255,255,255,0.2);border-radius:100px;height:6px;overflow:hidden;}
 .prog-bar{height:100%;background:white;border-radius:100px;transition:width 0.8s ease;}
 .streak-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;background:rgba(255,255,255,0.2);font-size:12px;font-weight:600;margin-top:12px;}
+
+/* ── EMPTY STATE ─────────────────────────────────────────── */
+.empty{text-align:center;padding:72px 20px 60px;color:var(--muted);}
+.empty-ambient{font-size:52px;margin-bottom:18px;opacity:0.55;display:block;line-height:1;}
+.empty-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--text);margin-bottom:10px;font-weight:500;}
+.empty-sub{font-size:14px;color:var(--muted);line-height:1.7;max-width:300px;margin:0 auto 24px;}
+.empty-cta{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:var(--radius-sm);background:var(--primary);color:white;border:none;cursor:pointer;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;transition:all 0.2s;}
+.empty-cta:hover{opacity:0.9;transform:translateY(-1px);}
 
 /* ── WEEKLY SUMMARY ─────────────────────────────────────── */
 .weekly-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
@@ -351,41 +464,6 @@ body.dark .pill.selected{color:var(--bg);}
 .results-header h2{font-family:'Playfair Display',serif;font-size:24px;}
 .results-meta{color:var(--muted);font-size:12px;margin-top:4px;text-transform:capitalize;}
 
-/* ── EMPTY ─────────────────────────────────────────────── */
-.empty{text-align:center;padding:60px 20px;color:var(--muted);}
-.empty-icon{font-size:48px;margin-bottom:12px;}
-
-/* ── TOAST ─────────────────────────────────────────────── */
-.toast{position:fixed;bottom:24px;right:24px;z-index:400;background:var(--card);border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:10px;font-size:14px;box-shadow:var(--shadow);transform:translateY(80px);opacity:0;transition:all 0.3s;max-width:300px;}
-.toast.show{transform:translateY(0);opacity:1;}
-
-/* ── MOOD SELECTION SCREEN ───────────────────────────────── */
-.mood-screen{display:flex;flex-direction:column;gap:24px;}
-.mood-screen-hero{text-align:center;padding-top:8px;}
-.mood-screen-footer{display:flex;flex-direction:column;align-items:center;gap:16px;}
-.mood-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-@media(min-width:480px){.mood-cards-grid{grid-template-columns:repeat(6,1fr);}}
-.mood-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:14px;border:1.5px solid transparent;background:var(--card);cursor:pointer;transition:all 0.2s;font-family:'Sora',sans-serif;box-shadow:var(--shadow);}
-.mood-card:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.10);}
-.mood-card.selected{border-color:var(--primary);background:var(--primary-dim);transform:translateY(-2px);}
-.mood-card-emoji{font-size:26px;}
-.mood-card-label{font-size:11px;font-weight:500;color:var(--muted);}
-.mood-card.selected .mood-card-label{color:var(--primary);}
-
-/* ── REFINE SCREEN ────────────────────────────────────────── */
-.refine-screen{animation:fadeIn 0.3s ease;}
-
-/* ── QUICK CONTEXT GRID ──────────────────────────────────── */
-.quick-context-grid{display:flex;flex-direction:column;gap:16px;}
-.qc-col{}
-.qc-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
-
-
-
-/* ── FINE TUNE BUTTON ─────────────────────────────────────── */
-.fine-tune-btn{width:100%;padding:10px;border-radius:var(--radius-sm);background:transparent;color:var(--muted);border:1.5px dashed var(--border);cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s;text-align:center;}
-.fine-tune-btn:hover{border-color:var(--primary);color:var(--primary);}
-
 /* ── TASTE PROFILE ────────────────────────────────────────── */
 .taste-profile{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
 .taste-title{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
@@ -421,6 +499,15 @@ body.dark .pill.selected{color:var(--bg);}
 .reveal{opacity:0;transform:translateY(12px);transition:all 0.35s ease;}
 .reveal.in{opacity:1;transform:translateY(0);}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── TOAST ─────────────────────────────────────────────── */
+.toast{position:fixed;bottom:24px;right:24px;z-index:400;background:var(--card);border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:10px;font-size:14px;box-shadow:var(--shadow);transform:translateY(80px);opacity:0;transition:all 0.3s;max-width:300px;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* Quick context grid for refine screen */
+.quick-context-grid{display:flex;flex-direction:column;gap:16px;}
+.qc-col{}
+.qc-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
 </style>
 </head>
 <body>
@@ -436,7 +523,7 @@ body.dark .pill.selected{color:var(--bg);}
 <!-- API KEY MODAL -->
 <div class="modal-overlay" id="apiModal" style="display:none">
   <div class="modal">
-    <h3>Welcome to Poow ✦</h3>
+    <h3>Welcome to MoodPick ✦</h3>
     <p>Uses Groq AI — completely free, no credit card needed.</p>
     <div class="modal-steps">
       <ol>
@@ -486,12 +573,10 @@ body.dark .pill.selected{color:var(--bg);}
 <div id="landingPage" style="display:none">
   <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;background:var(--bg);transition:var(--transition)">
     <div style="max-width:560px;width:100%">
-      <!-- Logo -->
       <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:48px">
         <div style="width:40px;height:40px;border-radius:10px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:20px;color:white">✦</div>
-        <span style="font-family:'Playfair Display',serif;font-size:24px;color:var(--text)">Poow</span>
+        <span style="font-family:'Playfair Display',serif;font-size:24px;color:var(--text)">MoodPick</span>
       </div>
-      <!-- Hero -->
       <div style="font-size:12px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px">✦ Activity Recommender</div>
       <h1 style="font-family:'Playfair Display',serif;font-size:clamp(36px,6vw,56px);line-height:1.15;color:var(--text);margin-bottom:20px">
         What are you in the<br><em style="color:var(--primary)">mood to do?</em>
@@ -499,7 +584,6 @@ body.dark .pill.selected{color:var(--bg);}
       <p style="color:var(--muted);font-size:16px;line-height:1.7;margin-bottom:40px;max-width:440px;margin-left:auto;margin-right:auto">
         Tell us your mood and we'll find the perfect activity for <em>right now</em> — with YouTube guides, shopping links, and a step-by-step start guide.
       </p>
-      <!-- Why section -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px">
         <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 12px">
           <div style="font-size:24px;margin-bottom:8px">🎭</div>
@@ -517,14 +601,8 @@ body.dark .pill.selected{color:var(--bg);}
           <div style="font-size:11px;color:var(--muted);line-height:1.4">Gets smarter with every activity you try</div>
         </div>
       </div>
-      <!-- Research note -->
-      <div style="background:var(--primary-dim);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:32px;text-align:left">
-        <div style="font-size:11px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">✦ The Research Behind This</div>
-        <div style="font-size:13px;color:var(--muted);line-height:1.6">"Too many choices leads to no choice" — Barry Schwartz, <em>The Paradox of Choice</em>. Poow solves decision fatigue by starting with your emotion, not a list of options.</div>
-      </div>
-      <!-- CTA -->
       <button onclick="enterApp()" style="width:100%;padding:18px;border-radius:14px;background:var(--primary);color:white;border:none;cursor:pointer;font-family:'Playfair Display',serif;font-size:18px;font-style:italic;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;box-shadow:0 4px 20px rgba(0,0,0,0.1)">
-        ✦ Check in with your mood
+        ✦ Find What to Do Right Now
       </button>
       <p style="font-size:11px;color:var(--muted);margin-top:12px">Free · No signup required · Powered by AI</p>
     </div>
@@ -535,12 +613,11 @@ body.dark .pill.selected{color:var(--bg);}
   <div class="sidebar">
     <div class="logo" onclick="showPage('home')">
       <div class="logo-mark">✦</div>
-      <span class="logo-text">Poow</span>
+      <span class="logo-text">MoodPick</span>
     </div>
     <nav>
       <button class="nav-btn active" id="nav-home" onclick="showPage('home')"><span class="nav-icon">🔍</span><span class="nav-label">Discover</span></button>
       <button class="nav-btn" id="nav-history" onclick="showPage('history')"><span class="nav-icon">📋</span><span class="nav-label">History</span></button>
-
       <button class="nav-btn" id="nav-insights" onclick="showPage('insights')"><span class="nav-icon">📊</span><span class="nav-label">Insights</span></button>
       <button class="nav-btn" id="nav-settings" onclick="showPage('settings')"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></button>
     </nav>
@@ -554,76 +631,97 @@ body.dark .pill.selected{color:var(--bg);}
 
   <div class="main-content">
 
-    <!-- HOME: SCREEN 1 - MOOD SELECTION -->
+    <!-- ═══════════════════════════════════════════════════════
+         HOME — SCREEN 1: MOOD SELECTION (Primary Entry Point)
+         ═══════════════════════════════════════════════════════ -->
     <div class="page active" id="page-home">
-      <div class="mood-screen" id="moodScreen">
-        <div class="mood-screen-hero">
-          <div class="hero-eyebrow">✦ Poow</div>
-          <h1 class="hero-title">How are you feeling<br><em>right now?</em></h1>
-          <p class="hero-sub">Select your mood and we'll find something that fits your moment.</p>
-        </div>
-        <div class="mood-cards-grid" id="moodGrid"></div>
-        <div class="mood-screen-footer">
-          <button class="surprise-btn" onclick="surpriseMe()">🎲 Surprise me</button>
-          <div id="moodBanner" class="mood-banner"></div>
-          <button class="btn-primary" id="moodNextBtn" onclick="goToRefine()" disabled style="max-width:320px;margin:0 auto">
-            Continue →
-          </button>
-        </div>
-      </div>
-
-      <!-- SCREEN 2: REFINEMENT -->
-      <div class="refine-screen" id="refineScreen" style="display:none">
-        <div style="margin-bottom:28px">
-          <button class="btn-ghost" onclick="backToMood()" style="margin-bottom:16px">← Back</button>
-          <div class="hero-eyebrow" id="refineEyebrow">✦ Feeling —</div>
-          <h1 class="hero-title" style="font-size:clamp(22px,3.5vw,32px)">Let's refine<br><em>your moment</em></h1>
-          <p class="hero-sub" style="font-size:13px">All optional — skip any that don't matter right now.</p>
+      <div class="mood-screen reveal" id="moodScreen">
+        <div class="mood-screen-header">
+          <div class="mood-screen-eyebrow">✦ Mood Check-in</div>
+          <h1 class="mood-screen-title">How are you feeling<br><em>right now?</em></h1>
+          <p class="mood-screen-sub">Choose all that apply — your mood is the starting point for everything.</p>
         </div>
 
-        <div class="card">
-          <div class="card-title" style="margin-bottom:10px">Already know what you want? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
-          <input class="text-input" id="specificInput" placeholder='e.g. "watch a movie", "draw something"...'/>
-          <div id="specificHint" style="display:none;margin-top:8px;font-size:12px;color:var(--primary)">✨ We'll find the best match!</div>
-        </div>
+        <!-- Large floating mood cards -->
+        <div class="mood-card-grid" id="moodGrid"></div>
 
-        <div class="card">
-          <div class="card-title" style="margin-bottom:14px">How much time do you have?</div>
-          <div class="pill-row" id="timeGroup"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title" style="margin-bottom:14px">What's your budget?</div>
-          <div class="pill-row" id="budgetGroup"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title" style="margin-bottom:14px">Who's joining?</div>
-          <div class="pill-row" id="peopleGroup"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title" style="margin-bottom:14px">What type of activity?</div>
-          <div class="pill-row" id="prefGroup"></div>
-        </div>
-
-        <div style="margin-bottom:16px">
-          <button class="fine-tune-btn" id="fineTuneBtn" onclick="toggleFineTune()">
-            ＋ Refine further
-          </button>
-          <div id="fineTunePanel" style="display:none;margin-top:8px">
-            <div class="card">
-              <div class="card-title" style="margin-bottom:14px">How much energy do you have? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
-              <div class="pill-row" id="diffGroup"></div>
-              <div style="margin-top:10px;font-size:11px;color:var(--muted)">🗓️ Start a Project = begin today, continue over time</div>
-            </div>
+        <!-- Selected mood indicator + continue -->
+        <div class="mood-continue-area" style="margin-top:16px">
+          <div class="mood-selected-banner" id="moodBanner"></div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+            <button class="btn-ghost" onclick="surpriseMe()">🎲 Surprise me</button>
+            <button class="btn-primary" id="moodContinueBtn" onclick="goToRefine()" disabled style="width:auto;padding:14px 28px;margin-top:0">
+              Continue → Refine
+            </button>
           </div>
         </div>
-
-        <button class="btn-primary" id="discoverBtn" onclick="getRecommendations()">
-          ✦ Find My Perfect Activity
-        </button>
       </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SCREEN 2: REFINEMENT (Secondary, Optional)
+         ═══════════════════════════════════════════════════════ -->
+    <div class="page" id="page-refine">
+      <button class="refine-back" onclick="showPage('home')">← Back to mood</button>
+
+      <!-- Mood recap chips -->
+      <div class="refine-screen-header">
+        <div class="refine-mood-recap" id="refineMoodRecap"></div>
+        <div style="font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,34px);line-height:1.25;margin-bottom:6px;">
+          Refine your <em style="color:var(--primary)">moment</em>
+        </div>
+        <p style="color:var(--muted);font-size:14px;line-height:1.6;">Help us find something that truly fits. All fields are optional.</p>
+      </div>
+
+      <!-- Already know what you want? -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title" style="margin-bottom:10px">Already know what you want? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
+        <input class="text-input" id="specificInput" placeholder='e.g. "watch a movie", "draw something"...'/>
+        <div id="specificHint" style="display:none;margin-top:8px;font-size:12px;color:var(--primary)">✨ We'll find the best match!</div>
+      </div>
+
+      <!-- Context fields -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title" style="margin-bottom:18px">Quick context</div>
+        <div class="refine-fields">
+          <div>
+            <div class="refine-field-label">⏱ Time available</div>
+            <div class="pill-row" id="timeGroup"></div>
+          </div>
+          <div>
+            <div class="refine-field-label">💰 Budget</div>
+            <div class="pill-row" id="budgetGroup"></div>
+          </div>
+          <div>
+            <div class="refine-field-label">👥 Who's joining</div>
+            <div class="pill-row" id="peopleGroup"></div>
+          </div>
+          <div>
+            <div class="refine-field-label">🎨 Activity type</div>
+            <div class="pill-row" id="prefGroup"></div>
+          </div>
+          <div>
+            <div class="refine-field-label">🌿 Indoor or outdoor</div>
+            <div class="pill-row" id="settingGroup"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Collapsible energy section -->
+      <button class="energy-toggle-btn" id="energyToggleBtn" onclick="toggleEnergy()">
+        ＋ Refine further
+      </button>
+      <div class="energy-panel" id="energyPanel">
+        <div class="card" style="margin-top:8px">
+          <div class="card-title" style="margin-bottom:14px">How much energy do you have? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
+          <div class="pill-row" id="diffGroup"></div>
+          <div style="margin-top:10px;font-size:11px;color:var(--muted)">🗓️ Start a Project = begin today, continue over time</div>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="discoverBtn" onclick="getRecommendations()" disabled style="margin-top:20px">
+        ✦ Find My Perfect Activity
+      </button>
     </div>
 
     <!-- RESULTS -->
@@ -640,7 +738,6 @@ body.dark .pill.selected{color:var(--bg);}
           📅 Calendar view
         </button>
       </div>
-      <!-- Inline calendar (hidden by default) -->
       <div id="inlineCalendar" style="display:none;margin-bottom:16px">
         <div class="card">
           <div class="cal-header">
@@ -654,8 +751,6 @@ body.dark .pill.selected{color:var(--bg);}
       </div>
       <div id="historyContent"></div>
     </div>
-
-
 
     <!-- INSIGHTS -->
     <div class="page" id="page-insights">
@@ -718,13 +813,13 @@ body.dark .pill.selected{color:var(--bg);}
 <script>
 // ── STATE ──────────────────────────────────────────────────
 let S = {
-  mood:[], time:null, budget:null, people:null, preference:null, difficulty:[], specific:'',
+  mood:[], time:null, budget:null, people:null, preference:null, setting:null, difficulty:[], specific:'',
   current:null,
-  history: JSON.parse(localStorage.getItem('poow_history')||'[]'),
-  apiKey: localStorage.getItem('poow_groq_key')||'',
-  settings: JSON.parse(localStorage.getItem('poow_settings')||'{"darkMode":false,"moodColors":true,"filterMemory":true,"checkin":true}'),
-  onboardingDone: localStorage.getItem('poow_onboarded')==='true',
-  lastFilters: JSON.parse(localStorage.getItem('poow_lastfilters')||'{}'),
+  history: JSON.parse(localStorage.getItem('mp_history')||'[]'),
+  apiKey: localStorage.getItem('mp_groq_key')||'',
+  settings: JSON.parse(localStorage.getItem('mp_settings')||'{"darkMode":false,"moodColors":true,"filterMemory":true,"checkin":true}'),
+  onboardingDone: localStorage.getItem('mp_onboarded')==='true',
+  lastFilters: JSON.parse(localStorage.getItem('mp_lastfilters')||'{}'),
   calMonth: new Date(),
   calSelected: null,
   checkinData: {activityId:null,mood:null,rating:0},
@@ -732,142 +827,107 @@ let S = {
 };
 
 // ── CONFIG ─────────────────────────────────────────────────
-const MOODS=[{v:'happy',e:'😊',l:'Happy'},{v:'energetic',e:'⚡',l:'Energetic'},{v:'calm',e:'🌿',l:'Calm'},{v:'inspired',e:'✨',l:'Inspired'},{v:'playful',e:'🎉',l:'Playful'},{v:'curious',e:'🔍',l:'Curious'},{v:'motivated',e:'🔥',l:'Motivated'},{v:'bored',e:'😐',l:'Bored'},{v:'restless',e:'🦋',l:'Restless'},{v:'tired',e:'😴',l:'Tired'},{v:'stressed',e:'😤',l:'Stressed'},{v:'anxious',e:'😰',l:'Anxious'},{v:'sad',e:'🌧️',l:'Sad'},{v:'lonely',e:'🫂',l:'Lonely'},{v:'grateful',e:'🙏',l:'Grateful'},{v:'nostalgic',e:'🌅',l:'Nostalgic'},{v:'frustrated',e:'😠',l:'Frustrated'},{v:'overwhelmed',e:'🌊',l:'Overwhelmed'}];
+const MOODS=[
+  {v:'happy',e:'😊',l:'Happy'},{v:'energetic',e:'⚡',l:'Energetic'},{v:'calm',e:'🌿',l:'Calm'},
+  {v:'inspired',e:'✨',l:'Inspired'},{v:'playful',e:'🎉',l:'Playful'},{v:'curious',e:'🔍',l:'Curious'},
+  {v:'motivated',e:'🔥',l:'Motivated'},{v:'bored',e:'😐',l:'Bored'},{v:'restless',e:'🦋',l:'Restless'},
+  {v:'tired',e:'😴',l:'Tired'},{v:'stressed',e:'😤',l:'Stressed'},{v:'anxious',e:'😰',l:'Anxious'},
+  {v:'sad',e:'🌧️',l:'Sad'},{v:'lonely',e:'🫂',l:'Lonely'},{v:'grateful',e:'🙏',l:'Grateful'},
+  {v:'nostalgic',e:'🌅',l:'Nostalgic'},{v:'frustrated',e:'😠',l:'Frustrated'},{v:'overwhelmed',e:'🌊',l:'Overwhelmed'}
+];
 const TIME=[{v:'flash',l:'⚡ <10 min'},{v:'short',l:'🕐 10–30 min'},{v:'medium',l:'⏱ 30–90 min'},{v:'long',l:'🌙 1.5–3 hrs'},{v:'day',l:'☀️ Full day'}];
 const BUDGET=[{v:'free',l:'🆓 Free'},{v:'low',l:'💵 Under $10'},{v:'medium',l:'💰 $10–50'},{v:'high',l:'💎 $50+'}];
 const PEOPLE=[{v:'alone',l:'🧍 Solo'},{v:'partner',l:'💑 Partner'},{v:'friends',l:'👥 Friends'},{v:'family',l:'👨‍👩‍👧 Family'},{v:'group',l:'🎊 Group'}];
 const PREF=[{v:'creative',l:'🎨 Creative'},{v:'active',l:'🏃 Active'},{v:'relaxing',l:'🧘 Relaxing'},{v:'social',l:'💬 Social'},{v:'learning',l:'📚 Learning'},{v:'entertainment',l:'🎬 Entertainment'},{v:'food',l:'🍳 Food'},{v:'music',l:'🎵 Music'},{v:'nature',l:'🌲 Nature'},{v:'gaming',l:'🎮 Gaming'},{v:'anything',l:'🎲 Anything'}];
+const SETTING=[{v:'indoor',l:'🏠 Indoor'},{v:'outdoor',l:'🌳 Outdoor'},{v:'either',l:'✓ Either'}];
 const DIFF=[{v:'easy',l:'✨ Laid-back'},{v:'medium',l:'🧠 Engaging'},{v:'hard',l:'💪 Challenging'},{v:'long_project',l:'🗓️ Start a Project'}];
 
 const MOOD_THEME={happy:'happy',playful:'happy',grateful:'happy',energetic:'energetic',motivated:'energetic',restless:'energetic',calm:'calm',inspired:'calm',curious:'calm',sad:'sad',lonely:'sad',stressed:'stressed',anxious:'stressed',frustrated:'stressed',overwhelmed:'stressed',bored:'bored',nostalgic:'bored',tired:'tired'};
 
 // ── ONBOARDING ─────────────────────────────────────────────
 const ONBOARD_STEPS = [
-  {
-    icon:'✦', title:'Welcome to Poow', sub:'Poow helps you find the perfect activity for your mood — with step-by-step guides, YouTube tutorials, and shopping links.',
-    type:'info', btn:'Get Started'
-  },
-  {
-    icon:'🎭', title:'What kinds of activities do you enjoy?', sub:'Pick all that apply — we\'ll use this to personalize your recommendations.',
-    type:'multi', key:'prefTypes',
-    options:['🎨 Creative','🏃 Active','🧘 Relaxing','💬 Social','📚 Learning','🎮 Gaming','🍳 Food & Cooking','🎵 Music','🌲 Nature']
-  },
-  {
-    icon:'🎉', title:'You\'re all set!', sub:'Poow is ready. Tell us your mood and we\'ll find the perfect activity for you right now.',
-    type:'finish', btn:'Start Exploring'
-  }
+  {icon:'✦', title:'Welcome to MoodPick', sub:'Find the perfect activity for any mood, budget, and situation — with step-by-step guides and YouTube tutorials.',type:'info', btn:'Get Started'},
+  {icon:'🎭', title:'What do you usually enjoy?', sub:'Pick all that apply — we\'ll use this to personalize your recommendations.',type:'multi', key:'prefTypes',options:['🎨 Creative','🏃 Active','🧘 Relaxing','💬 Social','📚 Learning','🎮 Gaming','🍳 Food & Cooking','🎵 Music','🌲 Nature']},
+  {icon:'🎉', title:'You\'re all set!', sub:'MoodPick is ready. Tell us your mood and we\'ll find the perfect activity for you right now.',type:'finish', btn:'Start Exploring'}
+];
+
+const CHECKIN_MOODS=[
+  {v:'happy',e:'😊',l:'Happy'},{v:'calm',e:'🌿',l:'Calm'},{v:'energetic',e:'⚡',l:'Energized'},
+  {v:'motivated',e:'🔥',l:'Motivated'},{v:'tired',e:'😴',l:'Tired'},{v:'sad',e:'🌧️',l:'Sad'},
+  {v:'stressed',e:'😤',l:'Still stressed'},{v:'peaceful',e:'☁️',l:'Peaceful'}
 ];
 
 let onboardStep = 0;
 let onboardAnswers = {};
 
 function enterApp(){
-  localStorage.setItem('poow_visited','true');
+  localStorage.setItem('mp_visited','true');
   document.getElementById('landingPage').style.display='none';
   document.querySelector('.app-shell').style.display='flex';
   applySettings();
-  if(!S.onboardingDone){
-    startOnboarding();
-  } else if(!S.apiKey){
-    document.getElementById('apiModal').style.display='flex';
-  }
+  if(!S.onboardingDone) startOnboarding();
+  else if(!S.apiKey) document.getElementById('apiModal').style.display='flex';
 }
 
 function startOnboarding(){
-  onboardStep = 0;
-  onboardAnswers = {};
-  document.getElementById('onboardingModal').style.display = 'flex';
+  onboardStep=0;onboardAnswers={};
+  document.getElementById('onboardingModal').style.display='flex';
   renderOnboardStep();
 }
 
 function renderOnboardStep(){
-  const step = ONBOARD_STEPS[onboardStep];
-  const dots = ONBOARD_STEPS.map((_,i) => `<div class="onboard-dot ${i===onboardStep?'active':''}"></div>`).join('');
-  document.getElementById('onboardProgress').innerHTML = dots;
-
-  let optionsHTML = '';
-  if(step.type === 'multi' || step.type === 'single'){
-    const selected = onboardAnswers[step.key] || [];
-    optionsHTML = `<div class="onboard-options">${step.options.map(o=>`<button class="onboard-pill ${selected.includes(o)?'selected':''}" onclick="selectOnboard('${step.key}','${o}','${step.type}')">${o}</button>`).join('')}</div>`;
+  const step=ONBOARD_STEPS[onboardStep];
+  const dots=ONBOARD_STEPS.map((_,i)=>`<div class="onboard-dot ${i===onboardStep?'active':''}"></div>`).join('');
+  document.getElementById('onboardProgress').innerHTML=dots;
+  let optionsHTML='';
+  if(step.type==='multi'||step.type==='single'){
+    const selected=onboardAnswers[step.key]||[];
+    optionsHTML=`<div class="onboard-options">${step.options.map(o=>`<button class="onboard-pill ${selected.includes(o)?'selected':''}" onclick="selectOnboard('${step.key}','${o}','${step.type}')">${o}</button>`).join('')}</div>`;
   }
-
-  document.getElementById('onboardingSteps').innerHTML = `
+  document.getElementById('onboardingSteps').innerHTML=`
     <div class="onboard-icon">${step.icon}</div>
     <div class="onboard-title">${step.title}</div>
     <div class="onboard-sub">${step.sub}</div>
     ${optionsHTML}
     <div style="display:flex;gap:8px">
       ${onboardStep>0?`<button class="btn-ghost" onclick="onboardBack()" style="flex:1;justify-content:center">← Back</button>`:''}
-      <button class="btn-primary" onclick="onboardNext()" style="flex:2">${step.btn || 'Continue →'}</button>
+      <button class="btn-primary" onclick="onboardNext()" style="flex:2">${step.btn||'Continue →'}</button>
     </div>`;
 }
 
-function selectOnboard(key, val, type){
-  if(type==='single'){
-    onboardAnswers[key]=[val];
-  } else {
-    if(!onboardAnswers[key])onboardAnswers[key]=[];
-    const i=onboardAnswers[key].indexOf(val);
-    if(i>-1)onboardAnswers[key].splice(i,1);else onboardAnswers[key].push(val);
-  }
+function selectOnboard(key,val,type){
+  if(type==='single'){onboardAnswers[key]=[val];}
+  else{if(!onboardAnswers[key])onboardAnswers[key]=[];const i=onboardAnswers[key].indexOf(val);if(i>-1)onboardAnswers[key].splice(i,1);else onboardAnswers[key].push(val);}
   renderOnboardStep();
 }
 
 function onboardNext(){
-  if(onboardStep < ONBOARD_STEPS.length - 1){
-    onboardStep++;
-    renderOnboardStep();
-  } else {
-    // Save preferences
-    localStorage.setItem('poow_onboard_answers', JSON.stringify(onboardAnswers));
-    localStorage.setItem('poow_onboarded', 'true');
-    S.onboardingDone = true;
-    document.getElementById('onboardingModal').style.display = 'none';
-    // Show API modal if no key
-    if(!S.apiKey) document.getElementById('apiModal').style.display = 'flex';
-    toast('Welcome to Poow! 🎉');
+  if(onboardStep<ONBOARD_STEPS.length-1){onboardStep++;renderOnboardStep();}
+  else{
+    localStorage.setItem('mp_onboard_answers',JSON.stringify(onboardAnswers));
+    localStorage.setItem('mp_onboarded','true');
+    S.onboardingDone=true;
+    document.getElementById('onboardingModal').style.display='none';
+    if(!S.apiKey) document.getElementById('apiModal').style.display='flex';
+    toast('Welcome to MoodPick! 🎉');
   }
 }
 
-function onboardBack(){
-  if(onboardStep > 0){ onboardStep--; renderOnboardStep(); }
-}
+function onboardBack(){if(onboardStep>0){onboardStep--;renderOnboardStep();}}
 
 function resetOnboarding(){
-  localStorage.removeItem('poow_onboarded');
-  S.onboardingDone = false;
-  startOnboarding();
+  localStorage.removeItem('mp_onboarded');S.onboardingDone=false;startOnboarding();
 }
 
 // ── SETTINGS ───────────────────────────────────────────────
-function saveSettings(){ localStorage.setItem('poow_settings', JSON.stringify(S.settings)); }
+function saveSettings(){localStorage.setItem('mp_settings',JSON.stringify(S.settings));}
 
-function toggleDarkMode(){
-  S.settings.darkMode = !S.settings.darkMode;
-  applySettings();
-  saveSettings();
-}
-
-function toggleMoodColors(){
-  S.settings.moodColors = !S.settings.moodColors;
-  applySettings();
-  saveSettings();
-}
-
-function toggleFilterMemory(){
-  S.settings.filterMemory = !S.settings.filterMemory;
-  document.getElementById('filterMemoryToggle').className='toggle'+(S.settings.filterMemory?' on':'');
-  saveSettings();
-}
-
-function toggleCheckin(){
-  S.settings.checkin = !S.settings.checkin;
-  document.getElementById('checkinToggle').className='toggle'+(S.settings.checkin?' on':'');
-  saveSettings();
-}
+function toggleDarkMode(){S.settings.darkMode=!S.settings.darkMode;applySettings();saveSettings();}
+function toggleMoodColors(){S.settings.moodColors=!S.settings.moodColors;applySettings();saveSettings();}
+function toggleFilterMemory(){S.settings.filterMemory=!S.settings.filterMemory;document.getElementById('filterMemoryToggle').className='toggle'+(S.settings.filterMemory?' on':'');saveSettings();}
+function toggleCheckin(){S.settings.checkin=!S.settings.checkin;document.getElementById('checkinToggle').className='toggle'+(S.settings.checkin?' on':'');saveSettings();}
 
 function applySettings(){
-  // Dark mode
   if(S.settings.darkMode){
     document.body.classList.add('dark');
     document.body.classList.remove('mood-happy','mood-energetic','mood-calm','mood-sad','mood-stressed','mood-bored','mood-tired');
@@ -875,14 +935,12 @@ function applySettings(){
     document.body.classList.remove('dark');
     if(S.settings.moodColors) applyMoodTheme(S.mood);
   }
-  // Update toggles
   document.getElementById('darkModeToggle').className='toggle'+(S.settings.darkMode?' on':'');
   document.getElementById('moodColorToggle').className='toggle'+(S.settings.moodColors?' on':'');
   document.getElementById('filterMemoryToggle').className='toggle'+(S.settings.filterMemory?' on':'');
   document.getElementById('checkinToggle').className='toggle'+(S.settings.checkin?' on':'');
-  // API key preview
-  const keyEl = document.getElementById('apiKeyPreview');
-  if(keyEl) keyEl.textContent = S.apiKey ? S.apiKey.substring(0,12)+'...' : 'Not connected';
+  const keyEl=document.getElementById('apiKeyPreview');
+  if(keyEl) keyEl.textContent=S.apiKey?S.apiKey.substring(0,12)+'...':'Not connected';
 }
 
 function clearHistory(){
@@ -896,18 +954,15 @@ function applyMoodTheme(moods){
   if(S.settings.darkMode) return;
   document.body.classList.remove('mood-happy','mood-energetic','mood-calm','mood-sad','mood-stressed','mood-bored','mood-tired');
   if(!S.settings.moodColors) return;
-  if(moods.length>0){
-    const theme=MOOD_THEME[moods[0]];
-    if(theme) document.body.classList.add('mood-'+theme);
-  }
+  if(moods.length>0){const theme=MOOD_THEME[moods[0]];if(theme)document.body.classList.add('mood-'+theme);}
 }
 
 // ── API ────────────────────────────────────────────────────
-function showApiModal(){ document.getElementById('apiModal').style.display='flex'; }
+function showApiModal(){document.getElementById('apiModal').style.display='flex';}
 function saveApiKey(){
   const k=document.getElementById('apiKeyInput').value.trim();
   if(!k.startsWith('gsk_')){toast('Please enter a valid Groq key (starts with gsk_)');return;}
-  S.apiKey=k;localStorage.setItem('poow_groq_key',k);
+  S.apiKey=k;localStorage.setItem('mp_groq_key',k);
   document.getElementById('apiModal').style.display='none';
   updateApiStatus();applySettings();toast('Connected! Ready to explore 🎉');
 }
@@ -927,7 +982,7 @@ async function callGroq(prompt){
         {role:'system',content:'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values.'},
         {role:'user',content:prompt}
       ],
-      temperature:0.7,max_tokens:3000,
+      temperature:0.7,max_tokens:3500,
       response_format:{type:'json_object'}
     })
   });
@@ -953,10 +1008,82 @@ function safeJSON(text){
   return JSON.parse(out);
 }
 
+// ── MOOD SCREEN FLOW ────────────────────────────────────────
+function toggleMood(v){
+  const i=S.mood.indexOf(v);
+  if(i>-1) S.mood.splice(i,1); else S.mood.push(v);
+  document.querySelectorAll('.mood-card').forEach(b=>b.classList.remove('selected'));
+  S.mood.forEach(m=>document.getElementById('mood-'+m)?.classList.add('selected'));
+  applyMoodTheme(S.mood);
+  const banner=document.getElementById('moodBanner');
+  const continueBtn=document.getElementById('moodContinueBtn');
+  if(S.mood.length>0){
+    const labels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m);
+    banner.textContent='✦ Feeling '+labels.join(' & ');
+    banner.classList.add('visible');
+    continueBtn.disabled=false;
+  } else {
+    banner.classList.remove('visible');
+    continueBtn.disabled=true;
+  }
+}
+
+function goToRefine(){
+  if(S.mood.length===0) return;
+  // Build mood recap in refine screen
+  const recap=document.getElementById('refineMoodRecap');
+  recap.innerHTML=S.mood.map(m=>{
+    const md=MOODS.find(x=>x.v===m);
+    return `<div class="refine-mood-chip"><span>${md?.e||''}</span>${md?.l||m}</div>`;
+  }).join('');
+  // Reset discover button state
+  checkReady();
+  showPage('refine');
+}
+
+function goHome(){
+  showPage('home');
+}
+
+// ── COLLAPSIBLE ENERGY ──────────────────────────────────────
+function toggleEnergy(){
+  const panel=document.getElementById('energyPanel');
+  const btn=document.getElementById('energyToggleBtn');
+  if(!panel||!btn) return;
+  const isOpen=panel.style.display!=='none';
+  panel.style.display=isOpen?'none':'block';
+  btn.textContent=isOpen?'\uFF0B Refine further':'\uFF0D Hide';
+}
+
+// ── PILL SELECTION ──────────────────────────────────────────
+function selPill(key,val,el){
+  el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');S[key]=val;checkReady();
+}
+
+function toggleDiff(val,el){
+  const i=S.difficulty.indexOf(val);
+  if(i>-1){S.difficulty.splice(i,1);el.classList.remove('selected');}
+  else{S.difficulty.push(val);el.classList.add('selected');}
+}
+
+function renderDiffGroup(){
+  const group=document.getElementById('diffGroup');
+  if(!group) return;
+  S.difficulty=[];
+  group.innerHTML=DIFF.map(o=>`<button class="pill" onclick="toggleDiff('${o.v}',this)" id="diff-${o.v}">${o.l}</button>`).join('');
+}
+
+function checkReady(){
+  // Can discover if mood is set (specific input OR has mood from step 1)
+  const ok=S.specific.length>0 || S.mood.length>0;
+  const btn=document.getElementById('discoverBtn');
+  if(btn) btn.disabled=!ok;
+}
+
 // ── SURPRISE ME ────────────────────────────────────────────
 async function surpriseMe(){
   if(!S.apiKey){showApiModal();return;}
-  // Random mood + filters
   const rMood=MOODS[Math.floor(Math.random()*MOODS.length)].v;
   const rTime=TIME[Math.floor(Math.random()*TIME.length)].v;
   const rBudget=BUDGET[Math.floor(Math.random()*BUDGET.length)].v;
@@ -968,14 +1095,15 @@ async function surpriseMe(){
   await getRecommendations();
 }
 
-// ── RECOMMENDATIONS ────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+// ENHANCED AI RECOMMENDATION ENGINE
+// ─────────────────────────────────────────────────────────
 async function getRecommendations(){
   if(!S.apiKey){showApiModal();return;}
 
-  // Save last filters
   if(S.settings.filterMemory){
-    const filters={mood:S.mood,time:S.time,budget:S.budget,people:S.people,preference:S.preference,difficulty:S.difficulty};
-    localStorage.setItem('poow_lastfilters',JSON.stringify(filters));
+    const filters={mood:S.mood,time:S.time,budget:S.budget,people:S.people,preference:S.preference,setting:S.setting,difficulty:S.difficulty};
+    localStorage.setItem('mp_lastfilters',JSON.stringify(filters));
   }
 
   showPage('results');
@@ -983,50 +1111,57 @@ async function getRecommendations(){
 
   const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
   const specificCtx=S.specific?`User specifically wants: "${S.specific}". Give 4 specific variations. Name exact movies, games, recipes.`:'';
+  const histCtx=S.history.length>0?`User history: ${S.history.slice(0,5).map(h=>`"${h.title}" (rated ${h.rating||'unrated'}/5, ${h.completed?'completed':'saved'})`).join(', ')}. Avoid suggesting these exact activities.`:'';
+  const hour=new Date().getHours();
+  const timeCtx=hour<9?'It is early morning.':hour<12?'It is morning.':hour<17?'It is afternoon.':hour<21?'It is evening.':'It is late night. Suggest quieter activities.';
 
-  // Build history context for personalization
-  const histCtx = S.history.length > 0 ?
-    `User history: ${S.history.slice(0,5).map(h=>`"${h.title}" (rated ${h.rating||'unrated'}/5, ${h.completed?'completed':'saved'})`).join(', ')}. Avoid suggesting these exact activities.` : '';
+  // Budget and time context for adaptive suggestions
+  const isConstrainedBudget = S.budget === 'free' || S.budget === 'low';
+  const isShortTime = S.time === 'flash' || S.time === 'short';
+  const adaptiveCtx = (isConstrainedBudget || isShortTime)
+    ? `IMPORTANT: Budget is ${S.budget||'flexible'} and time is ${S.time||'flexible'}. Adapt activities to be realistically achievable within these constraints. For example, if budget is low and time is short, suggest "water and reorganize your existing plants" rather than "start a full garden". Make suggestions feel emotionally achievable, not aspirational.`
+    : '';
 
-  // Current time context
-  const hour = new Date().getHours();
-  const timeCtx = hour < 9 ? 'It is early morning.' : hour < 12 ? 'It is morning.' : hour < 17 ? 'It is afternoon.' : hour < 21 ? 'It is evening.' : 'It is late night. Suggest quieter activities.';
+  const settingCtx = S.setting ? `Setting preference: ${S.setting}.` : '';
 
-  const prompt=`You are Poow, an emotionally intelligent activity recommender. Suggest exactly 4 activities.
-
-User context:
-- Mood: ${moodLabels||'any'}
-- Time available: ${S.time||'any'} (flash=under 10min, short=10-30min, medium=30-90min, long=1.5-3hrs, day=full day)
-- Budget: ${S.budget||'any'} (free=no cost, low=under $10, medium=$10-50, high=$50+)
-- People: ${S.people||'any'}
-- Preference: ${S.preference||'any'}
-${S.difficulty.length?`Energy level: ${S.difficulty.join(', ')}. Tailor intensity accordingly.`:''}
+  const prompt = `Suggest 4 activities for this person.
+Mood: ${moodLabels||'any'}
+Time available: ${S.time||'any'} (flash=under 10min, short=10-30min, medium=30-90min, long=1.5-3hrs, day=full day)
+Budget: ${S.budget||'any'} (free=no cost, low=under $10, medium=$10-50, high=$50+)
+People: ${S.people||'any'}
+Preference: ${S.preference||'any'}
+${settingCtx}
+${S.difficulty.length?`Energy/style: ${S.difficulty.join(', ')}. long_project = start today, continue over time.`:''}
 ${timeCtx}
 ${histCtx}
 ${specificCtx}
+${adaptiveCtx}
 
-EMOTIONAL INTELLIGENCE: Recommendations must feel achievable for this mood. If the user is stressed or tired, suggest simpler versions. If budget is low and time is short, adapt accordingly — e.g. "water your existing plants" not "start a full garden".
+CRITICAL MATERIALS RULE:
+The "materials" field must contain a practical, itemized list separated by commas. 
+- For activities that need ZERO materials (meditation, walking, breathing exercises, stretching, simple journaling, napping): set materials to exactly "Nothing needed"
+- For ALL other activities, generate a realistic beginner-friendly itemized list. Examples:
+  * Gardening: "Small plant pot, Potting soil, Seeds or herb starter kit, Watering can, Gardening gloves"
+  * Painting: "Acrylic paint set, Small canvas pad, Paint brushes (set of 3-5), Cup for water, Palette tray or paper plate"
+  * Baking cookies: "Mixing bowl, Flour, Sugar, Butter, Baking tray, Oven mitts, Measuring cups"
+  * Photography walk: "Smartphone or camera, Portable charger, Comfortable shoes, Optional: small tripod"
+  * Drawing: "Sketchbook or blank paper, Pencils (HB and 2B), Eraser, Optional: fine-tip pen"
+  * Gaming: "Gaming device or PC, Game title (be specific), Controller if needed"
+  * Journaling: "Notebook or journal, Pen or pencil"
+  * DIY craft: "Scissors, Craft paper or cardboard, Glue stick, Markers or paint"
+  * Cooking: list the main ingredients and tools
+  * Music: "Instrument (or free app like GarageBand), Phone stand if recording"
+  * Yoga: "Yoga mat or soft rug, Comfortable clothing, Optional: yoga strap or blocks"
+  * Reading: "Book (physical, ebook, or library app), Comfortable seating, Optional: bookmark"
+  If budget is free/low, suggest beginner alternatives or items the user likely already has.
+  If time is flash/short, trim list to essentials only.
 
-MATERIALS — analyze every activity carefully:
-- Gardening: small plant pot, potting soil, seeds or herb starter kit, watering can, gardening gloves
-- Painting: acrylic paint set, small canvas pad, paintbrushes, cup for water, palette tray
-- Baking: mixing bowl, flour, sugar, butter, eggs, baking tray, oven mitts
-- Photography: smartphone or camera, portable charger, comfortable shoes, optional tripod
-- Crafting/DIY: scissors, glue, craft paper, ruler, pencil
-- Gaming: device (console/PC/phone), game title, headphones if multiplayer
-- Music: instrument or streaming app, headphones, optional tuner app
-- Yoga/stretching: yoga mat, comfortable clothing, water bottle
-ONLY write "Nothing needed" for: meditation, walking, breathing exercises, simple journaling, stretching you can do anywhere.
-All other activities MUST have a practical itemized comma-separated list of beginner-friendly materials.
+For each activity, include:
+- A "why" field: one sentence why this fits their current mood specifically
+- steps: array of 4-6 practical strings
+- youtube: array of 3 search queries
 
-For each activity include:
-- A "why" field: one sentence on why this fits their mood RIGHT NOW
-- steps as an array of strings (no newlines inside strings)
-- 3 specific youtube search queries
-- similar activities list
-
-Return only valid JSON:
-{"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"item 1, item 2, item 3","steps":["step 1","step 2","step 3","step 4"],"youtube":["query 1","query 2","query 3"],"similar":["act 1","act 2","act 3"],"why":"why this fits their mood right now"}]}`;
+Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"comma-separated list or Nothing needed","steps":["step 1","step 2","step 3","step 4"],"youtube":["query 1","query 2","query 3"],"similar":["act 1","act 2","act 3"],"why":"why this fits their mood"}]}`;
 
   try{
     const text=await callGroq(prompt);
@@ -1034,7 +1169,7 @@ Return only valid JSON:
     window._acts=parsed.activities||[];
     renderResults(window._acts);
   }catch(err){
-    document.getElementById('resultsContent').innerHTML=`<div class="loading"><div style="font-size:40px;margin-bottom:16px">⚠️</div><h3>Something went wrong</h3><p style="color:var(--red);margin-bottom:20px">${err.message}</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn-ghost" onclick="showPage('home')">← Back</button><button class="btn-ghost" onclick="showApiModal()">🔑 API Key</button><button class="btn-ghost" onclick="getRecommendations()">↻ Retry</button></div></div>`;
+    document.getElementById('resultsContent').innerHTML=`<div class="loading"><div style="font-size:40px;margin-bottom:16px">⚠️</div><h3>Something went wrong</h3><p style="color:var(--red);margin-bottom:20px">${err.message}</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn-ghost" onclick="showPage('refine')">← Back</button><button class="btn-ghost" onclick="showApiModal()">🔑 API Key</button><button class="btn-ghost" onclick="getRecommendations()">↻ Retry</button></div></div>`;
   }
 }
 
@@ -1049,7 +1184,7 @@ function renderResults(acts,resetRefine=true){
   document.getElementById('resultsContent').innerHTML=`
     <div class="results-header">
       <div>
-        <button class="btn-ghost" onclick="showPage('home')" style="margin-bottom:12px">← Back</button>
+        <button class="btn-ghost" onclick="showPage('refine')" style="margin-bottom:12px">← Back</button>
         <h2>${S.specific?`Ideas for "${S.specific}"` :'Your Activities'}</h2>
         <div class="results-meta">${sub}</div>
       </div>
@@ -1084,10 +1219,8 @@ function addRefineTag(){
   renderTags();refetchWithRefinements();
 }
 function removeTag(idx){
-  refineState.tags.splice(idx,1);
-  renderTags();
-  if(refineState.tags.length===0){renderActCards();}
-  else{refetchWithRefinements();}
+  refineState.tags.splice(idx,1);renderTags();
+  if(refineState.tags.length===0)renderActCards();else refetchWithRefinements();
 }
 function renderTags(){
   const c=document.getElementById('refineTags');if(!c)return;
@@ -1109,7 +1242,7 @@ function renderActCards(){
   else if(refineState.sort==='cost')acts.sort((a,b)=>parseCost(a.estimated_cost)-parseCost(b.estimated_cost));
   else if(refineState.sort==='difficulty')acts.sort((a,b)=>(diffOrder[a.difficulty]||0)-(diffOrder[b.difficulty]||0));
   grid.innerHTML=acts.map((a,i)=>{
-    const matchPct = calcMatchScore(a);
+    const matchPct=calcMatchScore(a);
     return `
     <div class="act-card" onclick="showDetail(${window._acts.indexOf(a)})" style="animation:fadeUp 0.4s ease both;animation-delay:${i*0.08}s">
       <div class="act-top">
@@ -1126,45 +1259,32 @@ function renderActCards(){
 }
 
 function calcMatchScore(activity){
-  let score = 60; // base score
-  const moodLabels = S.mood.map(m => MOODS.find(x=>x.v===m)?.l?.toLowerCase()||m);
-  const desc = (activity.description||'').toLowerCase();
-  const title = (activity.title||'').toLowerCase();
-  // Check if description mentions the mood
-  moodLabels.forEach(m => { if(desc.includes(m)||title.includes(m)) score += 10; });
-  // Preference match
-  if(S.preference && activity.category && activity.category.toLowerCase().includes(S.preference)) score += 15;
-  // History bonus - if category is one user likes
-  const likedCats = getLikedCategories();
-  if(likedCats.includes(activity.category)) score += 10;
-  return Math.min(score, 98);
+  let score=60;
+  const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l?.toLowerCase()||m);
+  const desc=(activity.description||'').toLowerCase();
+  const title=(activity.title||'').toLowerCase();
+  moodLabels.forEach(m=>{if(desc.includes(m)||title.includes(m))score+=10;});
+  if(S.preference&&activity.category&&activity.category.toLowerCase().includes(S.preference))score+=15;
+  const likedCats=getLikedCategories();
+  if(likedCats.includes(activity.category))score+=10;
+  return Math.min(score,98);
 }
 
 function getDiffLabel(difficulty){
-  if(difficulty==='long_project') return '🗓️ Start a Project';
-  if(difficulty==='hard') return '💪 Challenging';
-  if(difficulty==='medium') return '🧠 Engaging';
+  if(difficulty==='long_project')return '🗓️ Start a Project';
+  if(difficulty==='hard')return '💪 Challenging';
+  if(difficulty==='medium')return '🧠 Engaging';
   return '✨ Laid-back';
 }
-
 function getDiffClass(difficulty){
-  if(difficulty==='long_project') return 'diff-long_project';
-  if(difficulty==='hard') return 'diff-hard';
-  if(difficulty==='medium') return 'diff-medium';
+  if(difficulty==='long_project')return 'diff-long_project';
+  if(difficulty==='hard')return 'diff-hard';
+  if(difficulty==='medium')return 'diff-medium';
   return 'diff-easy';
 }
 
-function getLikedCategories(){
-  return S.history
-    .filter(h => h.rating >= 4 && h.category)
-    .map(h => h.category);
-}
-
-function getDislikedCategories(){
-  return S.history
-    .filter(h => (h.rating <= 2 && h.rating > 0) && h.category)
-    .map(h => h.category);
-}
+function getLikedCategories(){return S.history.filter(h=>h.rating>=4&&h.category).map(h=>h.category);}
+function getDislikedCategories(){return S.history.filter(h=>(h.rating<=2&&h.rating>0)&&h.category).map(h=>h.category);}
 
 async function refetchWithRefinements(){
   if(!S.apiKey){toast('No API key — connect Groq first');showApiModal();return;}
@@ -1172,39 +1292,28 @@ async function refetchWithRefinements(){
   const grid=document.getElementById('activityGrid');
   if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div class="spin" style="margin:0 auto 12px"></div><p>Finding activities matching: <strong>${refineState.tags.join(', ')}</strong></p></div>`;
   const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
-  const prompt=`Suggest exactly 4 activities for this person.
-Mood: ${moodLabels||'any'}
-Time: ${S.time||'any'} (flash=under 10min, short=10-30min, medium=30-90min, long=1.5-3hrs, day=full day)
-Budget: ${S.budget||'any'} (free=no cost, low=under $10, medium=$10-50, high=$50+)
-People: ${S.people||'any'}
-Preference: ${S.preference||'any'}
+  const prompt=`Suggest exactly 4 activities.
+Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}
+IMPORTANT - All activities MUST satisfy: ${refineState.tags.join(', ')}
 
-IMPORTANT - All activities MUST satisfy these extra requirements: ${refineState.tags.join(', ')}
-Do not suggest anything that contradicts these requirements.
+MATERIALS RULE: Always provide an itemized comma-separated list of materials needed (e.g. "Sketchbook, Pencils, Eraser" or "Mixing bowl, Flour, Sugar, Baking tray"). Only use "Nothing needed" for activities like meditation, walking, breathing exercises, or stretching.
 
-Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3"],"youtube":["specific query 1","specific query 2","specific query 3"],"similar":["similar 1","similar 2"],"why":"one sentence why this fits their mood and requirements"}]}`;
+Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"comma-separated list or Nothing needed","steps":["step 1","step 2","step 3"],"youtube":["q1","q2","q3"],"similar":["s1","s2"],"why":"why this fits"}]}`;
   try{
     const text=await callGroq(prompt);
     const parsed=safeJSON(text);
     window._acts=parsed.activities||[];
     renderActCards();
     toast(`Found ${window._acts.length} activities matching your filters ✓`);
-  } catch(err){
+  }catch(err){
     if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:20px"><p style="color:var(--red);margin-bottom:12px">Error: ${err.message}</p><button class="btn-ghost" onclick="refetchWithRefinements()">↻ Try again</button></div>`;
   }
 }
 
 // ── DETAIL ─────────────────────────────────────────────────
 function parseMaterials(m){
-  if(!m) return [];
-  const lower = m.toLowerCase().trim();
-  const empty = ['nothing needed','none','n/a','nothing','no materials needed','no materials','not needed','no materials required'];
-  if(empty.includes(lower)) return [];
-  return m.split(/[,;
-]+/)
-    .map(function(s){ return s.replace(/^[- ]+/,'').trim(); })
-    .filter(function(s){ return s.length>2&&s.length<80; })
-    .filter(function(s){ return !empty.includes(s.toLowerCase()); });
+  if(!m||m.trim().toLowerCase()==='nothing needed'||m.trim().toLowerCase()==='none')return[];
+  return m.split(/[,;\n•\-]+/).map(s=>s.trim()).filter(s=>s.length>2&&s.length<100);
 }
 function buildShoppingHTML(materials){
   const items=parseMaterials(materials);if(!items.length)return'';
@@ -1213,45 +1322,23 @@ function buildShoppingHTML(materials){
     return`<div class="material-item"><span class="material-name">📦 ${item}</span><div class="shop-btns"><a class="shop-btn shop-btn-google" href="https://www.google.com/search?q=${q}&tbm=shop" target="_blank">🛍 Google</a><a class="shop-btn shop-btn-coupang" href="https://www.coupang.com/np/search?q=${q}" target="_blank">🛒 Coupang</a></div></div>`;
   }).join('')}</div>`;
 }
-function buildYouTubeHTML(title, category, difficulty, aiQueries, materials, description){
-  // Build hyper-specific queries using actual activity data
-  const diffLabel = difficulty==='long_project'?'beginner step by step':difficulty==='hard'?'advanced tutorial':difficulty==='medium'?'how to tutorial':'easy beginner guide';
-
-  // Clean the title for better search
-  const cleanTitle = title.replace(/['"]/g,'').trim();
-  const cleanCat = (category||'').toLowerCase();
-
-  // Build 3 very specific queries
-  const queries = [
-    // Query 1: Most popular - exact title + tutorial sorted by views
+function buildYouTubeHTML(title,category,difficulty,aiQueries,materials,description){
+  const diffLabel=difficulty==='long_project'?'beginner step by step':difficulty==='hard'?'advanced tutorial':difficulty==='medium'?'how to tutorial':'easy beginner guide';
+  const cleanTitle=title.replace(/['"]/g,'').trim();
+  const queries=[
     `${cleanTitle} ${diffLabel}`,
-    // Query 2: Use AI query if good, otherwise build from description
-    (aiQueries && aiQueries[0] && aiQueries[0].length > 5 && aiQueries[0] !== cleanTitle)
-      ? aiQueries[0]
-      : `how to ${cleanTitle.toLowerCase()} for beginners`,
-    // Query 3: Tips/tricks or materials-based
-    (aiQueries && aiQueries[1] && aiQueries[1].length > 5)
-      ? aiQueries[1]
-      : `${cleanTitle} tips and tricks ${new Date().getFullYear()}`
+    (aiQueries&&aiQueries[0]&&aiQueries[0].length>5&&aiQueries[0]!==cleanTitle)?aiQueries[0]:`how to ${cleanTitle.toLowerCase()} for beginners`,
+    (aiQueries&&aiQueries[1]&&aiQueries[1].length>5)?aiQueries[1]:`${cleanTitle} tips and tricks ${new Date().getFullYear()}`
   ];
-
-  const configs = [
-    {tag:'🔥 Most Viewed', label:'Sorted by view count', sort:'&sp=CAISAhAB'},
-    {tag:'📚 How To', label:'Step-by-step tutorial', sort:'&sp=CAISAhAB'},
-    {tag:'💡 Tips & Tricks', label:'Expert tips', sort:'&sp=CAISAhAB'},
+  const configs=[
+    {tag:'🔥 Most Viewed',label:'Sorted by view count',sort:'&sp=CAISAhAB'},
+    {tag:'📚 How To',label:'Step-by-step tutorial',sort:'&sp=CAISAhAB'},
+    {tag:'💡 Tips & Tricks',label:'Expert tips',sort:'&sp=CAISAhAB'},
   ];
-
   return queries.slice(0,3).map((q,i)=>{
-    const cfg = configs[i] || configs[0];
-    const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}${cfg.sort}`;
-    return `<a class="yt-link" href="${url}" target="_blank">
-      <div class="yt-icon">▶</div>
-      <div>
-        <div class="yt-tag">${cfg.tag}</div>
-        <div class="yt-t">${q}</div>
-        <div class="yt-s">${cfg.label} → YouTube</div>
-      </div>
-    </a>`;
+    const cfg=configs[i]||configs[0];
+    const url=`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}${cfg.sort}`;
+    return`<a class="yt-link" href="${url}" target="_blank"><div class="yt-icon">▶</div><div><div class="yt-tag">${cfg.tag}</div><div class="yt-t">${q}</div><div class="yt-s">${cfg.label} → YouTube</div></div></a>`;
   }).join('');
 }
 
@@ -1261,6 +1348,7 @@ function showDetail(i){
   const steps=Array.isArray(a.steps)?a.steps:(a.steps||'').split('|').map(s=>s.trim()).filter(Boolean);
   const yt=Array.isArray(a.youtube)?a.youtube:[];
   const sim=Array.isArray(a.similar)?a.similar:[];
+  const materialItems=parseMaterials(a.materials);
 
   document.getElementById('detailContent').innerHTML=`
     <div style="margin-bottom:24px"><button class="btn-ghost" onclick="showPage('results')">← Results</button></div>
@@ -1274,10 +1362,10 @@ function showDetail(i){
       <div class="meta-block"><div class="meta-lbl">Time</div><div class="meta-val">⏱ ${a.estimated_time||'?'}</div></div>
       <div class="meta-block"><div class="meta-lbl">Cost</div><div class="meta-val">💰 ${a.estimated_cost||'Free'}</div></div>
       <div class="meta-block"><div class="meta-lbl">Difficulty</div><div class="meta-val">${getDiffLabel(a.difficulty)}</div></div>
-      <div class="meta-block"><div class="meta-lbl">Materials</div><div class="meta-val">${parseMaterials(a.materials).length?'See below':'Nothing needed'}</div></div>
+      <div class="meta-block"><div class="meta-lbl">Materials</div><div class="meta-val">${materialItems.length?(materialItems.length+' item'+(materialItems.length>1?'s':'')):'Nothing needed'}</div></div>
     </div>
-    ${parseMaterials(a.materials).length?`<div class="section-block"><h4>🛍 What You Need <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">click to shop</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
-    ${steps.length?`<div class="section-block"><h4>Start Now Guide</h4><div class="steps-list">${steps.map((s,i)=>`<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s.replace(/^[0-9]+[.):\s]+/,'')}</div></div>`).join('')}</div></div>`:''}
+    ${materialItems.length?`<div class="section-block"><h4>🛍 What You Need <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">click to shop</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
+    ${steps.length?`<div class="section-block"><h4>Start Now Guide</h4><div class="steps-list">${steps.map((s,i)=>`<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s.replace(/^\d+[\.\):\-]\s*/,'')}</div></div>`).join('')}</div></div>`:''}
     <div class="section-block"><h4>▶ Watch on YouTube <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">sorted by views</span></h4>${buildYouTubeHTML(a.title,a.category,a.difficulty,yt,a.materials,a.description)}</div>
     ${sim.length?`<div class="section-block"><h4>Similar Activities</h4><div>${sim.map(s=>`<span class="similar-pill">${s}</span>`).join('')}</div></div>`:''}
     <div class="action-row">
@@ -1295,60 +1383,60 @@ function showDetail(i){
 
 // ── SAVE / DONE ────────────────────────────────────────────
 async function notForMe(){
-  const a = S.current;
-  if(!a || !S.apiKey) return;
-  // Find index
-  const idx = window._acts.findIndex(x=>x.title===a.title);
+  const a=S.current;
+  if(!a||!S.apiKey) return;
+  const idx=window._acts.findIndex(x=>x.title===a.title);
   toast('Finding a better match... 🔄');
-  const moodLabels = S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
-  const disliked = getDislikedCategories();
-  const prompt = `Suggest 1 activity for this person. Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}.
-The user did NOT like: "${a.title}" (${a.category}). Suggest something completely different in a different category.
-${disliked.length ? `Also avoid these categories they dislike: ${[...new Set(disliked)].join(', ')}.` : ''}
-Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3"],"youtube":["query 1","query 2","query 3"],"similar":["s1","s2"],"why":"why this is different and better for their mood"}]}`;
-  try{
-    const text = await callGroq(prompt);
-    const parsed = safeJSON(text);
-    if(parsed.activities && parsed.activities[0]){
-      if(idx > -1) window._acts[idx] = parsed.activities[0];
-      else window._acts.push(parsed.activities[0]);
-      S.current = parsed.activities[0];
-      showDetail(idx > -1 ? idx : window._acts.length - 1);
-      toast('Found a better match! ✨');
-    }
-  } catch(err){ toast('Could not find alternative: '+err.message); }
-}
 
-function saveActivity(){
-  const a=S.current;if(!a)return;
-  if(S.history.some(h=>h.title===a.title)){toast('Already in history!');return;}
-  S.history.unshift({...a,id:Date.now(),completed:false,rating:0,date:new Date().toISOString(),mood:S.mood.join(',')});
-  saveHistory();
-  const btn=document.getElementById('saveBtn');if(btn){btn.textContent='✓ Saved';btn.classList.add('saved');}
-  toast('Saved! 🔖');
+  const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
+  const dislikedCats=getDislikedCategories();
+
+  const prompt=`Suggest 1 alternative activity to replace "${a.title}" which the user didn't like.
+Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}
+Do NOT suggest: ${a.title}, ${a.category}${dislikedCats.length?`, ${dislikedCats.join(', ')}`:''}
+MATERIALS RULE: Always provide itemized comma-separated materials. Use "Nothing needed" only for meditation/walking/breathing/stretching.
+Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"comma-separated list or Nothing needed","steps":["step 1","step 2","step 3"],"youtube":["q1","q2","q3"],"similar":["s1","s2"],"why":"why this fits mood"}]}`;
+
+  try{
+    const text=await callGroq(prompt);
+    const parsed=safeJSON(text);
+    if(parsed.activities&&parsed.activities[0]){
+      if(idx>-1) window._acts.splice(idx,1,parsed.activities[0]);
+      else window._acts.push(parsed.activities[0]);
+      toast('Found a better match! ✓');
+      showPage('results');
+      renderActCards();
+    }
+  }catch(err){
+    toast('Could not find alternative: '+err.message);
+  }
 }
 
 function markDone(){
   const a=S.current;if(!a)return;
-  const ex=S.history.find(h=>h.title===a.title);
-  const id=ex?ex.id:Date.now();
-  if(ex){ex.completed=true;saveHistory();}
-  else{S.history.unshift({...a,id,completed:true,rating:0,date:new Date().toISOString(),mood:S.mood.join(',')});saveHistory();}
-  // Show mood check-in if enabled
-  if(S.settings.checkin){
-    showCheckin(a.title, id);
-  } else {
-    toast('Marked as done! 🎉');showPage('history');
-  }
+  const existing=S.history.find(h=>h.title===a.title);
+  if(existing){existing.completed=true;saveHistory();}
+  else{S.history.unshift({...a,id:Date.now(),date:new Date().toISOString(),completed:true,rating:0,mood:S.mood.join(',')});saveHistory();}
+  if(S.settings.checkin) showCheckin(a.title,existing?existing.id:S.history[0].id);
+  else{toast('Activity completed! 🎉');showPage('history');}
 }
 
-function saveHistory(){localStorage.setItem('poow_history',JSON.stringify(S.history));}
+function saveActivity(){
+  const a=S.current;if(!a)return;
+  const existing=S.history.find(h=>h.title===a.title);
+  if(existing){toast('Already saved!');return;}
+  S.history.unshift({...a,id:Date.now(),date:new Date().toISOString(),completed:false,rating:0,mood:S.mood.join(',')});
+  saveHistory();
+  document.getElementById('saveBtn').className='btn-save saved';
+  document.getElementById('saveBtn').textContent='✓ Saved';
+  toast('Saved for later 🔖');
+}
 
-// ── MOOD CHECK-IN ──────────────────────────────────────────
-const CHECKIN_MOODS=[{v:'happy',e:'😊',l:'Happy'},{v:'calm',e:'🌿',l:'Calm'},{v:'energetic',e:'⚡',l:'Energized'},{v:'satisfied',e:'😌',l:'Content'},{v:'tired',e:'😴',l:'Tired'},{v:'bored',e:'😐',l:'Still bored'},{v:'stressed',e:'😤',l:'Still stressed'},{v:'better',e:'🙂',l:'A bit better'}];
+function saveHistory(){localStorage.setItem('mp_history',JSON.stringify(S.history));}
 
-function showCheckin(activityName, activityId){
-  S.checkinData={activityId, mood:null, rating:0};
+// ── CHECKIN ────────────────────────────────────────────────
+function showCheckin(activityName,activityId){
+  S.checkinData={activityId,mood:null,rating:0};
   document.getElementById('checkinActivityName').textContent=`"${activityName}"`;
   document.getElementById('checkinMoods').innerHTML=CHECKIN_MOODS.map(m=>`<div class="checkin-mood" onclick="selectCheckinMood('${m.v}',this)" id="cm-${m.v}"><span class="checkin-emoji">${m.e}</span><span class="checkin-label">${m.l}</span></div>`).join('');
   document.getElementById('checkinStars').innerHTML=[1,2,3,4,5].map(s=>`<span class="r-star" onclick="setCheckinRating(${s})" id="rs-${s}">⭐</span>`).join('');
@@ -1362,42 +1450,17 @@ function selectCheckinMood(v,el){
   el.classList.add('selected');
   checkCheckinReady();
 }
-
-function setCheckinRating(r){
-  S.checkinData.rating=r;
-  updateCheckinStars();
-  checkCheckinReady();
-}
-
-function updateCheckinStars(){
-  [1,2,3,4,5].forEach(s=>{
-    const el=document.getElementById('rs-'+s);
-    if(el)el.className='r-star'+(s<=S.checkinData.rating?' on':'');
-  });
-}
-
-function checkCheckinReady(){
-  const btn=document.getElementById('checkinSubmitBtn');
-  if(btn)btn.disabled=!S.checkinData.mood||!S.checkinData.rating;
-}
-
+function setCheckinRating(r){S.checkinData.rating=r;updateCheckinStars();checkCheckinReady();}
+function updateCheckinStars(){[1,2,3,4,5].forEach(s=>{const el=document.getElementById('rs-'+s);if(el)el.className='r-star'+(s<=S.checkinData.rating?' on':'');});}
+function checkCheckinReady(){const btn=document.getElementById('checkinSubmitBtn');if(btn)btn.disabled=!S.checkinData.mood||!S.checkinData.rating;}
 function submitCheckin(){
   const item=S.history.find(h=>h.id===S.checkinData.activityId);
-  if(item){
-    item.rating=S.checkinData.rating;
-    item.moodAfter=S.checkinData.mood;
-    saveHistory();
-  }
+  if(item){item.rating=S.checkinData.rating;item.moodAfter=S.checkinData.mood;saveHistory();}
   document.getElementById('checkinOverlay').style.display='none';
   toast(`Rated ${S.checkinData.rating}⭐ — thanks for sharing! 🎉`);
   showPage('history');
 }
-
-function skipCheckin(){
-  document.getElementById('checkinOverlay').style.display='none';
-  toast('Activity completed! 🎉');
-  showPage('history');
-}
+function skipCheckin(){document.getElementById('checkinOverlay').style.display='none';toast('Activity completed! 🎉');showPage('history');}
 
 // ── SHARE ──────────────────────────────────────────────────
 function openShare(){
@@ -1406,115 +1469,63 @@ function openShare(){
   const moodEmoji=S.mood.length>0?MOODS.find(x=>x.v===S.mood[0])?.e||'✨':'✨';
   const moodLabel=S.mood.length>0?S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(' & '):'Good vibes';
   document.getElementById('shareCardEl').innerHTML=`
-    <div class="share-card-eyebrow">Poow Activity</div>
+    <div class="share-card-eyebrow">MoodPick Activity</div>
     <div class="share-card-mood">${moodEmoji}</div>
     <div class="share-card-title">${a.title}</div>
     <div class="share-card-sub">Feeling ${moodLabel} · ${a.estimated_time||'?'} · ${a.estimated_cost||'Free'}</div>
     <div style="display:flex;justify-content:center;gap:8px;margin-top:12px">
       ${[1,2,3,4,5].map(s=>`<span style="opacity:${s<=(a.rating||0)?1:0.3}">⭐</span>`).join('')}
     </div>
-    <div class="share-card-footer">poow.app · ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>`;
+    <div class="share-card-footer">moodpick.app · ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>`;
   document.getElementById('shareOverlay').style.display='flex';
 }
-
 function closeShare(){document.getElementById('shareOverlay').style.display='none';}
-
-function shareToTwitter(){
-  const a=S.shareActivity;if(!a)return;
-  const text=encodeURIComponent(`Just tried "${a.title}" with Poow! 🎯 ${a.estimated_time||''} · ${a.estimated_cost||'Free'}\n\n#Poow #ActivityRecommender`);
-  window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');
-}
-
-function shareToKakao(){
-  const a=S.shareActivity;if(!a)return;
-  const text=encodeURIComponent(`Poow이 추천한 활동: "${a.title}" 🎯\n${a.estimated_time||''} · ${a.estimated_cost||'무료'}\n\n#Poow`);
-  window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');
-  toast('Opening share... (KakaoTalk SDK required for native share)');
-}
-
-function copyShareLink(){
-  const a=S.shareActivity;if(!a)return;
-  const text=`Poow: "${a.title}" — ${a.description} (${a.estimated_time||'?'}, ${a.estimated_cost||'Free'})`;
-  navigator.clipboard.writeText(text).then(()=>toast('Copied to clipboard! 📋')).catch(()=>toast('Could not copy'));
-}
+function shareToTwitter(){const a=S.shareActivity;if(!a)return;const text=encodeURIComponent(`Just tried "${a.title}" with MoodPick! 🎯 ${a.estimated_time||''} · ${a.estimated_cost||'Free'}\n\n#MoodPick #ActivityRecommender`);window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');}
+function shareToKakao(){const a=S.shareActivity;if(!a)return;const text=encodeURIComponent(`MoodPick이 추천한 활동: "${a.title}" 🎯\n${a.estimated_time||''} · ${a.estimated_cost||'무료'}\n\n#MoodPick`);window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');toast('Opening share... (KakaoTalk SDK required for native share)');}
+function copyShareLink(){const a=S.shareActivity;if(!a)return;const text=`MoodPick: "${a.title}" — ${a.description} (${a.estimated_time||'?'}, ${a.estimated_cost||'Free'})`;navigator.clipboard.writeText(text).then(()=>toast('Copied to clipboard! 📋')).catch(()=>toast('Could not copy'));}
 
 // ── HISTORY ────────────────────────────────────────────────
 function buildTasteProfile(){
-  if(S.history.filter(h=>h.rating>0).length < 2) return '';
-
-  // Categories rated 4-5 stars
-  const catRatings = {};
+  if(S.history.filter(h=>h.rating>0).length<2) return '';
+  const catRatings={};
   S.history.filter(h=>h.rating>0&&h.category).forEach(h=>{
-    if(!catRatings[h.category]) catRatings[h.category]={total:0,count:0,completed:0,saved:0};
-    catRatings[h.category].total += h.rating;
-    catRatings[h.category].count++;
-    if(h.completed) catRatings[h.category].completed++;
-    else catRatings[h.category].saved++;
+    if(!catRatings[h.category])catRatings[h.category]={total:0,count:0,completed:0,saved:0};
+    catRatings[h.category].total+=h.rating;catRatings[h.category].count++;
+    if(h.completed)catRatings[h.category].completed++;else catRatings[h.category].saved++;
   });
-  const avgByCat = Object.entries(catRatings).map(([cat,d])=>({cat,avg:d.total/d.count,count:d.count,completion:d.completed/(d.completed+d.saved)}));
-  const loved = avgByCat.filter(x=>x.avg>=4).sort((a,b)=>b.avg-a.avg).slice(0,4);
-  const disliked = avgByCat.filter(x=>x.avg<=2.5).sort((a,b)=>a.avg-b.avg).slice(0,3);
-
-  // Top mood
+  const avgByCat=Object.entries(catRatings).map(([cat,d])=>({cat,avg:d.total/d.count,count:d.count,completion:d.completed/(d.completed+d.saved)}));
+  const loved=avgByCat.filter(x=>x.avg>=4).sort((a,b)=>b.avg-a.avg).slice(0,4);
+  const disliked=avgByCat.filter(x=>x.avg<=2.5).sort((a,b)=>a.avg-b.avg).slice(0,3);
   const moodCounts={};
   S.history.forEach(h=>{if(h.mood)h.mood.split(',').forEach(m=>{if(m)moodCounts[m]=(moodCounts[m]||0)+1;});});
-  const topMood = Object.entries(moodCounts).sort((a,b)=>b[1]-a[1])[0];
-  const topMoodData = topMood ? MOODS.find(x=>x.v===topMood[0]) : null;
-
-  // Mood improvement (activities where moodAfter is more positive)
+  const topMood=Object.entries(moodCounts).sort((a,b)=>b[1]-a[1])[0];
+  const topMoodData=topMood?MOODS.find(x=>x.v===topMood[0]):null;
   const positiveMoods=['happy','calm','energetic','motivated','inspired','grateful','playful','curious'];
   const negativeMoods=['stressed','anxious','tired','sad','frustrated','overwhelmed','bored','lonely'];
-  const improved = S.history.filter(h=>h.moodAfter&&h.mood&&negativeMoods.some(m=>h.mood.includes(m))&&positiveMoods.includes(h.moodAfter));
-  const totalWithAfter = S.history.filter(h=>h.moodAfter&&h.mood&&negativeMoods.some(m=>h.mood.includes(m)));
-  const improvePct = totalWithAfter.length>0 ? Math.round((improved.length/totalWithAfter.length)*100) : null;
-
-  // Category that improves mood most
-  const catImprove={};
-  improved.forEach(h=>{if(h.category)catImprove[h.category]=(catImprove[h.category]||0)+1;});
+  const improved=S.history.filter(h=>h.moodAfter&&h.mood&&negativeMoods.some(m=>h.mood.includes(m))&&positiveMoods.includes(h.moodAfter));
+  const totalWithAfter=S.history.filter(h=>h.moodAfter&&h.mood&&negativeMoods.some(m=>h.mood.includes(m)));
+  const improvePct=totalWithAfter.length>0?Math.round((improved.length/totalWithAfter.length)*100):null;
+  const catImprove={};improved.forEach(h=>{if(h.category)catImprove[h.category]=(catImprove[h.category]||0)+1;});
   const bestCat=Object.entries(catImprove).sort((a,b)=>b[1]-a[1])[0];
-
-  return `<div class="taste-profile">
+  return`<div class="taste-profile">
     <div class="taste-title">🎯 Your Taste Profile</div>
-    ${loved.length>0?`
-    <div class="taste-row">
-      <div class="taste-row-label">✅ You love</div>
-      <div class="taste-tags">${loved.map(x=>`<span class="taste-tag taste-tag-loved">${x.cat} ${'⭐'.repeat(Math.round(x.avg))}</span>`).join('')}</div>
-    </div>`:''}
-    ${disliked.length>0?`
-    <div class="taste-row">
-      <div class="taste-row-label">❌ Not really your thing</div>
-      <div class="taste-tags">${disliked.map(x=>`<span class="taste-tag taste-tag-meh">${x.cat}</span>`).join('')}</div>
-    </div>`:''}
-    ${topMoodData?`
-    <div class="taste-row">
-      <div class="taste-row-label">🎭 Your most common mood</div>
-      <div class="taste-tags"><span class="taste-tag taste-tag-mood">${topMoodData.e} ${topMoodData.l} (${topMood[1]}x)</span></div>
-    </div>`:''}
-    ${improvePct!==null?`
-    <div class="taste-row">
-      <div class="taste-row-label">💚 Mood improvement rate</div>
-      <div class="mood-improve-bar">
-        <div class="mood-improve-label"><span>${improvePct}% of activities improved your mood</span><span>${bestCat?`Best: ${bestCat[0]}`:''}</span></div>
-        <div class="mood-improve-track"><div class="mood-improve-fill" style="width:${improvePct}%"></div></div>
-      </div>
-    </div>`:''}
+    ${loved.length>0?`<div class="taste-row"><div class="taste-row-label">✅ You love</div><div class="taste-tags">${loved.map(x=>`<span class="taste-tag taste-tag-loved">${x.cat} ${'⭐'.repeat(Math.round(x.avg))}</span>`).join('')}</div></div>`:''}
+    ${disliked.length>0?`<div class="taste-row"><div class="taste-row-label">❌ Not really your thing</div><div class="taste-tags">${disliked.map(x=>`<span class="taste-tag taste-tag-meh">${x.cat}</span>`).join('')}</div></div>`:''}
+    ${topMoodData?`<div class="taste-row"><div class="taste-row-label">🎭 Your most common mood</div><div class="taste-tags"><span class="taste-tag taste-tag-mood">${topMoodData.e} ${topMoodData.l} (${topMood[1]}x)</span></div></div>`:''}
+    ${improvePct!==null?`<div class="taste-row"><div class="taste-row-label">💚 Mood improvement rate</div><div class="mood-improve-bar"><div class="mood-improve-label"><span>${improvePct}% of activities improved your mood</span><span>${bestCat?`Best: ${bestCat[0]}`:''}</span></div><div class="mood-improve-track"><div class="mood-improve-fill" style="width:${improvePct}%"></div></div></div></div>`:''}
     ${loved.length===0&&disliked.length===0?`<div class="taste-empty">Rate more activities (⭐) to build your taste profile</div>`:''}
   </div>`;
 }
 
 function showSavedItem(id){
-  const item = S.history.find(h=>h.id===id);
-  if(!item) return;
-  // Show as if it's the current activity
-  S.current = item;
-  window._acts = window._acts || [item];
-  if(!window._acts.find(a=>a.title===item.title)) window._acts.unshift(item);
+  const item=S.history.find(h=>h.id===id);if(!item)return;
+  S.current=item;window._acts=window._acts||[item];
+  if(!window._acts.find(a=>a.title===item.title))window._acts.unshift(item);
   showDetail(window._acts.findIndex(a=>a.title===item.title));
 }
 
 function buildWeeklySummary(){
-  const now=new Date();
-  const weekAgo=new Date(now-7*24*60*60*1000);
+  const now=new Date();const weekAgo=new Date(now-7*24*60*60*1000);
   const weekItems=S.history.filter(h=>new Date(h.date)>=weekAgo);
   const weekDone=weekItems.filter(h=>h.completed);
   const weekRated=weekItems.filter(h=>h.rating>0);
@@ -1525,7 +1536,6 @@ function buildWeeklySummary(){
   const topCat=weekDone.reduce((acc,h)=>{if(h.category)acc[h.category]=(acc[h.category]||0)+1;return acc;},{});
   const topCatKey=Object.keys(topCat).sort((a,b)=>topCat[b]-topCat[a])[0]||'—';
   const insight=weekDone.length===0?`You haven't completed any activities this week. Try the "Surprise Me" button!`:weekDone.length<3?`Good start! You completed ${weekDone.length} activit${weekDone.length===1?'y':'ies'} this week. Keep it up!`:`Great week! You completed ${weekDone.length} activities. Your favorite category was ${topCatKey}.`;
-
   return`<div class="weekly-card">
     <div class="weekly-title">📆 This Week's Summary</div>
     <div class="weekly-stats">
@@ -1544,16 +1554,12 @@ function renderHistory(filter='all'){
   const avg=rated.length?(rated.reduce((s,h)=>s+h.rating,0)/rated.length).toFixed(1):'—';
   const progress=Math.min((done/10)*100,100);
   const streak=calcStreak();
-
-  // Check for old saved items (7+ days)
-  const weekAgoTs = Date.now() - 7*24*60*60*1000;
-  const oldSaved = S.history.filter(h=>!h.completed && new Date(h.date).getTime() < weekAgoTs);
-
+  const weekAgoTs=Date.now()-7*24*60*60*1000;
+  const oldSaved=S.history.filter(h=>!h.completed&&new Date(h.date).getTime()<weekAgoTs);
   let html='';
-  // Saved reminders
-  if(oldSaved.length > 0){
-    const item = oldSaved[0];
-    html += `<div class="saved-reminder" onclick="showSavedItem(${item.id})">
+  if(oldSaved.length>0){
+    const item=oldSaved[0];
+    html+=`<div class="saved-reminder" onclick="showSavedItem(${item.id})">
       <div class="saved-reminder-icon">🔖</div>
       <div class="saved-reminder-text">
         You saved "<strong>${item.title}</strong>" ${Math.floor((Date.now()-new Date(item.date).getTime())/86400000)} days ago
@@ -1564,23 +1570,19 @@ function renderHistory(filter='all'){
   html+=buildWeeklySummary();
   if(S.history.length>0){
     html+=`<div class="progress-bar-card"><div class="prog-stats"><div class="prog-stat"><div class="prog-num">${done}</div><div class="prog-lbl">Completed</div></div><div class="prog-stat"><div class="prog-num">${S.history.length}</div><div class="prog-lbl">Total Saved</div></div><div class="prog-stat"><div class="prog-num">${done>0?Math.round((done/S.history.length)*100)+'%':'—'}</div><div class="prog-lbl">Completion</div></div></div><div style="font-size:11px;opacity:0.8;margin-bottom:8px;display:flex;justify-content:space-between"><span>${done} done</span><span>Next: ${Math.ceil(Math.max(done,1)/10)*10} 🎯</span></div><div class="prog-bar-wrap"><div class="prog-bar" style="width:${progress}%"></div></div>${streak>0?`<div class="streak-badge">🔥 ${streak} day streak!</div>`:''}</div>`;
-    // Taste Profile
-    html += buildTasteProfile();
+    html+=buildTasteProfile();
   }
   html+=`<div class="hist-tabs"><button class="hist-tab ${filter==='all'?'active':''}" onclick="renderHistory('all')">All (${S.history.length})</button><button class="hist-tab ${filter==='saved'?'active':''}" onclick="renderHistory('saved')">Saved (${S.history.filter(h=>!h.completed).length})</button><button class="hist-tab ${filter==='done'?'active':''}" onclick="renderHistory('done')">Done (${done})</button></div>`;
+
   if(items.length===0){
-    if(filter==='all'&&S.history.length===0){
-      html+=`<div class="empty" style="padding:60px 20px">
-        <div style="font-size:56px;margin-bottom:20px;opacity:0.6">🌿</div>
-        <div style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:10px;color:var(--text)">Your activity journey<br>hasn't started yet</div>
-        <p style="color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:28px;max-width:280px;margin-left:auto;margin-right:auto">Try a mood check-in and discover something that fits your moment.</p>
-        <button class="btn-primary" onclick="showPage('home')" style="max-width:220px;margin:0 auto">✦ Find Something to Do</button>
-      </div>`;
-    } else {
-      html+=`<div class="empty"><div style="font-size:36px;margin-bottom:12px;opacity:0.5">📭</div><p style="color:var(--muted);font-size:14px">Nothing here yet.</p></div>`;
-    }
-  }
-  else{
+    // Warm, emotionally aligned empty state
+    html+=`<div class="empty">
+      <span class="empty-ambient">📭</span>
+      <div class="empty-title">Your activity journey hasn't started yet.</div>
+      <div class="empty-sub">Try a mood check-in and discover something that fits your moment.</div>
+      <button class="empty-cta" onclick="showPage('home')">✦ Go to Home</button>
+    </div>`;
+  } else {
     html+=`<div class="hist-list">`;
     items.forEach(item=>{
       const date=new Date(item.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
@@ -1601,38 +1603,26 @@ function renderHistory(filter='all'){
     html+=`</div>`;
   }
   document.getElementById('historyContent').innerHTML=html;
-  // If calendar is open, refresh it too
-  const cal = document.getElementById('inlineCalendar');
-  if(cal && cal.style.display !== 'none') renderCalendar();
+  const cal=document.getElementById('inlineCalendar');
+  if(cal&&cal.style.display!=='none')renderCalendar();
 }
 
 function doAgain(id){
-  const item=S.history.find(h=>h.id===id);
-  if(!item)return;
-  S.current=item;
-  // Add to front of acts so showDetail works
-  window._acts=window._acts||[];
+  const item=S.history.find(h=>h.id===id);if(!item)return;
+  S.current=item;window._acts=window._acts||[];
   const existing=window._acts.findIndex(a=>a.title===item.title);
   if(existing>-1)window._acts.splice(existing,1);
   window._acts.unshift(item);
-  showDetail(0);
-  toast('Showing "'+item.title+'" again ↺');
+  showDetail(0);toast('Showing "'+item.title+'" again ↺');
 }
 
 function rateItem(id,r){const h=S.history.find(h=>h.id===id);if(h){h.rating=r;saveHistory();renderHistory();}}
 function markHistDone(id){
   const h=S.history.find(h=>h.id===id);
-  if(h){
-    h.completed=true;saveHistory();
-    if(S.settings.checkin)showCheckin(h.title,id);
-    else{renderHistory();toast('Done! 🎉');}
-  }
+  if(h){h.completed=true;saveHistory();if(S.settings.checkin)showCheckin(h.title,id);else{renderHistory();toast('Done! 🎉');}}
 }
 function deleteItem(id){S.history=S.history.filter(h=>h.id!==id);saveHistory();renderHistory();toast('Deleted');}
-function openShareFromHistory(id){
-  const item=S.history.find(h=>h.id===id);
-  if(item){S.current=item;openShare();}
-}
+function openShareFromHistory(id){const item=S.history.find(h=>h.id===id);if(item){S.current=item;openShare();}}
 
 // ── CALENDAR ───────────────────────────────────────────────
 function renderCalendar(){
@@ -1644,10 +1634,8 @@ function renderCalendar(){
   for(let i=0;i<pad;i++)html+=`<div class="cal-cell empty"></div>`;
   const today=new Date();
   for(let d=1;d<=last.getDate();d++){
-    const date=new Date(year,mon,d);
-    const dateStr=date.toISOString().split('T')[0];
-    const isToday=date.toDateString()===today.toDateString();
-    const isSelected=S.calSelected===dateStr;
+    const date=new Date(year,mon,d);const dateStr=date.toISOString().split('T')[0];
+    const isToday=date.toDateString()===today.toDateString();const isSelected=S.calSelected===dateStr;
     const dayItems=S.history.filter(h=>new Date(h.date).toISOString().split('T')[0]===dateStr);
     html+=`<div class="cal-cell${isToday?' today':''}${isSelected?' selected':''}" onclick="selectCalDay('${dateStr}')">
       <div class="cal-date-num">${d}</div>
@@ -1671,15 +1659,13 @@ function renderCalModal(){
   document.getElementById('calModal').innerHTML=html;
 }
 function toggleCalendarView(){
-  const cal = document.getElementById('inlineCalendar');
-  const btn = document.getElementById('calToggleBtn');
-  if(!cal || !btn) return;
-  const isOpen = cal.style.display !== 'none';
-  cal.style.display = isOpen ? 'none' : 'block';
-  btn.textContent = isOpen ? '📅 Calendar view' : '📋 List view';
-  if(!isOpen) renderCalendar();
+  const cal=document.getElementById('inlineCalendar');const btn=document.getElementById('calToggleBtn');
+  if(!cal||!btn)return;
+  const isOpen=cal.style.display!=='none';
+  cal.style.display=isOpen?'none':'block';
+  btn.textContent=isOpen?'📅 Calendar view':'📋 List view';
+  if(!isOpen)renderCalendar();
 }
-
 function changeMonth(dir){S.calMonth=new Date(S.calMonth.getFullYear(),S.calMonth.getMonth()+dir,1);S.calSelected=null;renderCalendar();}
 
 // ── INSIGHTS ───────────────────────────────────────────────
@@ -1688,8 +1674,6 @@ function renderInsights(){
   const total=S.history.length;
   const cats=[...new Set(S.history.map(h=>h.category).filter(Boolean))].length;
   const streak=calcStreak();
-
-  // Mood improvement
   const positiveMoods=['happy','calm','energetic','motivated','inspired','grateful','playful','curious'];
   const negativeMoods=['stressed','anxious','tired','sad','frustrated','overwhelmed','bored','lonely'];
   const improved=S.history.filter(h=>h.moodAfter&&h.mood&&negativeMoods.some(m=>h.mood.includes(m))&&positiveMoods.includes(h.moodAfter));
@@ -1704,17 +1688,14 @@ function renderInsights(){
   </div>`;
 
   if(total<2){
-    html+=`<div class="empty"><div class="empty-icon">📊</div><p>Save and complete more activities to see your insights!</p></div>`;
+    html+=`<div class="empty"><span class="empty-ambient">📊</span><div class="empty-title">Not enough data yet</div><div class="empty-sub">Save and complete more activities to see your personal insights.</div></div>`;
     document.getElementById('insightsContent').innerHTML=html;return;
   }
 
-  // Taste profile (reuse from history)
-  html += buildTasteProfile();
+  html+=buildTasteProfile();
 
-  // Mood improvement insight card
   if(improvePct!==null){
-    const catImprove={};
-    improved.forEach(h=>{if(h.category)catImprove[h.category]=(catImprove[h.category]||0)+1;});
+    const catImprove={};improved.forEach(h=>{if(h.category)catImprove[h.category]=(catImprove[h.category]||0)+1;});
     const bestCat=Object.entries(catImprove).sort((a,b)=>b[1]-a[1])[0];
     html+=`<div class="card">
       <div class="card-title" style="margin-bottom:12px">💚 Mood impact</div>
@@ -1726,25 +1707,16 @@ function renderInsights(){
     </div>`;
   }
 
-  // Most active days of week
   const dayCounts=[0,0,0,0,0,0,0];
   const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   S.history.forEach(h=>{dayCounts[new Date(h.date).getDay()]++;});
   const peakDay=dayNames[dayCounts.indexOf(Math.max(...dayCounts))];
   const totalActivities=dayCounts.reduce((a,b)=>a+b,0);
-
   if(totalActivities>3){
     html+=`<div class="card">
       <div class="card-title" style="margin-bottom:12px">📅 Activity patterns</div>
       <div style="display:flex;gap:6px;align-items:flex-end;height:60px;margin-bottom:8px">
-        ${dayCounts.map((c,i)=>{
-          const max=Math.max(...dayCounts)||1;
-          const h=Math.round((c/max)*100);
-          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
-            <div style="width:100%;background:var(--primary);border-radius:4px 4px 0 0;height:${h}%;opacity:${c===Math.max(...dayCounts)?1:0.4};transition:height 0.5s ease"></div>
-            <div style="font-size:9px;color:var(--muted)">${dayNames[i]}</div>
-          </div>`;
-        }).join('')}
+        ${dayCounts.map((c,i)=>{const max=Math.max(...dayCounts)||1;const h=Math.round((c/max)*100);return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;background:var(--primary);border-radius:4px 4px 0 0;height:${h}%;opacity:${c===Math.max(...dayCounts)?1:0.4};transition:height 0.5s ease"></div><div style="font-size:9px;color:var(--muted)">${dayNames[i]}</div></div>`;}).join('')}
       </div>
       <div style="font-size:12px;color:var(--muted)">You're most active on <strong style="color:var(--text)">${peakDay}</strong></div>
     </div>`;
@@ -1758,9 +1730,8 @@ function calcStreak(){
   const sortedDone=[...S.history.filter(h=>h.completed)].sort((a,b)=>new Date(b.date)-new Date(a.date));
   let checkDate=new Date();
   for(const item of sortedDone){
-    if(new Date(item.date).toDateString()===checkDate.toDateString()){
-      streak++;checkDate=new Date(checkDate-86400000);
-    } else break;
+    if(new Date(item.date).toDateString()===checkDate.toDateString()){streak++;checkDate=new Date(checkDate-86400000);}
+    else break;
   }
   return streak;
 }
@@ -1770,81 +1741,83 @@ function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name)?.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('nav-'+name)?.classList.add('active');
+  // Map refine to home nav highlight
+  const navName = name === 'refine' ? 'home' : name;
+  document.getElementById('nav-'+navName)?.classList.add('active');
   if(name==='history')renderHistory();
-
   if(name==='insights')renderInsights();
   applyMoodTheme(S.mood);
   window.scrollTo(0,0);
 }
 
 function startOver(){
-  S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=null;S.difficulty=[];S.specific='';
+  S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=null;S.setting=null;S.difficulty=[];S.specific='';
   refineState={tags:[],sort:'default'};
   applyMoodTheme([]);
   document.querySelectorAll('.mood-card').forEach(b=>b.classList.remove('selected'));
   document.querySelectorAll('.pill').forEach(p=>p.classList.remove('selected'));
-  // Reset to mood screen
-  const ms=document.getElementById('moodScreen');
-  const rs=document.getElementById('refineScreen');
-  if(ms)ms.style.display='flex';
-  if(rs)rs.style.display='none';
-  const nextBtn=document.getElementById('moodNextBtn');
-  if(nextBtn)nextBtn.disabled=true;
-  const banner=document.getElementById('moodBanner');
-  if(banner)banner.style.display='none';
   const si=document.getElementById('specificInput');if(si)si.value='';
-  const mb=document.getElementById('moodBanner');if(mb)mb.style.display='none';
-  document.getElementById('discoverBtn').disabled=true;
-  const ft = document.getElementById('fineTunePanel');
-  const ftBtn = document.getElementById('fineTuneBtn');
-  if(ft) ft.style.display='none';
-  if(ftBtn) ftBtn.textContent='＋ Refine further';
+  const banner=document.getElementById('moodBanner');if(banner)banner.classList.remove('visible');
+  const continueBtn=document.getElementById('moodContinueBtn');if(continueBtn)continueBtn.disabled=true;
+  const discoverBtn=document.getElementById('discoverBtn');if(discoverBtn)discoverBtn.disabled=true;
+  const ep=document.getElementById('energyPanel');if(ep)ep.style.display='none';
+  const etb=document.getElementById('energyToggleBtn');if(etb)etb.textContent='\uFF0B Refine further';
   showPage('home');toast('Starting fresh! 🔄');
 }
 
 // ── SETUP ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
-  // Show landing page on first ever visit, otherwise go straight to app
-  const hasVisited = localStorage.getItem('poow_visited');
+  const hasVisited=localStorage.getItem('mp_visited');
   if(!hasVisited){
     document.getElementById('landingPage').style.display='block';
     document.querySelector('.app-shell').style.display='none';
   } else {
     document.getElementById('landingPage').style.display='none';
     document.querySelector('.app-shell').style.display='flex';
-    // Onboarding or API modal
-    if(!S.onboardingDone){
-      startOnboarding();
-    } else if(!S.apiKey){
-      document.getElementById('apiModal').style.display='flex';
-    }
+    if(!S.onboardingDone) startOnboarding();
+    else if(!S.apiKey) document.getElementById('apiModal').style.display='flex';
   }
 
   applySettings();
   updateApiStatus();
 
-  // Mood grid
-  document.getElementById('moodGrid').innerHTML=MOODS.map(m=>`<button class="mood-card" onclick="toggleMood('${m.v}')" id="mood-${m.v}"><span class="mood-card-emoji">${m.e}</span><span class="mood-card-label">${m.l}</span></button>`).join('');
+  // Build large mood card grid
+  document.getElementById('moodGrid').innerHTML=MOODS.map(m=>`
+    <button class="mood-card" onclick="toggleMood('${m.v}')" id="mood-${m.v}">
+      <span class="mood-card-emoji">${m.e}</span>
+      <span class="mood-card-label">${m.l}</span>
+    </button>`).join('');
 
-  // Pill groups
+  // Pill groups on refine screen
   const rp=(id,opts,key)=>{document.getElementById(id).innerHTML=opts.map(o=>`<button class="pill" onclick="selPill('${key}','${o.v}',this)">${o.l}</button>`).join('');};
-  rp('timeGroup',TIME,'time');rp('budgetGroup',BUDGET,'budget');rp('peopleGroup',PEOPLE,'people');rp('prefGroup',PREF,'preference');
+  rp('timeGroup',TIME,'time');
+  rp('budgetGroup',BUDGET,'budget');
+  rp('peopleGroup',PEOPLE,'people');
+  rp('prefGroup',PREF,'preference');
+  rp('settingGroup',SETTING,'setting');
   renderDiffGroup();
 
   // Restore filter memory
-  if(S.settings.filterMemory && Object.keys(S.lastFilters).length>0){
+  if(S.settings.filterMemory&&Object.keys(S.lastFilters).length>0){
     const lf=S.lastFilters;
-    if(lf.mood){S.mood=lf.mood;S.mood.forEach(m=>document.getElementById('mood-'+m)?.classList.add('selected'));applyMoodTheme(S.mood);}
-    // Enable next button if mood restored
-    if(S.mood.length>0){const nb=document.getElementById('moodNextBtn');if(nb)nb.disabled=false;}
+    if(lf.mood){S.mood=lf.mood;S.mood.forEach(m=>document.getElementById('mood-'+m)?.classList.add('selected'));applyMoodTheme(S.mood);
+      // Update banner and continue button
+      const banner=document.getElementById('moodBanner');
+      const continueBtn=document.getElementById('moodContinueBtn');
+      if(S.mood.length>0&&banner&&continueBtn){
+        const labels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m);
+        banner.textContent='✦ Feeling '+labels.join(' & ');
+        banner.classList.add('visible');
+        continueBtn.disabled=false;
+      }
+    }
     if(lf.time){S.time=lf.time;document.querySelector(`#timeGroup .pill[onclick*="${lf.time}"]`)?.classList.add('selected');}
     if(lf.budget){S.budget=lf.budget;document.querySelector(`#budgetGroup .pill[onclick*="${lf.budget}"]`)?.classList.add('selected');}
     if(lf.people){S.people=lf.people;document.querySelector(`#peopleGroup .pill[onclick*="${lf.people}"]`)?.classList.add('selected');}
     if(lf.preference){S.preference=lf.preference;document.querySelector(`#prefGroup .pill[onclick*="${lf.preference}"]`)?.classList.add('selected');}
+    if(lf.setting){S.setting=lf.setting;document.querySelector(`#settingGroup .pill[onclick*="${lf.setting}"]`)?.classList.add('selected');}
     if(lf.difficulty){S.difficulty=lf.difficulty;S.difficulty.forEach(d=>document.getElementById('diff-'+d)?.classList.add('selected'));}
     checkReady();
-    if(S.mood.length>0){const labels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m);const banner=document.getElementById('moodBanner');if(banner){banner.textContent='✦ Restored your last filters — '+labels.join(' & ');banner.style.display='block';}}
   }
 
   // Specific input
@@ -1852,89 +1825,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     S.specific=this.value.trim();
     document.getElementById('specificHint').style.display=S.specific?'block':'none';
     checkReady();
-    
   });
 
-  // Reveal
+  // Reveal animations
   const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:0.1});
   document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 });
-
-function toggleMood(v){
-  const i=S.mood.indexOf(v);if(i>-1)S.mood.splice(i,1);else S.mood.push(v);
-  document.querySelectorAll('.mood-card').forEach(b=>b.classList.remove('selected'));
-  S.mood.forEach(m=>document.getElementById('mood-'+m)?.classList.add('selected'));
-  applyMoodTheme(S.mood);
-  const banner=document.getElementById('moodBanner');
-  if(S.mood.length>0){
-    const labels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m);
-    const emojis=S.mood.map(m=>MOODS.find(x=>x.v===m)?.e||'');
-    banner.textContent=emojis.join(' ')+' '+labels.join(' & ');
-    banner.style.display='block';
-    // Enable next button
-    const nextBtn=document.getElementById('moodNextBtn');
-    if(nextBtn)nextBtn.disabled=false;
-  } else {
-    banner.style.display='none';
-    const nextBtn=document.getElementById('moodNextBtn');
-    if(nextBtn)nextBtn.disabled=true;
-  }
-  checkReady();
-}
-
-function goToRefine(){
-  if(S.mood.length===0)return;
-  document.getElementById('moodScreen').style.display='none';
-  document.getElementById('refineScreen').style.display='block';
-  // Update refine screen eyebrow with mood
-  const labels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m);
-  const emojis=S.mood.map(m=>MOODS.find(x=>x.v===m)?.e||'');
-  const eyebrow=document.getElementById('refineEyebrow');
-  if(eyebrow)eyebrow.textContent='✦ Feeling '+emojis.join(' ')+' '+labels.join(' & ');
-  window.scrollTo(0,0);
-}
-
-function backToMood(){
-  document.getElementById('refineScreen').style.display='none';
-  document.getElementById('moodScreen').style.display='flex';
-  window.scrollTo(0,0);
-}
-
-function selPill(key,val,el){
-  el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('selected'));
-  el.classList.add('selected');S[key]=val;checkReady();
-}
-
-function toggleDiff(val,el){
-  const i=S.difficulty.indexOf(val);
-  if(i>-1){S.difficulty.splice(i,1);el.classList.remove('selected');}
-  else{S.difficulty.push(val);el.classList.add('selected');}
-}
-
-function renderDiffGroup(){
-  const group = document.getElementById('diffGroup');
-  if(!group) return;
-  S.difficulty = [];
-  group.innerHTML = DIFF.map(o=>`<button class="pill" onclick="toggleDiff('${o.v}',this)" id="diff-${o.v}">${o.l}</button>`).join('');
-}
-
-function toggleFineTune(){
-  const panel = document.getElementById('fineTunePanel');
-  const btn = document.getElementById('fineTuneBtn');
-  if(!panel||!btn) return;
-  const isOpen = panel.style.display !== 'none';
-  panel.style.display = isOpen ? 'none' : 'block';
-  btn.textContent = isOpen ? '＋ Refine further' : '－ Hide';
-}
-
-function checkReady(){
-  // On refine screen, just need mood (already selected) to enable discover
-  // All refinement fields are optional
-  const ok = S.mood.length > 0 || S.specific.length > 0;
-  const btn = document.getElementById('discoverBtn');
-  if(btn) btn.disabled = !ok;
-}
-
 
 function toast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
