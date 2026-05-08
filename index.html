@@ -358,7 +358,47 @@ body.dark .pill.selected{color:var(--bg);}
 .toast{position:fixed;bottom:24px;right:24px;z-index:400;background:var(--card);border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:10px;font-size:14px;box-shadow:var(--shadow);transform:translateY(80px);opacity:0;transition:all 0.3s;max-width:300px;}
 .toast.show{transform:translateY(0);opacity:1;}
 
-/* ── ANIMATIONS ─────────────────────────────────────────── */
+/* ── QUICK CONTEXT GRID ──────────────────────────────────── */
+.quick-context-grid{display:flex;flex-direction:column;gap:16px;}
+.qc-col{}
+.qc-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
+
+/* ── MORE OPTIONS ─────────────────────────────────────────── */
+.more-options-btn{width:100%;padding:10px;border-radius:var(--radius-sm);background:transparent;color:var(--muted);border:1.5px dashed var(--border);cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s;text-align:center;}
+.more-options-btn:hover{border-color:var(--primary);color:var(--primary);}
+
+/* ── TASTE PROFILE ────────────────────────────────────────── */
+.taste-profile{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+.taste-title{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.taste-row{margin-bottom:16px;}
+.taste-row-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
+.taste-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.taste-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:100px;font-size:12px;font-weight:500;}
+.taste-tag-loved{background:var(--green-dim);color:var(--green);border:1px solid rgba(45,122,79,0.2);}
+.taste-tag-meh{background:var(--red-dim);color:var(--red);border:1px solid rgba(192,57,43,0.2);}
+.taste-tag-mood{background:var(--primary-dim);color:var(--primary);border:1px solid var(--border);}
+.taste-empty{font-size:13px;color:var(--muted);font-style:italic;}
+.mood-improve-bar{margin-bottom:10px;}
+.mood-improve-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px;}
+.mood-improve-track{height:6px;background:var(--bg3);border-radius:100px;overflow:hidden;}
+.mood-improve-fill{height:100%;background:var(--green);border-radius:100px;transition:width 0.8s ease;}
+
+/* ── SAVED REMINDER ───────────────────────────────────────── */
+.saved-reminder{background:var(--primary-dim);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s;}
+.saved-reminder:hover{border-color:var(--primary);}
+.saved-reminder-icon{font-size:20px;flex-shrink:0;}
+.saved-reminder-text{flex:1;font-size:13px;color:var(--text);}
+.saved-reminder-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ── NOT FOR ME ───────────────────────────────────────────── */
+.btn-notforme{padding:14px 16px;border-radius:var(--radius-sm);background:var(--bg3);color:var(--muted);border:1px solid var(--border);cursor:pointer;font-family:'Sora',sans-serif;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;}
+.btn-notforme:hover{border-color:var(--red);color:var(--red);background:var(--red-dim);}
+
+/* ── MATCH INDICATOR ──────────────────────────────────────── */
+.match-bar{height:3px;border-radius:100px;margin-top:10px;background:var(--bg3);overflow:hidden;}
+.match-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--primary),var(--green));}
+
+/* ── ANIMATIONS ─────────────────────────────────────────────── */
 .reveal{opacity:0;transform:translateY(12px);transition:all 0.35s ease;}
 .reveal.in{opacity:1;transform:translateY(0);}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
@@ -467,31 +507,48 @@ body.dark .pill.selected{color:var(--bg);}
       <div class="divider">or tell us more</div>
 
       <div class="card reveal" style="transition-delay:0.08s">
-        <div class="card-title" style="margin-bottom:10px">Already know what you want?</div>
+        <div class="card-title" style="margin-bottom:10px">Already know what you want? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
         <input class="text-input" id="specificInput" placeholder='e.g. "watch a movie", "draw something"...'/>
         <div id="specificHint" style="display:none;margin-top:8px;font-size:12px;color:var(--primary)">✨ We'll find the best match!</div>
       </div>
+
       <div class="card reveal" style="transition-delay:0.11s">
-        <div class="card-title" style="margin-bottom:14px">How much time do you have?</div>
-        <div class="pill-row" id="timeGroup"></div>
+        <div class="card-title" style="margin-bottom:14px">Quick context</div>
+        <div class="quick-context-grid">
+          <div class="qc-col">
+            <div class="qc-label">⏱ Time</div>
+            <div class="pill-row" id="timeGroup"></div>
+          </div>
+          <div class="qc-col">
+            <div class="qc-label">💰 Budget</div>
+            <div class="pill-row" id="budgetGroup"></div>
+          </div>
+          <div class="qc-col">
+            <div class="qc-label">👥 Who</div>
+            <div class="pill-row" id="peopleGroup"></div>
+          </div>
+        </div>
       </div>
+
       <div class="card reveal" style="transition-delay:0.14s">
-        <div class="card-title" style="margin-bottom:14px">What's your budget?</div>
-        <div class="pill-row" id="budgetGroup"></div>
-      </div>
-      <div class="card reveal" style="transition-delay:0.17s">
-        <div class="card-title" style="margin-bottom:14px">Who's joining?</div>
-        <div class="pill-row" id="peopleGroup"></div>
-      </div>
-      <div class="card reveal" style="transition-delay:0.2s">
         <div class="card-title" style="margin-bottom:14px">What type of activity?</div>
         <div class="pill-row" id="prefGroup"></div>
       </div>
-      <div class="card reveal" style="transition-delay:0.22s">
-        <div class="card-title" style="margin-bottom:14px">Energy level / difficulty? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
-        <div class="pill-row" id="diffGroup"></div>
+
+      <!-- More options collapsed -->
+      <div class="reveal" style="transition-delay:0.17s">
+        <button class="more-options-btn" id="moreOptionsBtn" onclick="toggleMoreOptions()">
+          <span id="moreOptionsBtnText">＋ More options (difficulty, energy level)</span>
+        </button>
+        <div id="moreOptionsPanel" style="display:none">
+          <div class="card" style="margin-top:8px">
+            <div class="card-title" style="margin-bottom:14px">Energy level / difficulty? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
+            <div class="pill-row" id="diffGroup"></div>
+          </div>
+        </div>
       </div>
-      <div class="reveal" style="transition-delay:0.25s">
+
+      <div class="reveal" style="transition-delay:0.2s">
         <button class="btn-primary" id="discoverBtn" onclick="getRecommendations()" disabled>✦ Find My Perfect Activity</button>
       </div>
     </div>
@@ -946,17 +1003,48 @@ function renderActCards(){
   if(refineState.sort==='time')acts.sort((a,b)=>parseTime(a.estimated_time)-parseTime(b.estimated_time));
   else if(refineState.sort==='cost')acts.sort((a,b)=>parseCost(a.estimated_cost)-parseCost(b.estimated_cost));
   else if(refineState.sort==='difficulty')acts.sort((a,b)=>(diffOrder[a.difficulty]||0)-(diffOrder[b.difficulty]||0));
-  grid.innerHTML=acts.map((a,i)=>`
+  grid.innerHTML=acts.map((a,i)=>{
+    const matchPct = calcMatchScore(a);
+    return `
     <div class="act-card" onclick="showDetail(${window._acts.indexOf(a)})" style="animation:fadeUp 0.4s ease both;animation-delay:${i*0.08}s">
       <div class="act-top">
         <span class="cat-badge">${a.category||'Activity'}</span>
-        <span class="diff-badge diff-${a.difficulty||'easy'}">${a.difficulty==='long_project'?'🗓️ Epic Project':a.difficulty==='hard'?'🔥 Challenging':a.difficulty==='medium'?'🧠 Engaging':'✨ Laid-back'}</span>
+        <span class="diff-badge diff-${a.difficulty||'easy'}">${a.difficulty==='long_project'?'🗓️ Epic':a.difficulty==='hard'?'🔥 Hard':a.difficulty==='medium'?'🧠 Medium':'✨ Easy'}</span>
       </div>
       <div class="act-title">${a.title}</div>
       <div class="act-desc">${a.description}</div>
       ${a.why?`<div class="why-tag">✦ ${a.why}</div>`:''}
       <div class="act-meta" style="margin-top:10px"><span>⏱ ${a.estimated_time||'?'}</span><span>💰 ${a.estimated_cost||'Free'}</span></div>
-    </div>`).join('');
+      <div class="match-bar" title="Mood match score"><div class="match-fill" style="width:${matchPct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function calcMatchScore(activity){
+  let score = 60; // base score
+  const moodLabels = S.mood.map(m => MOODS.find(x=>x.v===m)?.l?.toLowerCase()||m);
+  const desc = (activity.description||'').toLowerCase();
+  const title = (activity.title||'').toLowerCase();
+  // Check if description mentions the mood
+  moodLabels.forEach(m => { if(desc.includes(m)||title.includes(m)) score += 10; });
+  // Preference match
+  if(S.preference && activity.category && activity.category.toLowerCase().includes(S.preference)) score += 15;
+  // History bonus - if category is one user likes
+  const likedCats = getLikedCategories();
+  if(likedCats.includes(activity.category)) score += 10;
+  return Math.min(score, 98);
+}
+
+function getLikedCategories(){
+  return S.history
+    .filter(h => h.rating >= 4 && h.category)
+    .map(h => h.category);
+}
+
+function getDislikedCategories(){
+  return S.history
+    .filter(h => (h.rating <= 2 && h.rating > 0) && h.category)
+    .map(h => h.category);
 }
 
 async function refetchWithRefinements(){
@@ -1070,11 +1158,41 @@ function showDetail(i){
       <button class="btn-done" onclick="markDone()">✓ I Did This!</button>
       <button class="btn-save ${isSaved?'saved':''}" id="saveBtn" onclick="saveActivity()">${isSaved?'✓ Saved':'🔖 Save for Later'}</button>
       <button class="btn-share" onclick="openShare()">↗ Share</button>
+    </div>
+    <div class="action-row" style="margin-top:8px">
+      <button class="btn-notforme" onclick="notForMe()" title="Replace this with a different suggestion">
+        👎 Not for me — try another
+      </button>
     </div>`;
   showPage('detail');
 }
 
 // ── SAVE / DONE ────────────────────────────────────────────
+async function notForMe(){
+  const a = S.current;
+  if(!a || !S.apiKey) return;
+  // Find index
+  const idx = window._acts.findIndex(x=>x.title===a.title);
+  toast('Finding a better match... 🔄');
+  const moodLabels = S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
+  const disliked = getDislikedCategories();
+  const prompt = `Suggest 1 activity for this person. Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}.
+The user did NOT like: "${a.title}" (${a.category}). Suggest something completely different in a different category.
+${disliked.length ? `Also avoid these categories they dislike: ${[...new Set(disliked)].join(', ')}.` : ''}
+Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3"],"youtube":["query 1","query 2","query 3"],"similar":["s1","s2"],"why":"why this is different and better for their mood"}]}`;
+  try{
+    const text = await callGroq(prompt);
+    const parsed = safeJSON(text);
+    if(parsed.activities && parsed.activities[0]){
+      if(idx > -1) window._acts[idx] = parsed.activities[0];
+      else window._acts.push(parsed.activities[0]);
+      S.current = parsed.activities[0];
+      showDetail(idx > -1 ? idx : window._acts.length - 1);
+      toast('Found a better match! ✨');
+    }
+  } catch(err){ toast('Could not find alternative: '+err.message); }
+}
+
 function saveActivity(){
   const a=S.current;if(!a)return;
   if(S.history.some(h=>h.title===a.title)){toast('Already in history!');return;}
@@ -1195,6 +1313,79 @@ function copyShareLink(){
 }
 
 // ── HISTORY ────────────────────────────────────────────────
+function buildTasteProfile(){
+  if(S.history.filter(h=>h.rating>0).length < 2) return '';
+
+  // Categories rated 4-5 stars
+  const catRatings = {};
+  S.history.filter(h=>h.rating>0&&h.category).forEach(h=>{
+    if(!catRatings[h.category]) catRatings[h.category]={total:0,count:0,completed:0,saved:0};
+    catRatings[h.category].total += h.rating;
+    catRatings[h.category].count++;
+    if(h.completed) catRatings[h.category].completed++;
+    else catRatings[h.category].saved++;
+  });
+  const avgByCat = Object.entries(catRatings).map(([cat,d])=>({cat,avg:d.total/d.count,count:d.count,completion:d.completed/(d.completed+d.saved)}));
+  const loved = avgByCat.filter(x=>x.avg>=4).sort((a,b)=>b.avg-a.avg).slice(0,4);
+  const disliked = avgByCat.filter(x=>x.avg<=2.5).sort((a,b)=>a.avg-b.avg).slice(0,3);
+
+  // Top mood
+  const moodCounts={};
+  S.history.forEach(h=>{if(h.mood)h.mood.split(',').forEach(m=>{if(m)moodCounts[m]=(moodCounts[m]||0)+1;});});
+  const topMood = Object.entries(moodCounts).sort((a,b)=>b[1]-a[1])[0];
+  const topMoodData = topMood ? MOODS.find(x=>x.v===topMood[0]) : null;
+
+  // Mood improvement (activities where moodAfter is more positive)
+  const positiveMoods=['happy','calm','energetic','motivated','inspired','grateful','playful','curious'];
+  const negativeMoods=['stressed','anxious','tired','sad','frustrated','overwhelmed','bored','lonely'];
+  const improved = S.history.filter(h=>h.moodAfter&&h.mood&&negativeMoods.some(m=>h.mood.includes(m))&&positiveMoods.includes(h.moodAfter));
+  const totalWithAfter = S.history.filter(h=>h.moodAfter&&h.mood&&negativeMoods.some(m=>h.mood.includes(m)));
+  const improvePct = totalWithAfter.length>0 ? Math.round((improved.length/totalWithAfter.length)*100) : null;
+
+  // Category that improves mood most
+  const catImprove={};
+  improved.forEach(h=>{if(h.category)catImprove[h.category]=(catImprove[h.category]||0)+1;});
+  const bestCat=Object.entries(catImprove).sort((a,b)=>b[1]-a[1])[0];
+
+  return `<div class="taste-profile">
+    <div class="taste-title">🎯 Your Taste Profile</div>
+    ${loved.length>0?`
+    <div class="taste-row">
+      <div class="taste-row-label">✅ You love</div>
+      <div class="taste-tags">${loved.map(x=>`<span class="taste-tag taste-tag-loved">${x.cat} ${'⭐'.repeat(Math.round(x.avg))}</span>`).join('')}</div>
+    </div>`:''}
+    ${disliked.length>0?`
+    <div class="taste-row">
+      <div class="taste-row-label">❌ Not really your thing</div>
+      <div class="taste-tags">${disliked.map(x=>`<span class="taste-tag taste-tag-meh">${x.cat}</span>`).join('')}</div>
+    </div>`:''}
+    ${topMoodData?`
+    <div class="taste-row">
+      <div class="taste-row-label">🎭 Your most common mood</div>
+      <div class="taste-tags"><span class="taste-tag taste-tag-mood">${topMoodData.e} ${topMoodData.l} (${topMood[1]}x)</span></div>
+    </div>`:''}
+    ${improvePct!==null?`
+    <div class="taste-row">
+      <div class="taste-row-label">💚 Mood improvement rate</div>
+      <div class="mood-improve-bar">
+        <div class="mood-improve-label"><span>${improvePct}% of activities improved your mood</span><span>${bestCat?`Best: ${bestCat[0]}`:''}</span></div>
+        <div class="mood-improve-track"><div class="mood-improve-fill" style="width:${improvePct}%"></div></div>
+      </div>
+    </div>`:''}
+    ${loved.length===0&&disliked.length===0?`<div class="taste-empty">Rate more activities (⭐) to build your taste profile</div>`:''}
+  </div>`;
+}
+
+function showSavedItem(id){
+  const item = S.history.find(h=>h.id===id);
+  if(!item) return;
+  // Show as if it's the current activity
+  S.current = item;
+  window._acts = window._acts || [item];
+  if(!window._acts.find(a=>a.title===item.title)) window._acts.unshift(item);
+  showDetail(window._acts.findIndex(a=>a.title===item.title));
+}
+
 function buildWeeklySummary(){
   const now=new Date();
   const weekAgo=new Date(now-7*24*60*60*1000);
@@ -1238,10 +1429,27 @@ function renderHistory(filter='all'){
     } else break;
   }
 
+  // Check for old saved items (7+ days)
+  const weekAgoTs = Date.now() - 7*24*60*60*1000;
+  const oldSaved = S.history.filter(h=>!h.completed && new Date(h.date).getTime() < weekAgoTs);
+
   let html='';
+  // Saved reminders
+  if(oldSaved.length > 0){
+    const item = oldSaved[0];
+    html += `<div class="saved-reminder" onclick="showSavedItem(${item.id})">
+      <div class="saved-reminder-icon">🔖</div>
+      <div class="saved-reminder-text">
+        You saved "<strong>${item.title}</strong>" ${Math.floor((Date.now()-new Date(item.date).getTime())/86400000)} days ago
+        <div class="saved-reminder-sub">Still want to try it? Tap to view →</div>
+      </div>
+    </div>`;
+  }
   html+=buildWeeklySummary();
   if(S.history.length>0){
-    html+=`<div class="progress-bar-card"><div class="prog-stats"><div class="prog-stat"><div class="prog-num">${done}</div><div class="prog-lbl">Completed</div></div><div class="prog-stat"><div class="prog-num">${S.history.length}</div><div class="prog-lbl">Total Saved</div></div><div class="prog-stat"><div class="prog-num">${avg}</div><div class="prog-lbl">Avg Rating</div></div></div><div style="font-size:11px;opacity:0.8;margin-bottom:8px;display:flex;justify-content:space-between"><span>${done} done</span><span>Next milestone: ${Math.ceil(Math.max(done,1)/10)*10} 🎯</span></div><div class="prog-bar-wrap"><div class="prog-bar" style="width:${progress}%"></div></div>${streak>0?`<div class="streak-badge">🔥 ${streak} day streak!</div>`:''}</div>`;
+    html+=`<div class="progress-bar-card"><div class="prog-stats"><div class="prog-stat"><div class="prog-num">${done}</div><div class="prog-lbl">Completed</div></div><div class="prog-stat"><div class="prog-num">${S.history.length}</div><div class="prog-lbl">Total Saved</div></div><div class="prog-stat"><div class="prog-num">${done>0?Math.round((done/S.history.length)*100)+'%':'—'}</div><div class="prog-lbl">Completion</div></div></div><div style="font-size:11px;opacity:0.8;margin-bottom:8px;display:flex;justify-content:space-between"><span>${done} done</span><span>Next: ${Math.ceil(Math.max(done,1)/10)*10} 🎯</span></div><div class="prog-bar-wrap"><div class="prog-bar" style="width:${progress}%"></div></div>${streak>0?`<div class="streak-badge">🔥 ${streak} day streak!</div>`:''}</div>`;
+    // Taste Profile
+    html += buildTasteProfile();
   }
   html+=`<div class="hist-tabs"><button class="hist-tab ${filter==='all'?'active':''}" onclick="renderHistory('all')">All (${S.history.length})</button><button class="hist-tab ${filter==='saved'?'active':''}" onclick="renderHistory('saved')">Saved (${S.history.filter(h=>!h.completed).length})</button><button class="hist-tab ${filter==='done'?'active':''}" onclick="renderHistory('done')">Done (${done})</button></div>`;
   if(items.length===0){html+=`<div class="empty"><div class="empty-icon">📭</div><p>No activities yet. Start exploring!</p></div>`;}
@@ -1444,6 +1652,15 @@ function toggleDiff(val,el){
 function checkReady(){
   const ok=S.specific.length>0||(S.mood.length>0&&S.time&&S.budget&&S.people&&S.preference);
   document.getElementById('discoverBtn').disabled=!ok;
+}
+
+function toggleMoreOptions(){
+  const panel=document.getElementById('moreOptionsPanel');
+  const btn=document.getElementById('moreOptionsBtnText');
+  if(!panel||!btn)return;
+  const isOpen=panel.style.display!=='none';
+  panel.style.display=isOpen?'none':'block';
+  btn.textContent=isOpen?'＋ More options (difficulty, energy level)':'－ Hide extra options';
 }
 
 function toast(msg){
