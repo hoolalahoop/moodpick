@@ -972,10 +972,18 @@ function updateApiStatus(){
   else{dot.className='api-dot off';txt.textContent='Connect API';}
 }
 
+// ── WORKER URL — replace with your Cloudflare Worker URL ──
+const WORKER_URL = 'https://autumn-recipe-dfe4.hoolalayeonhoo.workers.dev';
+
 async function callGroq(prompt){
-  const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+  // Use personal API key if set, otherwise use the worker
+  const useWorker = !S.apiKey;
+  const url = useWorker ? WORKER_URL : 'https://api.groq.com/openai/v1/chat/completions';
+  const headers = {'Content-Type':'application/json'};
+  if(!useWorker) headers['Authorization'] = 'Bearer '+S.apiKey;
+  const r=await fetch(url,{
     method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.apiKey},
+    headers,
     body:JSON.stringify({
       model:'llama-3.1-8b-instant',
       messages:[
@@ -1083,7 +1091,7 @@ function checkReady(){
 
 // ── SURPRISE ME ────────────────────────────────────────────
 async function surpriseMe(){
-  if(!S.apiKey){showApiModal();return;}
+  if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE'){showApiModal();return;}
   const rMood=MOODS[Math.floor(Math.random()*MOODS.length)].v;
   const rTime=TIME[Math.floor(Math.random()*TIME.length)].v;
   const rBudget=BUDGET[Math.floor(Math.random()*BUDGET.length)].v;
@@ -1111,7 +1119,7 @@ async function surpriseMe(){
 // ENHANCED AI RECOMMENDATION ENGINE
 // ─────────────────────────────────────────────────────────
 async function getRecommendations(){
-  if(!S.apiKey){showApiModal();return;}
+  if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE'){showApiModal();return;}
 
   if(S.settings.filterMemory){
     const filters={mood:S.mood,time:S.time,budget:S.budget,people:S.people,preference:S.preference,setting:S.setting,difficulty:S.difficulty};
@@ -1208,7 +1216,7 @@ function setDiffFilter(val){
 }
 
 async function refetchWithDifficulty(diff){
-  if(!S.apiKey){toast('No API key — connect Groq first');showApiModal();return;}
+  if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE'){toast('No API key — connect Groq first');showApiModal();return;}
   var grid=document.getElementById('activityGrid');
   var diffLabels={'long_project':'long-term projects (start today, continue over time)','hard':'challenging, skill-stretching activities','medium':'moderately engaging activities','easy':'easy, low-effort, relaxing activities'};
   var diffLabel=diffLabels[diff]||diff;
@@ -1351,7 +1359,7 @@ function getLikedCategories(){return S.history.filter(h=>h.rating>=4&&h.category
 function getDislikedCategories(){return S.history.filter(h=>(h.rating<=2&&h.rating>0)&&h.category).map(h=>h.category);}
 
 async function refetchWithRefinements(){
-  if(!S.apiKey){toast('No API key — connect Groq first');showApiModal();return;}
+  if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE'){toast('No API key — connect Groq first');showApiModal();return;}
   if(refineState.tags.length===0){renderActCards();return;}
   const grid=document.getElementById('activityGrid');
   if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div class="spin" style="margin:0 auto 12px"></div><p>Finding activities matching: <strong>${refineState.tags.join(', ')}</strong></p></div>`;
