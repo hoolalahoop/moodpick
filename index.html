@@ -866,7 +866,7 @@ function enterApp(){
   document.querySelector('.app-shell').style.display='flex';
   applySettings();
   if(!S.onboardingDone) startOnboarding();
-  else if(!S.apiKey) document.getElementById('apiModal').style.display='flex';
+  else if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE') document.getElementById('apiModal').style.display='flex';
 }
 
 function startOnboarding(){
@@ -908,7 +908,7 @@ function onboardNext(){
     localStorage.setItem('mp_onboarded','true');
     S.onboardingDone=true;
     document.getElementById('onboardingModal').style.display='none';
-    if(!S.apiKey) document.getElementById('apiModal').style.display='flex';
+    if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE') document.getElementById('apiModal').style.display='flex';
     toast('Welcome to MoodPick! 🎉');
   }
 }
@@ -1847,7 +1847,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('landingPage').style.display='none';
     document.querySelector('.app-shell').style.display='flex';
     if(!S.onboardingDone) startOnboarding();
-    else if(!S.apiKey) document.getElementById('apiModal').style.display='flex';
+    else if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE') document.getElementById('apiModal').style.display='flex';
   }
 
   applySettings();
