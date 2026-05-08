@@ -988,9 +988,9 @@ MATERIALS - think carefully and be realistic. Examples:
 - Baking: flour, butter, eggs, sugar, chocolate chips, vanilla extract, baking sheet
 - Yoga: yoga mat, comfortable clothing, water bottle
 - Guitar practice: guitar, guitar pick, chord chart
-Only say "Nothing needed" if the activity truly requires zero materials (e.g. meditation, walking, journaling with pen you own).
+Only say "Nothing needed" if the activity truly requires zero materials (e.g. meditation, walking, journaling you already have pen for).
 
-Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"item 1, item 2, item 3 (list ALL real items needed — never say Nothing needed unless truly zero prep)","steps":["step 1","step 2","step 3","step 4"],"youtube":["query 1","query 2","query 3"],"similar":["act 1","act 2","act 3"],"why":"why this fits their mood"}]}`;
+Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3","step 4"],"youtube":["query 1","query 2","query 3"],"similar":["act 1","act 2","act 3"],"why":"why this fits their mood"}]}`;
 
   try{
     const text=await callGroq(prompt);
@@ -1146,8 +1146,7 @@ Preference: ${S.preference||'any'}
 IMPORTANT - All activities MUST satisfy these extra requirements: ${refineState.tags.join(', ')}
 Do not suggest anything that contradicts these requirements.
 
-Think carefully about materials — list every specific item needed. Never say "Nothing needed" unless truly zero prep required.
-Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"item 1, item 2, item 3","steps":["step 1","step 2","step 3"],"youtube":["specific query 1","specific query 2","specific query 3"],"similar":["similar 1","similar 2"],"why":"one sentence why this fits their mood and requirements"}]}`;
+Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3"],"youtube":["specific query 1","specific query 2","specific query 3"],"similar":["similar 1","similar 2"],"why":"one sentence why this fits their mood and requirements"}]}`;
   try{
     const text=await callGroq(prompt);
     const parsed=safeJSON(text);
@@ -1533,7 +1532,18 @@ function renderHistory(filter='all'){
     html += buildTasteProfile();
   }
   html+=`<div class="hist-tabs"><button class="hist-tab ${filter==='all'?'active':''}" onclick="renderHistory('all')">All (${S.history.length})</button><button class="hist-tab ${filter==='saved'?'active':''}" onclick="renderHistory('saved')">Saved (${S.history.filter(h=>!h.completed).length})</button><button class="hist-tab ${filter==='done'?'active':''}" onclick="renderHistory('done')">Done (${done})</button></div>`;
-  if(items.length===0){html+=`<div class="empty"><div class="empty-icon">📭</div><p>No activities yet. Start exploring!</p></div>`;}
+  if(items.length===0){
+    if(filter==='all'&&S.history.length===0){
+      html+=`<div class="empty">
+        <div class="empty-icon">✨</div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;margin-bottom:8px;color:var(--text)">Your first activity is waiting</div>
+        <p style="margin-bottom:20px;line-height:1.6;color:var(--muted)">You haven't tried anything yet.<br>Go discover something perfect for your mood!</p>
+        <button class="btn-primary" onclick="showPage('home')" style="max-width:240px;margin:0 auto">✦ Find Something to Do</button>
+      </div>`;
+    } else {
+      html+=`<div class="empty"><div class="empty-icon">📭</div><p>Nothing here yet in this category.</p></div>`;
+    }
+  }
   else{
     html+=`<div class="hist-list">`;
     items.forEach(item=>{
