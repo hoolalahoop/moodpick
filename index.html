@@ -590,7 +590,7 @@ body.dark .pill.selected{color:var(--bg);}
       <!-- More options collapsed -->
       <div class="reveal" style="transition-delay:0.22s">
         <button class="fine-tune-btn" id="fineTuneBtn" onclick="toggleFineTune()">
-          ＋ Refine further
+          ＋ Fine-tune my results
         </button>
         <div id="fineTunePanel" style="display:none;margin-top:8px">
           <div class="card">
@@ -982,14 +982,6 @@ ${specificCtx}
 For each activity add a "why" field: one sentence explaining why this fits their current mood specifically.
 For steps use an array of strings. For youtube use 3 search queries sorted by relevance.
 
-MATERIALS - think carefully and be realistic. Examples:
-- Gardening: seeds or seedlings, potting soil, plant pot, watering can, gardening gloves, small trowel
-- Watercolor painting: watercolor paint set, watercolor paper, paintbrushes, water cup, palette
-- Baking: flour, butter, eggs, sugar, chocolate chips, vanilla extract, baking sheet
-- Yoga: yoga mat, comfortable clothing, water bottle
-- Guitar practice: guitar, guitar pick, chord chart
-Only say "Nothing needed" if the activity truly requires zero materials (e.g. meditation, walking, journaling you already have pen for).
-
 Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3","step 4"],"youtube":["query 1","query 2","query 3"],"similar":["act 1","act 2","act 3"],"why":"why this fits their mood"}]}`;
 
   try{
@@ -1160,15 +1152,8 @@ Return JSON: {"activities":[{"title":"string","description":"string","category":
 
 // ── DETAIL ─────────────────────────────────────────────────
 function parseMaterials(m){
-  if(!m) return [];
-  const lower = m.toLowerCase().trim();
-  const emptyPhrases = ['nothing needed','none','n/a','nothing','no materials needed','no materials required','no materials','not needed'];
-  if(emptyPhrases.includes(lower)) return [];
-  return m.split(/[,;
-•]+/)
-    .map(s=>s.replace(/^[\-\s]+/,'').trim())
-    .filter(s=>s.length>2&&s.length<80)
-    .filter(s=>!emptyPhrases.includes(s.toLowerCase()));
+  if(!m||m==='Nothing needed'||m==='None')return[];
+  return m.split(/[,;\n•\-]+/).map(s=>s.trim()).filter(s=>s.length>2&&s.length<80);
 }
 function buildShoppingHTML(materials){
   const items=parseMaterials(materials);if(!items.length)return'';
@@ -1532,18 +1517,7 @@ function renderHistory(filter='all'){
     html += buildTasteProfile();
   }
   html+=`<div class="hist-tabs"><button class="hist-tab ${filter==='all'?'active':''}" onclick="renderHistory('all')">All (${S.history.length})</button><button class="hist-tab ${filter==='saved'?'active':''}" onclick="renderHistory('saved')">Saved (${S.history.filter(h=>!h.completed).length})</button><button class="hist-tab ${filter==='done'?'active':''}" onclick="renderHistory('done')">Done (${done})</button></div>`;
-  if(items.length===0){
-    if(filter==='all'&&S.history.length===0){
-      html+=`<div class="empty">
-        <div class="empty-icon">✨</div>
-        <div style="font-family:'Playfair Display',serif;font-size:20px;margin-bottom:8px;color:var(--text)">Your first activity is waiting</div>
-        <p style="margin-bottom:20px;line-height:1.6;color:var(--muted)">You haven't tried anything yet.<br>Go discover something perfect for your mood!</p>
-        <button class="btn-primary" onclick="showPage('home')" style="max-width:240px;margin:0 auto">✦ Find Something to Do</button>
-      </div>`;
-    } else {
-      html+=`<div class="empty"><div class="empty-icon">📭</div><p>Nothing here yet in this category.</p></div>`;
-    }
-  }
+  if(items.length===0){html+=`<div class="empty"><div class="empty-icon">📭</div><p>No activities yet. Start exploring!</p></div>`;}
   else{
     html+=`<div class="hist-list">`;
     items.forEach(item=>{
@@ -1754,7 +1728,7 @@ function startOver(){
   const ft = document.getElementById('fineTunePanel');
   const ftBtn = document.getElementById('fineTuneBtn');
   if(ft) ft.style.display='none';
-  if(ftBtn) ftBtn.textContent='＋ Refine further';
+  if(ftBtn) ftBtn.textContent='＋ Fine-tune my results';
   showPage('home');toast('Starting fresh! 🔄');
 }
 
@@ -1848,7 +1822,7 @@ function toggleFineTune(){
   if(!panel||!btn) return;
   const isOpen = panel.style.display !== 'none';
   panel.style.display = isOpen ? 'none' : 'block';
-  btn.textContent = isOpen ? '＋ Refine further' : '－ Hide';
+  btn.textContent = isOpen ? '＋ Fine-tune my results' : '－ Hide extra options';
 }
 
 function checkReady(){
