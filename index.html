@@ -364,9 +364,11 @@ body.dark .pill.selected{color:var(--bg);}
 .qc-col{}
 .qc-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
 
-/* ── MORE OPTIONS ─────────────────────────────────────────── */
-.more-options-btn{width:100%;padding:10px;border-radius:var(--radius-sm);background:transparent;color:var(--muted);border:1.5px dashed var(--border);cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s;text-align:center;}
-.more-options-btn:hover{border-color:var(--primary);color:var(--primary);}
+
+
+/* ── FINE TUNE BUTTON ─────────────────────────────────────── */
+.fine-tune-btn{width:100%;padding:10px;border-radius:var(--radius-sm);background:transparent;color:var(--muted);border:1.5px dashed var(--border);cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s;text-align:center;}
+.fine-tune-btn:hover{border-color:var(--primary);color:var(--primary);}
 
 /* ── TASTE PROFILE ────────────────────────────────────────── */
 .taste-profile{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
@@ -586,14 +588,15 @@ body.dark .pill.selected{color:var(--bg);}
       </div>
 
       <!-- More options collapsed -->
-      <div class="reveal" style="transition-delay:0.17s">
-        <button class="more-options-btn" id="moreOptionsBtn" onclick="toggleMoreOptions()">
-          <span id="moreOptionsBtnText">＋ Refine further (vibe, style, energy)</span>
+      <div class="reveal" style="transition-delay:0.22s">
+        <button class="fine-tune-btn" id="fineTuneBtn" onclick="toggleFineTune()">
+          ＋ Fine-tune my results
         </button>
-        <div id="moreOptionsPanel" style="display:none">
-          <div class="card" style="margin-top:8px">
+        <div id="fineTunePanel" style="display:none;margin-top:8px">
+          <div class="card">
             <div class="card-title" style="margin-bottom:14px">How much energy do you have? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
             <div class="pill-row" id="diffGroup"></div>
+            <div style="margin-top:10px;font-size:11px;color:var(--muted)">🗓️ Start a Project = begin today, continue over time</div>
           </div>
         </div>
       </div>
@@ -1722,6 +1725,10 @@ function startOver(){
   const si=document.getElementById('specificInput');if(si)si.value='';
   const mb=document.getElementById('moodBanner');if(mb)mb.style.display='none';
   document.getElementById('discoverBtn').disabled=true;
+  const ft = document.getElementById('fineTunePanel');
+  const ftBtn = document.getElementById('fineTuneBtn');
+  if(ft) ft.style.display='none';
+  if(ftBtn) ftBtn.textContent='＋ Fine-tune my results';
   showPage('home');toast('Starting fresh! 🔄');
 }
 
@@ -1809,19 +1816,20 @@ function renderDiffGroup(){
   group.innerHTML = DIFF.map(o=>`<button class="pill" onclick="toggleDiff('${o.v}',this)" id="diff-${o.v}">${o.l}</button>`).join('');
 }
 
+function toggleFineTune(){
+  const panel = document.getElementById('fineTunePanel');
+  const btn = document.getElementById('fineTuneBtn');
+  if(!panel||!btn) return;
+  const isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? '＋ Fine-tune my results' : '－ Hide extra options';
+}
+
 function checkReady(){
   const ok=S.specific.length>0||(S.mood.length>0&&S.time&&S.budget&&S.people&&S.preference);
   document.getElementById('discoverBtn').disabled=!ok;
 }
 
-function toggleMoreOptions(){
-  const panel=document.getElementById('moreOptionsPanel');
-  const btn=document.getElementById('moreOptionsBtnText');
-  if(!panel||!btn)return;
-  const isOpen=panel.style.display!=='none';
-  panel.style.display=isOpen?'none':'block';
-  btn.innerHTML=isOpen?'<span id="moreOptionsBtnText">＋ Refine further (vibe, style, energy)</span>':'<span id="moreOptionsBtnText">－ Hide extra options</span>';
-}
 
 function toast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
