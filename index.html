@@ -476,7 +476,7 @@ body.dark .pill.selected{color:var(--bg);}
       <!-- Hero -->
       <div style="font-size:12px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px">✦ Activity Recommender</div>
       <h1 style="font-family:'Playfair Display',serif;font-size:clamp(36px,6vw,56px);line-height:1.15;color:var(--text);margin-bottom:20px">
-        Stop scrolling.<br><em style="color:var(--primary)">Start doing.</em>
+        What are you in the<br><em style="color:var(--primary)">mood to do?</em>
       </h1>
       <p style="color:var(--muted);font-size:16px;line-height:1.7;margin-bottom:40px;max-width:440px;margin-left:auto;margin-right:auto">
         Tell us your mood and we'll find the perfect activity for <em>right now</em> — with YouTube guides, shopping links, and a step-by-step start guide.
@@ -540,8 +540,8 @@ body.dark .pill.selected{color:var(--bg);}
     <div class="page active" id="page-home">
       <div class="hero reveal">
         <div class="hero-eyebrow">✦ Activity Recommender</div>
-        <h1 class="hero-title">What should you do<br><em>right now?</em></h1>
-        <p class="hero-sub">Tell us your mood and we'll find the perfect activity — with YouTube guides, shopping links, and step-by-step instructions.</p>
+        <h1 class="hero-title">What are you in the<br><em>mood to do?</em></h1>
+        <p class="hero-sub">Tell us how you're feeling and we'll find the perfect activity — with YouTube guides, shopping links, and a step-by-step start guide.</p>
       </div>
 
       <button class="surprise-btn reveal" onclick="surpriseMe()" style="transition-delay:0.03s">
@@ -588,11 +588,11 @@ body.dark .pill.selected{color:var(--bg);}
       <!-- More options collapsed -->
       <div class="reveal" style="transition-delay:0.17s">
         <button class="more-options-btn" id="moreOptionsBtn" onclick="toggleMoreOptions()">
-          <span id="moreOptionsBtnText">＋ More options (difficulty, energy level)</span>
+          <span id="moreOptionsBtnText">＋ Refine further (vibe, style, energy)</span>
         </button>
         <div id="moreOptionsPanel" style="display:none">
           <div class="card" style="margin-top:8px">
-            <div class="card-title" style="margin-bottom:14px">Energy level / difficulty? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
+            <div class="card-title" style="margin-bottom:14px">How much energy do you have? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
             <div class="pill-row" id="diffGroup"></div>
           </div>
         </div>
@@ -714,7 +714,8 @@ const TIME=[{v:'flash',l:'⚡ <10 min'},{v:'short',l:'🕐 10–30 min'},{v:'med
 const BUDGET=[{v:'free',l:'🆓 Free'},{v:'low',l:'💵 Under $10'},{v:'medium',l:'💰 $10–50'},{v:'high',l:'💎 $50+'}];
 const PEOPLE=[{v:'alone',l:'🧍 Solo'},{v:'partner',l:'💑 Partner'},{v:'friends',l:'👥 Friends'},{v:'family',l:'👨‍👩‍👧 Family'},{v:'group',l:'🎊 Group'}];
 const PREF=[{v:'creative',l:'🎨 Creative'},{v:'active',l:'🏃 Active'},{v:'relaxing',l:'🧘 Relaxing'},{v:'social',l:'💬 Social'},{v:'learning',l:'📚 Learning'},{v:'entertainment',l:'🎬 Entertainment'},{v:'food',l:'🍳 Food'},{v:'music',l:'🎵 Music'},{v:'nature',l:'🌲 Nature'},{v:'gaming',l:'🎮 Gaming'},{v:'anything',l:'🎲 Anything'}];
-const DIFF=[{v:'easy',l:'😌 Easy'},{v:'medium',l:'🧠 Medium'},{v:'hard',l:'💪 Hard'},{v:'long_project',l:'🗓️ Start a Project'}];
+const DIFF=[{v:'easy',l:'✨ Laid-back'},{v:'medium',l:'🧠 Engaging'},{v:'hard',l:'💪 Challenging'},{v:'long_project',l:'🗓️ Start a Project'}];
+
 const MOOD_THEME={happy:'happy',playful:'happy',grateful:'happy',energetic:'energetic',motivated:'energetic',restless:'energetic',calm:'calm',inspired:'calm',curious:'calm',sad:'sad',lonely:'sad',stressed:'stressed',anxious:'stressed',frustrated:'stressed',overwhelmed:'stressed',bored:'bored',nostalgic:'bored',tired:'tired'};
 
 // ── ONBOARDING ─────────────────────────────────────────────
@@ -970,7 +971,7 @@ async function getRecommendations(){
 
   const prompt=`Suggest 4 activities for this person.
 Mood: ${moodLabels||'any'}, Time: ${S.time||'any'} (flash=<10min, short=10-30min, medium=30-90min, long=1.5-3hrs, day=full day), Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}
-${S.difficulty.length?`Difficulty/Energy: ${S.difficulty.join(', ')} only. Note: long_project means something the user can START right now but continue over days or weeks (e.g. learn guitar, start a journal, build something). Still suggest how to begin TODAY.`:''}
+${S.difficulty.length?`Activity style/vibe: ${S.difficulty.join(', ')}. For entertainment this means genre/mood of content. For music this means the energy of music. For activities this means difficulty level. Tailor suggestions to match this style exactly. long_project = start now, continue over time, always include how to begin TODAY.`:''}
 ${timeCtx}
 ${histCtx}
 ${specificCtx}
@@ -1066,7 +1067,7 @@ function renderActCards(){
     <div class="act-card" onclick="showDetail(${window._acts.indexOf(a)})" style="animation:fadeUp 0.4s ease both;animation-delay:${i*0.08}s">
       <div class="act-top">
         <span class="cat-badge">${a.category||'Activity'}</span>
-        <span class="diff-badge diff-${a.difficulty||'easy'}">${a.difficulty==='long_project'?'🗓️ Start a Project':a.difficulty==='hard'?'🔥 Hard':a.difficulty==='medium'?'🧠 Medium':'✨ Easy'}</span>
+        <span class="diff-badge ${getDiffClass(a.difficulty)}">${getDiffLabel(a.difficulty)}</span>
       </div>
       <div class="act-title">${a.title}</div>
       <div class="act-desc">${a.description}</div>
@@ -1090,6 +1091,20 @@ function calcMatchScore(activity){
   const likedCats = getLikedCategories();
   if(likedCats.includes(activity.category)) score += 10;
   return Math.min(score, 98);
+}
+
+function getDiffLabel(difficulty){
+  if(difficulty==='long_project') return '🗓️ Start a Project';
+  if(difficulty==='hard') return '💪 Challenging';
+  if(difficulty==='medium') return '🧠 Engaging';
+  return '✨ Laid-back';
+}
+
+function getDiffClass(difficulty){
+  if(difficulty==='long_project') return 'diff-long_project';
+  if(difficulty==='hard') return 'diff-hard';
+  if(difficulty==='medium') return 'diff-medium';
+  return 'diff-easy';
 }
 
 function getLikedCategories(){
@@ -1204,7 +1219,7 @@ function showDetail(i){
     <div class="meta-grid">
       <div class="meta-block"><div class="meta-lbl">Time</div><div class="meta-val">⏱ ${a.estimated_time||'?'}</div></div>
       <div class="meta-block"><div class="meta-lbl">Cost</div><div class="meta-val">💰 ${a.estimated_cost||'Free'}</div></div>
-      <div class="meta-block"><div class="meta-lbl">Difficulty</div><div class="meta-val">${a.difficulty==='long_project'?'🗓️ Start a Project':a.difficulty==='hard'?'🔥 Challenging':a.difficulty==='medium'?'🧠 Engaging':'✨ Laid-back'}</div></div>
+      <div class="meta-block"><div class="meta-lbl">Difficulty</div><div class="meta-val">${getDiffLabel(a.difficulty)}</div></div>
       <div class="meta-block"><div class="meta-lbl">Materials</div><div class="meta-val">${parseMaterials(a.materials).length?'See below':'Nothing needed'}</div></div>
     </div>
     ${parseMaterials(a.materials).length?`<div class="section-block"><h4>🛍 What You Need <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">click to shop</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
@@ -1737,7 +1752,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   // Pill groups
   const rp=(id,opts,key)=>{document.getElementById(id).innerHTML=opts.map(o=>`<button class="pill" onclick="selPill('${key}','${o.v}',this)">${o.l}</button>`).join('');};
   rp('timeGroup',TIME,'time');rp('budgetGroup',BUDGET,'budget');rp('peopleGroup',PEOPLE,'people');rp('prefGroup',PREF,'preference');
-  document.getElementById('diffGroup').innerHTML=DIFF.map(o=>`<button class="pill" onclick="toggleDiff('${o.v}',this)" id="diff-${o.v}">${o.l}</button>`).join('');
+  renderDiffGroup();
 
   // Restore filter memory
   if(S.settings.filterMemory && Object.keys(S.lastFilters).length>0){
@@ -1757,6 +1772,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     S.specific=this.value.trim();
     document.getElementById('specificHint').style.display=S.specific?'block':'none';
     checkReady();
+    
   });
 
   // Reveal
@@ -1786,6 +1802,13 @@ function toggleDiff(val,el){
   else{S.difficulty.push(val);el.classList.add('selected');}
 }
 
+function renderDiffGroup(){
+  const group = document.getElementById('diffGroup');
+  if(!group) return;
+  S.difficulty = [];
+  group.innerHTML = DIFF.map(o=>`<button class="pill" onclick="toggleDiff('${o.v}',this)" id="diff-${o.v}">${o.l}</button>`).join('');
+}
+
 function checkReady(){
   const ok=S.specific.length>0||(S.mood.length>0&&S.time&&S.budget&&S.people&&S.preference);
   document.getElementById('discoverBtn').disabled=!ok;
@@ -1797,7 +1820,7 @@ function toggleMoreOptions(){
   if(!panel||!btn)return;
   const isOpen=panel.style.display!=='none';
   panel.style.display=isOpen?'none':'block';
-  btn.textContent=isOpen?'＋ More options (difficulty, energy level)':'－ Hide extra options';
+  btn.innerHTML=isOpen?'<span id="moreOptionsBtnText">＋ Refine further (vibe, style, energy)</span>':'<span id="moreOptionsBtnText">－ Hide extra options</span>';
 }
 
 function toast(msg){
