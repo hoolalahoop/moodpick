@@ -590,7 +590,7 @@ body.dark .pill.selected{color:var(--bg);}
       <!-- More options collapsed -->
       <div class="reveal" style="transition-delay:0.22s">
         <button class="fine-tune-btn" id="fineTuneBtn" onclick="toggleFineTune()">
-          ＋ Fine-tune my results
+          ＋ Refine further
         </button>
         <div id="fineTunePanel" style="display:none;margin-top:8px">
           <div class="card">
@@ -982,7 +982,15 @@ ${specificCtx}
 For each activity add a "why" field: one sentence explaining why this fits their current mood specifically.
 For steps use an array of strings. For youtube use 3 search queries sorted by relevance.
 
-Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3","step 4"],"youtube":["query 1","query 2","query 3"],"similar":["act 1","act 2","act 3"],"why":"why this fits their mood"}]}`;
+MATERIALS - think carefully and be realistic. Examples:
+- Gardening: seeds or seedlings, potting soil, plant pot, watering can, gardening gloves, small trowel
+- Watercolor painting: watercolor paint set, watercolor paper, paintbrushes, water cup, palette
+- Baking: flour, butter, eggs, sugar, chocolate chips, vanilla extract, baking sheet
+- Yoga: yoga mat, comfortable clothing, water bottle
+- Guitar practice: guitar, guitar pick, chord chart
+Only say "Nothing needed" if the activity truly requires zero materials (e.g. meditation, walking, journaling with pen you own).
+
+Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"item 1, item 2, item 3 (list ALL real items needed — never say Nothing needed unless truly zero prep)","steps":["step 1","step 2","step 3","step 4"],"youtube":["query 1","query 2","query 3"],"similar":["act 1","act 2","act 3"],"why":"why this fits their mood"}]}`;
 
   try{
     const text=await callGroq(prompt);
@@ -1138,7 +1146,8 @@ Preference: ${S.preference||'any'}
 IMPORTANT - All activities MUST satisfy these extra requirements: ${refineState.tags.join(', ')}
 Do not suggest anything that contradicts these requirements.
 
-Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"string","steps":["step 1","step 2","step 3"],"youtube":["specific query 1","specific query 2","specific query 3"],"similar":["similar 1","similar 2"],"why":"one sentence why this fits their mood and requirements"}]}`;
+Think carefully about materials — list every specific item needed. Never say "Nothing needed" unless truly zero prep required.
+Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"item 1, item 2, item 3","steps":["step 1","step 2","step 3"],"youtube":["specific query 1","specific query 2","specific query 3"],"similar":["similar 1","similar 2"],"why":"one sentence why this fits their mood and requirements"}]}`;
   try{
     const text=await callGroq(prompt);
     const parsed=safeJSON(text);
@@ -1152,8 +1161,15 @@ Return JSON: {"activities":[{"title":"string","description":"string","category":
 
 // ── DETAIL ─────────────────────────────────────────────────
 function parseMaterials(m){
-  if(!m||m==='Nothing needed'||m==='None')return[];
-  return m.split(/[,;\n•\-]+/).map(s=>s.trim()).filter(s=>s.length>2&&s.length<80);
+  if(!m) return [];
+  const lower = m.toLowerCase().trim();
+  const emptyPhrases = ['nothing needed','none','n/a','nothing','no materials needed','no materials required','no materials','not needed'];
+  if(emptyPhrases.includes(lower)) return [];
+  return m.split(/[,;
+•]+/)
+    .map(s=>s.replace(/^[\-\s]+/,'').trim())
+    .filter(s=>s.length>2&&s.length<80)
+    .filter(s=>!emptyPhrases.includes(s.toLowerCase()));
 }
 function buildShoppingHTML(materials){
   const items=parseMaterials(materials);if(!items.length)return'';
@@ -1728,7 +1744,7 @@ function startOver(){
   const ft = document.getElementById('fineTunePanel');
   const ftBtn = document.getElementById('fineTuneBtn');
   if(ft) ft.style.display='none';
-  if(ftBtn) ftBtn.textContent='＋ Fine-tune my results';
+  if(ftBtn) ftBtn.textContent='＋ Refine further';
   showPage('home');toast('Starting fresh! 🔄');
 }
 
@@ -1822,7 +1838,7 @@ function toggleFineTune(){
   if(!panel||!btn) return;
   const isOpen = panel.style.display !== 'none';
   panel.style.display = isOpen ? 'none' : 'block';
-  btn.textContent = isOpen ? '＋ Fine-tune my results' : '－ Hide extra options';
+  btn.textContent = isOpen ? '＋ Refine further' : '－ Hide';
 }
 
 function checkReady(){
