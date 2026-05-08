@@ -1092,7 +1092,19 @@ async function surpriseMe(){
   S.mood=[rMood];S.time=rTime;S.budget=rBudget;S.people=rPeople;S.preference=rPref;
   applyMoodTheme(S.mood);
   toast('🎲 Picking something random for you...');
-  await getRecommendations();
+  // Go straight to results — skip refine screen entirely
+  showPage('results');
+  document.getElementById('resultsContent').innerHTML=`<div class="loading"><div class="spin"></div><h3>Finding perfect activities...</h3><p>AI is personalizing your picks</p><div class="dots"><span></span><span></span><span></span></div></div>`;
+  try{
+    const moodLabel=MOODS.find(x=>x.v===rMood)?.l||rMood;
+    const prompt=`Suggest 4 fun activities for someone feeling ${moodLabel}. Time: ${rTime}, Budget: ${rBudget}, People: ${rPeople}, Preference: ${rPref}. MATERIALS RULE: Provide itemized comma-separated materials for every activity. Use "Nothing needed" only for meditation, walking, breathing, stretching. Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"comma-separated list or Nothing needed","steps":["step 1","step 2","step 3"],"youtube":["q1","q2","q3"],"similar":["s1","s2"],"why":"why this fits the mood"}]}`;
+    const text=await callGroq(prompt);
+    const parsed=safeJSON(text);
+    window._acts=parsed.activities||[];
+    renderResults(window._acts);
+  }catch(err){
+    document.getElementById('resultsContent').innerHTML=`<div class="loading"><div style="font-size:40px;margin-bottom:16px">⚠️</div><h3>Something went wrong</h3><p style="color:var(--red);margin-bottom:20px">${err.message}</p><div style="display:flex;gap:10px;justify-content:center"><button class="btn-ghost" onclick="showPage('home')">← Back</button><button class="btn-ghost" onclick="surpriseMe()">↻ Retry</button></div></div>`;
+  }
 }
 
 // ─────────────────────────────────────────────────────────
