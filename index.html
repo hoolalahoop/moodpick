@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MoodPick</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
 <style>
 /* ── THEMES ─────────────────────────────────────────────── */
 :root {
@@ -147,6 +147,7 @@ body.dark .pill.selected{color:var(--bg);}
 .diff-easy{background:var(--green-dim);color:var(--green);}
 .diff-medium{background:var(--primary-dim);color:var(--primary);}
 .diff-hard{background:var(--red-dim);color:var(--red);}
+.diff-long_project{background:var(--blue-dim);color:var(--blue);}
 .diff-long_project{background:var(--blue-dim);color:var(--blue);}
 .act-title{font-family:'Playfair Display',serif;font-size:17px;margin-bottom:6px;line-height:1.3;}
 .act-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:14px;}
@@ -463,6 +464,55 @@ body.dark .pill.selected{color:var(--bg);}
   </div>
 </div>
 
+<!-- LANDING PAGE -->
+<div id="landingPage" style="display:none">
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;background:var(--bg);transition:var(--transition)">
+    <div style="max-width:560px;width:100%">
+      <!-- Logo -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:48px">
+        <div style="width:40px;height:40px;border-radius:10px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:20px;color:white">✦</div>
+        <span style="font-family:'Playfair Display',serif;font-size:24px;color:var(--text)">MoodPick</span>
+      </div>
+      <!-- Hero -->
+      <div style="font-size:12px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px">✦ Activity Recommender</div>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(36px,6vw,56px);line-height:1.15;color:var(--text);margin-bottom:20px">
+        Stop scrolling.<br><em style="color:var(--primary)">Start doing.</em>
+      </h1>
+      <p style="color:var(--muted);font-size:16px;line-height:1.7;margin-bottom:40px;max-width:440px;margin-left:auto;margin-right:auto">
+        Tell us your mood and we'll find the perfect activity for <em>right now</em> — with YouTube guides, shopping links, and a step-by-step start guide.
+      </p>
+      <!-- Why section -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 12px">
+          <div style="font-size:24px;margin-bottom:8px">🎭</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">Mood-first</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.4">Start from how you feel, not a category</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 12px">
+          <div style="font-size:24px;margin-bottom:8px">⚡</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">Start now</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.4">Step-by-step guide + YouTube + shopping</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 12px">
+          <div style="font-size:24px;margin-bottom:8px">🧠</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">Learns you</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.4">Gets smarter with every activity you try</div>
+        </div>
+      </div>
+      <!-- Research note -->
+      <div style="background:var(--primary-dim);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:32px;text-align:left">
+        <div style="font-size:11px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">✦ The Research Behind This</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6">"Too many choices leads to no choice" — Barry Schwartz, <em>The Paradox of Choice</em>. MoodPick solves decision fatigue by starting with your emotion, not a list of options.</div>
+      </div>
+      <!-- CTA -->
+      <button onclick="enterApp()" style="width:100%;padding:18px;border-radius:14px;background:var(--primary);color:white;border:none;cursor:pointer;font-family:'Playfair Display',serif;font-size:18px;font-style:italic;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;box-shadow:0 4px 20px rgba(0,0,0,0.1)">
+        ✦ Find What to Do Right Now
+      </button>
+      <p style="font-size:11px;color:var(--muted);margin-top:12px">Free · No signup required · Powered by AI</p>
+    </div>
+  </div>
+</div>
+
 <div class="app-shell">
   <div class="sidebar">
     <div class="logo" onclick="showPage('home')">
@@ -472,7 +522,7 @@ body.dark .pill.selected{color:var(--bg);}
     <nav>
       <button class="nav-btn active" id="nav-home" onclick="showPage('home')"><span class="nav-icon">🔍</span><span class="nav-label">Discover</span></button>
       <button class="nav-btn" id="nav-history" onclick="showPage('history')"><span class="nav-icon">📋</span><span class="nav-label">History</span></button>
-      <button class="nav-btn" id="nav-calendar" onclick="showPage('calendar')"><span class="nav-icon">📅</span><span class="nav-label">Calendar</span></button>
+
       <button class="nav-btn" id="nav-insights" onclick="showPage('insights')"><span class="nav-icon">📊</span><span class="nav-label">Insights</span></button>
       <button class="nav-btn" id="nav-settings" onclick="showPage('settings')"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></button>
     </nav>
@@ -561,23 +611,28 @@ body.dark .pill.selected{color:var(--bg);}
 
     <!-- HISTORY -->
     <div class="page" id="page-history">
-      <div class="hero"><div class="hero-eyebrow">✦ Your Journey</div><h1 class="hero-title">Activity <em>History</em></h1></div>
+      <div class="hero" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div><div class="hero-eyebrow">✦ Your Journey</div><h1 class="hero-title">Activity <em>History</em></h1></div>
+        <button class="btn-ghost" id="calToggleBtn" onclick="toggleCalendarView()" style="margin-top:8px;align-self:flex-end">
+          📅 Calendar view
+        </button>
+      </div>
+      <!-- Inline calendar (hidden by default) -->
+      <div id="inlineCalendar" style="display:none;margin-bottom:16px">
+        <div class="card">
+          <div class="cal-header">
+            <button class="btn-icon" onclick="changeMonth(-1)">←</button>
+            <span class="cal-month" id="calMonth"></span>
+            <button class="btn-icon" onclick="changeMonth(1)">→</button>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+        <div id="calModal"></div>
+      </div>
       <div id="historyContent"></div>
     </div>
 
-    <!-- CALENDAR -->
-    <div class="page" id="page-calendar">
-      <div class="hero"><div class="hero-eyebrow">✦ Schedule</div><h1 class="hero-title">Activity <em>Calendar</em></h1></div>
-      <div class="card">
-        <div class="cal-header">
-          <button class="btn-icon" onclick="changeMonth(-1)">←</button>
-          <span class="cal-month" id="calMonth"></span>
-          <button class="btn-icon" onclick="changeMonth(1)">→</button>
-        </div>
-        <div class="cal-grid" id="calGrid"></div>
-      </div>
-      <div id="calModal"></div>
-    </div>
+
 
     <!-- INSIGHTS -->
     <div class="page" id="page-insights">
@@ -659,7 +714,7 @@ const TIME=[{v:'flash',l:'⚡ <10 min'},{v:'short',l:'🕐 10–30 min'},{v:'med
 const BUDGET=[{v:'free',l:'🆓 Free'},{v:'low',l:'💵 Under $10'},{v:'medium',l:'💰 $10–50'},{v:'high',l:'💎 $50+'}];
 const PEOPLE=[{v:'alone',l:'🧍 Solo'},{v:'partner',l:'💑 Partner'},{v:'friends',l:'👥 Friends'},{v:'family',l:'👨‍👩‍👧 Family'},{v:'group',l:'🎊 Group'}];
 const PREF=[{v:'creative',l:'🎨 Creative'},{v:'active',l:'🏃 Active'},{v:'relaxing',l:'🧘 Relaxing'},{v:'social',l:'💬 Social'},{v:'learning',l:'📚 Learning'},{v:'entertainment',l:'🎬 Entertainment'},{v:'food',l:'🍳 Food'},{v:'music',l:'🎵 Music'},{v:'nature',l:'🌲 Nature'},{v:'gaming',l:'🎮 Gaming'},{v:'anything',l:'🎲 Anything'}];
-const DIFF=[{v:'easy',l:'😌 Easy'},{v:'medium',l:'🧠 Medium'},{v:'hard',l:'💪 Hard'},{v:'long_project',l:'🗓️ Long Project'}];
+const DIFF=[{v:'easy',l:'😌 Easy'},{v:'medium',l:'🧠 Medium'},{v:'hard',l:'💪 Hard'},{v:'long_project',l:'🗓️ Start a Project'}];
 const MOOD_THEME={happy:'happy',playful:'happy',grateful:'happy',energetic:'energetic',motivated:'energetic',restless:'energetic',calm:'calm',inspired:'calm',curious:'calm',sad:'sad',lonely:'sad',stressed:'stressed',anxious:'stressed',frustrated:'stressed',overwhelmed:'stressed',bored:'bored',nostalgic:'bored',tired:'tired'};
 
 // ── ONBOARDING ─────────────────────────────────────────────
@@ -669,28 +724,30 @@ const ONBOARD_STEPS = [
     type:'info', btn:'Get Started'
   },
   {
-    icon:'🎭', title:'What\'s your vibe?', sub:'What kind of activities do you usually enjoy? (Pick all that apply)',
+    icon:'🎭', title:'What do you usually enjoy?', sub:'Pick all that apply — we\'ll use this to personalize your recommendations.',
     type:'multi', key:'prefTypes',
     options:['🎨 Creative','🏃 Active','🧘 Relaxing','💬 Social','📚 Learning','🎮 Gaming','🍳 Food & Cooking','🎵 Music','🌲 Nature']
   },
   {
-    icon:'💰', title:'What\'s your usual budget?', sub:'This helps us tailor recommendations to what\'s realistic for you.',
-    type:'single', key:'budgetPref',
-    options:['🆓 Free activities','💵 Under $10','💰 $10–50','💎 No limit']
-  },
-  {
-    icon:'⏰', title:'How much free time do you usually have?', sub:'We\'ll remember this as your default.',
-    type:'single', key:'timePref',
-    options:['⚡ Under 30 min','🕐 30–90 min','🌙 A few hours','☀️ Full day sometimes']
-  },
-  {
-    icon:'🎉', title:'You\'re all set!', sub:'MoodPick is personalized just for you. Your preferences are saved and will be used to make better recommendations.',
+    icon:'🎉', title:'You\'re all set!', sub:'MoodPick is ready. Tell us your mood and we\'ll find the perfect activity for you right now.',
     type:'finish', btn:'Start Exploring'
   }
 ];
 
 let onboardStep = 0;
 let onboardAnswers = {};
+
+function enterApp(){
+  localStorage.setItem('mp_visited','true');
+  document.getElementById('landingPage').style.display='none';
+  document.querySelector('.app-shell').style.display='flex';
+  applySettings();
+  if(!S.onboardingDone){
+    startOnboarding();
+  } else if(!S.apiKey){
+    document.getElementById('apiModal').style.display='flex';
+  }
+}
 
 function startOnboarding(){
   onboardStep = 0;
@@ -913,7 +970,7 @@ async function getRecommendations(){
 
   const prompt=`Suggest 4 activities for this person.
 Mood: ${moodLabels||'any'}, Time: ${S.time||'any'} (flash=<10min, short=10-30min, medium=30-90min, long=1.5-3hrs, day=full day), Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}
-${S.difficulty.length?`Difficulty: ${S.difficulty.join(', ')} only.`:''}
+${S.difficulty.length?`Difficulty/Energy: ${S.difficulty.join(', ')} only. Note: long_project means something the user can START right now but continue over days or weeks (e.g. learn guitar, start a journal, build something). Still suggest how to begin TODAY.`:''}
 ${timeCtx}
 ${histCtx}
 ${specificCtx}
@@ -1009,7 +1066,7 @@ function renderActCards(){
     <div class="act-card" onclick="showDetail(${window._acts.indexOf(a)})" style="animation:fadeUp 0.4s ease both;animation-delay:${i*0.08}s">
       <div class="act-top">
         <span class="cat-badge">${a.category||'Activity'}</span>
-        <span class="diff-badge diff-${a.difficulty||'easy'}">${a.difficulty==='long_project'?'🗓️ Epic':a.difficulty==='hard'?'🔥 Hard':a.difficulty==='medium'?'🧠 Medium':'✨ Easy'}</span>
+        <span class="diff-badge diff-${a.difficulty||'easy'}">${a.difficulty==='long_project'?'🗓️ Start a Project':a.difficulty==='hard'?'🔥 Hard':a.difficulty==='medium'?'🧠 Medium':'✨ Easy'}</span>
       </div>
       <div class="act-title">${a.title}</div>
       <div class="act-desc">${a.description}</div>
@@ -1147,7 +1204,7 @@ function showDetail(i){
     <div class="meta-grid">
       <div class="meta-block"><div class="meta-lbl">Time</div><div class="meta-val">⏱ ${a.estimated_time||'?'}</div></div>
       <div class="meta-block"><div class="meta-lbl">Cost</div><div class="meta-val">💰 ${a.estimated_cost||'Free'}</div></div>
-      <div class="meta-block"><div class="meta-lbl">Difficulty</div><div class="meta-val">${a.difficulty==='long_project'?'🗓️ Epic Project':a.difficulty==='hard'?'🔥 Challenging':a.difficulty==='medium'?'🧠 Engaging':'✨ Laid-back'}</div></div>
+      <div class="meta-block"><div class="meta-lbl">Difficulty</div><div class="meta-val">${a.difficulty==='long_project'?'🗓️ Start a Project':a.difficulty==='hard'?'🔥 Challenging':a.difficulty==='medium'?'🧠 Engaging':'✨ Laid-back'}</div></div>
       <div class="meta-block"><div class="meta-lbl">Materials</div><div class="meta-val">${parseMaterials(a.materials).length?'See below':'Nothing needed'}</div></div>
     </div>
     ${parseMaterials(a.materials).length?`<div class="section-block"><h4>🛍 What You Need <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">click to shop</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
@@ -1417,17 +1474,7 @@ function renderHistory(filter='all'){
   const rated=S.history.filter(h=>h.rating>0);
   const avg=rated.length?(rated.reduce((s,h)=>s+h.rating,0)/rated.length).toFixed(1):'—';
   const progress=Math.min((done/10)*100,100);
-  // Calculate streak
-  let streak=0;
-  const today=new Date().toDateString();
-  const sortedDone=[...S.history.filter(h=>h.completed)].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  let checkDate=new Date();
-  for(const item of sortedDone){
-    if(new Date(item.date).toDateString()===checkDate.toDateString()){
-      streak++;
-      checkDate=new Date(checkDate-86400000);
-    } else break;
-  }
+  const streak=calcStreak();
 
   // Check for old saved items (7+ days)
   const weekAgoTs = Date.now() - 7*24*60*60*1000;
@@ -1465,6 +1512,7 @@ function renderHistory(filter='all'){
         <div class="hist-bottom">
           <div class="stars">${[1,2,3,4,5].map(s=>`<span class="star" onclick="rateItem(${item.id},${s})" style="color:${s<=(item.rating||0)?'var(--primary)':'var(--border)'}">${s<=(item.rating||0)?'★':'☆'}</span>`).join('')}</div>
           ${!item.completed?`<button class="btn-ghost" style="padding:4px 12px;font-size:11px" onclick="markHistDone(${item.id})">Mark done</button>`:''}
+          <button class="btn-ghost" style="padding:4px 12px;font-size:11px;color:var(--primary);border-color:var(--primary)" onclick="doAgain(${item.id})">↺ Again</button>
           <button class="btn-ghost" style="padding:4px 12px;font-size:11px" onclick="openShareFromHistory(${item.id})">↗ Share</button>
           <button class="btn-ghost" style="padding:4px 12px;font-size:11px;color:var(--red);border-color:var(--red);margin-left:auto" onclick="deleteItem(${item.id})">Delete</button>
         </div>
@@ -1473,6 +1521,22 @@ function renderHistory(filter='all'){
     html+=`</div>`;
   }
   document.getElementById('historyContent').innerHTML=html;
+  // If calendar is open, refresh it too
+  const cal = document.getElementById('inlineCalendar');
+  if(cal && cal.style.display !== 'none') renderCalendar();
+}
+
+function doAgain(id){
+  const item=S.history.find(h=>h.id===id);
+  if(!item)return;
+  S.current=item;
+  // Add to front of acts so showDetail works
+  window._acts=window._acts||[];
+  const existing=window._acts.findIndex(a=>a.title===item.title);
+  if(existing>-1)window._acts.splice(existing,1);
+  window._acts.unshift(item);
+  showDetail(0);
+  toast('Showing "'+item.title+'" again ↺');
 }
 
 function rateItem(id,r){const h=S.history.find(h=>h.id===id);if(h){h.rating=r;saveHistory();renderHistory();}}
@@ -1526,35 +1590,99 @@ function renderCalModal(){
   html+=`</div>`;
   document.getElementById('calModal').innerHTML=html;
 }
+function toggleCalendarView(){
+  const cal = document.getElementById('inlineCalendar');
+  const btn = document.getElementById('calToggleBtn');
+  if(!cal || !btn) return;
+  const isOpen = cal.style.display !== 'none';
+  cal.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? '📅 Calendar view' : '📋 List view';
+  if(!isOpen) renderCalendar();
+}
+
 function changeMonth(dir){S.calMonth=new Date(S.calMonth.getFullYear(),S.calMonth.getMonth()+dir,1);S.calSelected=null;renderCalendar();}
 
 // ── INSIGHTS ───────────────────────────────────────────────
 function renderInsights(){
   const done=S.history.filter(h=>h.completed).length;
   const total=S.history.length;
-  const rated=S.history.filter(h=>h.rating>0);
-  const avg=rated.length?(rated.reduce((s,h)=>s+h.rating,0)/rated.length).toFixed(1):'—';
   const cats=[...new Set(S.history.map(h=>h.category).filter(Boolean))].length;
-  let html=`<div class="insights-grid"><div class="insight-stat"><div class="insight-num">${done}</div><div class="insight-lbl">Completed</div></div><div class="insight-stat"><div class="insight-num">${total}</div><div class="insight-lbl">Total Saved</div></div><div class="insight-stat"><div class="insight-num">${avg}</div><div class="insight-lbl">Avg Rating</div></div><div class="insight-stat"><div class="insight-num">${cats}</div><div class="insight-lbl">Categories</div></div></div>`;
-  if(S.history.length<2){html+=`<div class="empty"><div class="empty-icon">📊</div><p>Save more activities to see insights!</p></div>`;document.getElementById('insightsContent').innerHTML=html;return;}
-  html+=`<div class="chart-card"><div class="chart-title">📂 Activities by Category</div><canvas id="catChart" height="200"></canvas></div><div class="chart-card"><div class="chart-title">⭐ Rating Distribution</div><canvas id="ratingChart" height="200"></canvas></div><div class="chart-card"><div class="chart-title">😊 Mood Before vs After</div><canvas id="moodChart" height="200"></canvas></div>`;
+  const streak=calcStreak();
+
+  // Mood improvement
+  const positiveMoods=['happy','calm','energetic','motivated','inspired','grateful','playful','curious'];
+  const negativeMoods=['stressed','anxious','tired','sad','frustrated','overwhelmed','bored','lonely'];
+  const improved=S.history.filter(h=>h.moodAfter&&h.mood&&negativeMoods.some(m=>h.mood.includes(m))&&positiveMoods.includes(h.moodAfter));
+  const totalWithAfter=S.history.filter(h=>h.moodAfter&&h.mood&&negativeMoods.some(m=>h.mood.includes(m)));
+  const improvePct=totalWithAfter.length>0?Math.round((improved.length/totalWithAfter.length)*100):null;
+
+  let html=`<div class="insights-grid">
+    <div class="insight-stat"><div class="insight-num">${done}</div><div class="insight-lbl">Completed</div></div>
+    <div class="insight-stat"><div class="insight-num">${total}</div><div class="insight-lbl">Total Saved</div></div>
+    <div class="insight-stat"><div class="insight-num">${cats}</div><div class="insight-lbl">Categories tried</div></div>
+    <div class="insight-stat"><div class="insight-num">${streak>0?streak+'🔥':'—'}</div><div class="insight-lbl">Day streak</div></div>
+  </div>`;
+
+  if(total<2){
+    html+=`<div class="empty"><div class="empty-icon">📊</div><p>Save and complete more activities to see your insights!</p></div>`;
+    document.getElementById('insightsContent').innerHTML=html;return;
+  }
+
+  // Taste profile (reuse from history)
+  html += buildTasteProfile();
+
+  // Mood improvement insight card
+  if(improvePct!==null){
+    const catImprove={};
+    improved.forEach(h=>{if(h.category)catImprove[h.category]=(catImprove[h.category]||0)+1;});
+    const bestCat=Object.entries(catImprove).sort((a,b)=>b[1]-a[1])[0];
+    html+=`<div class="card">
+      <div class="card-title" style="margin-bottom:12px">💚 Mood impact</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:12px">
+        ${improvePct}% of the time, doing an activity improved your mood from negative to positive.
+        ${bestCat?`<strong style="color:var(--text)">${bestCat[0]}</strong> activities help you the most.`:''}
+      </div>
+      <div class="mood-improve-track"><div class="mood-improve-fill" style="width:${improvePct}%"></div></div>
+    </div>`;
+  }
+
+  // Most active days of week
+  const dayCounts=[0,0,0,0,0,0,0];
+  const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  S.history.forEach(h=>{dayCounts[new Date(h.date).getDay()]++;});
+  const peakDay=dayNames[dayCounts.indexOf(Math.max(...dayCounts))];
+  const totalActivities=dayCounts.reduce((a,b)=>a+b,0);
+
+  if(totalActivities>3){
+    html+=`<div class="card">
+      <div class="card-title" style="margin-bottom:12px">📅 Activity patterns</div>
+      <div style="display:flex;gap:6px;align-items:flex-end;height:60px;margin-bottom:8px">
+        ${dayCounts.map((c,i)=>{
+          const max=Math.max(...dayCounts)||1;
+          const h=Math.round((c/max)*100);
+          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="width:100%;background:var(--primary);border-radius:4px 4px 0 0;height:${h}%;opacity:${c===Math.max(...dayCounts)?1:0.4};transition:height 0.5s ease"></div>
+            <div style="font-size:9px;color:var(--muted)">${dayNames[i]}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="font-size:12px;color:var(--muted)">You're most active on <strong style="color:var(--text)">${peakDay}</strong></div>
+    </div>`;
+  }
+
   document.getElementById('insightsContent').innerHTML=html;
-  const isDark=document.body.classList.contains('dark');
-  const tickColor=isDark?'#6b6878':'#8a7f74';
-  const gridColor=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
-  const primary=getComputedStyle(document.documentElement).getPropertyValue('--primary').trim()||'#2d5a3d';
-  // Category chart
-  const catCounts={};S.history.filter(h=>h.completed&&h.category).forEach(h=>{catCounts[h.category]=(catCounts[h.category]||0)+1;});
-  const catLabels=Object.keys(catCounts).slice(0,6);
-  new Chart(document.getElementById('catChart'),{type:'bar',data:{labels:catLabels,datasets:[{data:catLabels.map(c=>catCounts[c]),backgroundColor:'rgba(45,90,61,0.6)',borderColor:'rgba(45,90,61,1)',borderWidth:1,borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{display:false}}}}});
-  // Rating chart
-  const rc=[0,0,0,0,0];S.history.filter(h=>h.rating>0).forEach(h=>{rc[h.rating-1]++;});
-  new Chart(document.getElementById('ratingChart'),{type:'bar',data:{labels:['1⭐','2⭐','3⭐','4⭐','5⭐'],datasets:[{data:rc,backgroundColor:['rgba(192,57,43,0.6)','rgba(193,127,58,0.6)','rgba(200,169,110,0.6)','rgba(45,122,79,0.6)','rgba(45,90,61,0.8)'],borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{display:false}}}}});
-  // Mood chart - before vs after
-  const moodBefore={},moodAfter={};
-  S.history.forEach(h=>{if(h.mood)h.mood.split(',').forEach(m=>{if(m)moodBefore[m]=(moodBefore[m]||0)+1;});if(h.moodAfter)moodAfter[h.moodAfter]=(moodAfter[h.moodAfter]||0)+1;});
-  const topMoods=Object.keys({...moodBefore,...moodAfter}).slice(0,6);
-  new Chart(document.getElementById('moodChart'),{type:'doughnut',data:{labels:topMoods.map(m=>{const f=MOODS.find(x=>x.v===m);return f?f.e+' '+f.l:m;}),datasets:[{data:topMoods.map(m=>moodBefore[m]||0),backgroundColor:['rgba(45,90,61,0.7)','rgba(76,175,130,0.7)','rgba(107,159,212,0.7)','rgba(192,57,43,0.7)','rgba(200,169,110,0.7)','rgba(90,64,128,0.7)'],label:'Before'}]},options:{plugins:{legend:{labels:{color:isDark?'#f0eee8':'#1a1714',font:{family:'Sora',size:12}}}}}});
+}
+
+function calcStreak(){
+  let streak=0;
+  const sortedDone=[...S.history.filter(h=>h.completed)].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  let checkDate=new Date();
+  for(const item of sortedDone){
+    if(new Date(item.date).toDateString()===checkDate.toDateString()){
+      streak++;checkDate=new Date(checkDate-86400000);
+    } else break;
+  }
+  return streak;
 }
 
 // ── NAVIGATION ─────────────────────────────────────────────
@@ -1564,7 +1692,7 @@ function showPage(name){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('nav-'+name)?.classList.add('active');
   if(name==='history')renderHistory();
-  if(name==='calendar')renderCalendar();
+
   if(name==='insights')renderInsights();
   applyMoodTheme(S.mood);
   window.scrollTo(0,0);
@@ -1584,11 +1712,20 @@ function startOver(){
 
 // ── SETUP ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
-  // Onboarding or API modal
-  if(!S.onboardingDone){
-    startOnboarding();
-  } else if(!S.apiKey){
-    document.getElementById('apiModal').style.display='flex';
+  // Show landing page on first ever visit, otherwise go straight to app
+  const hasVisited = localStorage.getItem('mp_visited');
+  if(!hasVisited){
+    document.getElementById('landingPage').style.display='block';
+    document.querySelector('.app-shell').style.display='none';
+  } else {
+    document.getElementById('landingPage').style.display='none';
+    document.querySelector('.app-shell').style.display='flex';
+    // Onboarding or API modal
+    if(!S.onboardingDone){
+      startOnboarding();
+    } else if(!S.apiKey){
+      document.getElementById('apiModal').style.display='flex';
+    }
   }
 
   applySettings();
