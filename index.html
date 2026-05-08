@@ -1186,10 +1186,55 @@ Return JSON: {"activities":[{"title":"string","description":"string","category":
 }
 
 // ── RESULTS ────────────────────────────────────────────────
-let refineState={tags:[],sort:'default'};
+let refineState={tags:[],sort:'default',diffFilter:null};
+
+function setDiffFilter(val, el){
+  // Toggle off if already selected
+  if(refineState.diffFilter === val){
+    refineState.diffFilter = null;
+    document.querySelectorAll('[id^="diff-filter-"]').forEach(b=>b.classList.remove('active'));
+    renderActCards();
+    return;
+  }
+  refineState.diffFilter = val;
+  document.querySelectorAll('[id^="diff-filter-"]').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  // If we have existing results with matching difficulty, just filter client-side
+  const matching = (window._acts||[]).filter(a=>a.difficulty===val);
+  if(matching.length >= 2){
+    renderActCards();
+  } else {
+    // Re-fetch from AI with this difficulty constraint
+    refetchWithDifficulty(val);
+  }
+}
+
+async function refetchWithDifficulty(diff){
+  if(!S.apiKey){toast('No API key — connect Groq first');showApiModal();return;}
+  const grid=document.getElementById('activityGrid');
+  const diffLabel = diff==='long_project'?'long-term projects (start today, continue over time)':diff==='hard'?'challenging, skill-stretching activities':diff==='medium'?'moderately engaging activities':'easy, low-effort, relaxing activities';
+  if(grid) grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div class="spin" style="margin:0 auto 12px"></div><p>Finding <strong>${diffLabel}</strong>...</p></div>`;
+  const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
+  const prompt=`Suggest exactly 4 activities that are specifically "${diff}" difficulty level (${diffLabel}).
+Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}
+Every single activity MUST have difficulty: "${diff}". Do not mix difficulty levels.
+${diff==='long_project'?'Each project must include how to START TODAY plus what to continue over coming days/weeks.':''}
+${diff==='hard'?'Activities should require skill, focus, or physical effort. Push the user beyond their comfort zone.':''}
+MATERIALS RULE: Provide itemized comma-separated materials. Use "Nothing needed" only for meditation/walking/breathing/stretching.
+Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"${diff}","materials":"comma-separated list or Nothing needed","steps":["step 1","step 2","step 3","step 4"],"youtube":["q1","q2","q3"],"similar":["s1","s2"],"why":"why this fits their mood"}]}`;
+  try{
+    const text=await callGroq(prompt);
+    const parsed=safeJSON(text);
+    window._acts=parsed.activities||[];
+    renderActCards();
+    toast(`Showing ${diffLabel} ✓`);
+  }catch(err){
+    if(grid) grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:20px"><p style="color:var(--red);margin-bottom:12px">Error: ${err.message}</p><button class="btn-ghost" onclick="refetchWithDifficulty('${diff}')">↻ Try again</button></div>`;
+  }
+}
 
 function renderResults(acts,resetRefine=true){
-  if(resetRefine)refineState={tags:[],sort:'default'};
+  if(resetRefine)refineState={tags:[],sort:'default',diffFilter:null};
   window._acts=acts;
   const moodText=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(' & ');
   const sub=[S.specific,moodText,S.preference,S.time].filter(Boolean).join(' · ');
@@ -1217,6 +1262,13 @@ function renderResults(acts,resetRefine=true){
         <button class="sort-pill" onclick="setSort('time',this)">⏱ Time</button>
         <button class="sort-pill" onclick="setSort('cost',this)">💰 Cost</button>
         <button class="sort-pill" onclick="setSort('difficulty',this)">💪 Effort</button>
+      </div>
+      <div class="sort-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+        <span class="sort-lbl">Want:</span>
+        <button class="sort-pill" id="diff-filter-easy" onclick="setDiffFilter('easy',this)">✨ Laid-back</button>
+        <button class="sort-pill" id="diff-filter-medium" onclick="setDiffFilter('medium',this)">🧠 Engaging</button>
+        <button class="sort-pill" id="diff-filter-hard" onclick="setDiffFilter('hard',this)">💪 Challenging</button>
+        <button class="sort-pill" id="diff-filter-long_project" onclick="setDiffFilter('long_project',this)">🗓️ Project</button>
       </div>
     </div>
     <div class="activity-grid" id="activityGrid"></div>`;
@@ -1246,7 +1298,7 @@ function setSort(sort,el){
 }
 function renderActCards(){
   const grid=document.getElementById('activityGrid');if(!grid)return;
-  let acts=[...window._acts];
+  let acts=[...(window._acts||[])].filter(a=>!refineState.diffFilter||a.difficulty===refineState.diffFilter);
   const diffOrder={easy:0,medium:1,hard:2,long_project:3};
   const parseCost=s=>{if(!s)return 0;const m=s.match(/[\d.]+/);return m?parseFloat(m[0]):0;};
   const parseTime=s=>{if(!s)return 0;const h=s.match(/(\d+)\s*h/i),m=s.match(/(\d+)\s*m/i);return(h?parseInt(h[1])*60:0)+(m?parseInt(m[1]):0);};
