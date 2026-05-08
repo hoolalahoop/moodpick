@@ -866,7 +866,7 @@ function enterApp(){
   document.querySelector('.app-shell').style.display='flex';
   applySettings();
   if(!S.onboardingDone) startOnboarding();
-  else if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE') document.getElementById('apiModal').style.display='flex';
+  // worker handles auth — no modal needed
 }
 
 function startOnboarding(){
@@ -908,7 +908,7 @@ function onboardNext(){
     localStorage.setItem('mp_onboarded','true');
     S.onboardingDone=true;
     document.getElementById('onboardingModal').style.display='none';
-    if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE') document.getElementById('apiModal').style.display='flex';
+    // worker handles auth — no modal needed
     toast('Welcome to MoodPick! 🎉');
   }
 }
@@ -973,15 +973,12 @@ function updateApiStatus(){
 }
 
 // ── WORKER URL — replace with your Cloudflare Worker URL ──
-const WORKER_URL = 'https://autumn-recipe-dfe4.hoolalayeonhoo.workers.dev';
+const GROQ_KEY_BAKED = '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';
 
 async function callGroq(prompt){
-  // Use personal API key if set, otherwise use the worker
-  const useWorker = !S.apiKey;
-  const url = useWorker ? WORKER_URL : 'https://api.groq.com/openai/v1/chat/completions';
-  const headers = {'Content-Type':'application/json'};
-  if(!useWorker) headers['Authorization'] = 'Bearer '+S.apiKey;
-  const r=await fetch(url,{
+  const url = 'https://api.groq.com/openai/v1/chat/completions';
+  const headers = {'Content-Type':'application/json','Authorization':'Bearer '+(S.apiKey||GROQ_KEY_BAKED)};
+  const r = await fetch(url,{
     method:'POST',
     headers,
     body:JSON.stringify({
@@ -1091,7 +1088,7 @@ function checkReady(){
 
 // ── SURPRISE ME ────────────────────────────────────────────
 async function surpriseMe(){
-  if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE'){showApiModal();return;}
+  if(false){}// worker handles auth
   const rMood=MOODS[Math.floor(Math.random()*MOODS.length)].v;
   const rTime=TIME[Math.floor(Math.random()*TIME.length)].v;
   const rBudget=BUDGET[Math.floor(Math.random()*BUDGET.length)].v;
@@ -1119,7 +1116,7 @@ async function surpriseMe(){
 // ENHANCED AI RECOMMENDATION ENGINE
 // ─────────────────────────────────────────────────────────
 async function getRecommendations(){
-  if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE'){showApiModal();return;}
+  if(false){}// worker handles auth
 
   if(S.settings.filterMemory){
     const filters={mood:S.mood,time:S.time,budget:S.budget,people:S.people,preference:S.preference,setting:S.setting,difficulty:S.difficulty};
@@ -1216,7 +1213,7 @@ function setDiffFilter(val){
 }
 
 async function refetchWithDifficulty(diff){
-  if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE'){toast('No API key — connect Groq first');showApiModal();return;}
+  if(false){}// worker handles auth
   var grid=document.getElementById('activityGrid');
   var diffLabels={'long_project':'long-term projects (start today, continue over time)','hard':'challenging, skill-stretching activities','medium':'moderately engaging activities','easy':'easy, low-effort, relaxing activities'};
   var diffLabel=diffLabels[diff]||diff;
@@ -1359,7 +1356,7 @@ function getLikedCategories(){return S.history.filter(h=>h.rating>=4&&h.category
 function getDislikedCategories(){return S.history.filter(h=>(h.rating<=2&&h.rating>0)&&h.category).map(h=>h.category);}
 
 async function refetchWithRefinements(){
-  if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE'){toast('No API key — connect Groq first');showApiModal();return;}
+  if(false){}// worker handles auth
   if(refineState.tags.length===0){renderActCards();return;}
   const grid=document.getElementById('activityGrid');
   if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div class="spin" style="margin:0 auto 12px"></div><p>Finding activities matching: <strong>${refineState.tags.join(', ')}</strong></p></div>`;
@@ -1847,7 +1844,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('landingPage').style.display='none';
     document.querySelector('.app-shell').style.display='flex';
     if(!S.onboardingDone) startOnboarding();
-    else if(!S.apiKey && WORKER_URL==='YOUR_WORKER_URL_HERE') document.getElementById('apiModal').style.display='flex';
+    // worker handles auth — no modal needed
   }
 
   applySettings();
