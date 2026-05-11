@@ -817,7 +817,7 @@ let S = {
   current:null,
   history: JSON.parse(localStorage.getItem('mp_history')||'[]'),
   apiKey: localStorage.getItem('mp_groq_key')||'',
-  settings: JSON.parse(localStorage.getItem('mp_settings')||'{"darkMode":false,"moodColors":true,"filterMemory":false,"checkin":true}'),
+  settings: JSON.parse(localStorage.getItem('mp_settings')||'{"darkMode":false,"moodColors":true,"filterMemory":true,"checkin":true}'),
   onboardingDone: localStorage.getItem('mp_onboarded')==='true',
   lastFilters: JSON.parse(localStorage.getItem('mp_lastfilters')||'{}'),
   calMonth: new Date(),
@@ -982,7 +982,7 @@ async function callGroq(prompt){
     method:'POST',
     headers,
     body:JSON.stringify({
-      model:'gemini-2.5-flash',
+      model:'llama-3.1-8b-instant',
       messages:[
         {role:'system',content:'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values.'},
         {role:'user',content:prompt}
@@ -1821,7 +1821,6 @@ function showPage(name){
 }
 
 function startOver(){
-  localStorage.removeItem('mp_lastfilters');
   S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=null;S.setting=null;S.difficulty=[];S.specific='';
   refineState={tags:[],sort:'default'};
   applyMoodTheme([]);
