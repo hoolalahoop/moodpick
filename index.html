@@ -817,7 +817,7 @@ let S = {
   current:null,
   history: JSON.parse(localStorage.getItem('mp_history')||'[]'),
   apiKey: localStorage.getItem('mp_groq_key')||'',
-  settings: JSON.parse(localStorage.getItem('mp_settings')||'{"darkMode":false,"moodColors":true,"filterMemory":true,"checkin":true}'),
+  settings: JSON.parse(localStorage.getItem('mp_settings')||'{"darkMode":false,"moodColors":true,"filterMemory":false,"checkin":true}'),
   onboardingDone: localStorage.getItem('mp_onboarded')==='true',
   lastFilters: JSON.parse(localStorage.getItem('mp_lastfilters')||'{}'),
   calMonth: new Date(),
@@ -1821,6 +1821,7 @@ function showPage(name){
 }
 
 function startOver(){
+  localStorage.removeItem('mp_lastfilters');
   S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=null;S.setting=null;S.difficulty=[];S.specific='';
   refineState={tags:[],sort:'default'};
   applyMoodTheme([]);
