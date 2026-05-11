@@ -976,7 +976,7 @@ function updateApiStatus(){
 const GEMINI_KEY = 'AIzaSyDb9YsqI6DLImpUTpWNy8V2ga92Vx6ZnzM';
 
 async function callGroq(prompt){
-  const url = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=' + GEMINI_KEY;
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY;
   const headers = {'Content-Type':'application/json'};
   const r = await fetch(url,{
     method:'POST',
