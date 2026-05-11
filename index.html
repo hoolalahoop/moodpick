@@ -973,23 +973,28 @@ function updateApiStatus(){
 }
 
 // ── WORKER URL — replace with your Cloudflare Worker URL ──
-const GEMINI_KEY = 'AIzaSyAkHvNhIKOMcLL8MHEV2H6LmehmdgOsNRU';
+const WORKER_URL = 'https://autumn-recipe-dfe4.hoolalayeonhoo.workers.dev';
 
 async function callGroq(prompt){
-  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY;
+  const url = WORKER_URL;
   const headers = {'Content-Type':'application/json'};
   const r = await fetch(url,{
     method:'POST',
     headers,
     body:JSON.stringify({
-      contents:[{parts:[{text:'You are a JSON API. Return only valid JSON. Never use markdown code fences.\n\n' + prompt}]}],
-      generationConfig:{temperature:0.7,maxOutputTokens:8192,responseMimeType:'application/json'}
+      model:'gemini-2.5-flash',
+      messages:[
+        {role:'system',content:'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values.'},
+        {role:'user',content:prompt}
+      ],
+      temperature:0.7,max_tokens:3500,
+      response_format:{type:'json_object'}
     })
   });
   if(!r.ok){let e='HTTP '+r.status;try{const j=await r.json();e=j.error?.message||e;}catch(x){}throw new Error(e);}
   const d=await r.json();
-  if(d.error) throw new Error(d.error.message||JSON.stringify(d.error));
-  return d.candidates[0].content.parts[0].text;
+  if(d.error) throw new Error(d.error?.message||JSON.stringify(d.error));
+  return d.choices[0].message.content;
 }
 
 function safeJSON(text){
