@@ -972,13 +972,12 @@ function updateApiStatus(){
   else{dot.className='api-dot off';txt.textContent='Connect API';}
 }
 
-// ── Routes through Cloudflare Worker — key never exposed ──
+// ── WORKER URL — replace with your Cloudflare Worker URL ──
 const WORKER_URL = 'https://autumn-recipe-dfe4.hoolalayeonhoo.workers.dev';
 
 async function callGroq(prompt){
-  const url = S.apiKey ? 'https://api.groq.com/openai/v1/chat/completions' : WORKER_URL;
+  const url = WORKER_URL;
   const headers = {'Content-Type':'application/json'};
-  if(S.apiKey) headers['Authorization'] = 'Bearer ' + S.apiKey;
   const r = await fetch(url,{
     method:'POST',
     headers,
