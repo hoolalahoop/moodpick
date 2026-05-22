@@ -526,13 +526,13 @@ body.dark .pill.selected{color:var(--bg);}
 <div class="checkin-overlay" id="checkinOverlay" style="display:none">
   <div class="checkin-modal">
     <div style="font-size:40px;margin-bottom:12px">🎉</div>
-    <h3>How do you feel now?</h3>
-    <p>You just completed <strong id="checkinActivityName"></strong>. Did your mood change?</p>
+    <h3>${t('howFeelNow')}</h3>
+    <p>${t('justCompleted')} <strong id="checkinActivityName"></strong>. ${t('didMoodChange')}</p>
     <div class="checkin-moods" id="checkinMoods"></div>
-    <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em">Rate this activity</div>
+    <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em">${t('rateActivity')}</div>
     <div class="rating-stars" id="checkinStars"></div>
-    <button class="btn-primary" onclick="submitCheckin()" id="checkinSubmitBtn" style="margin-top:0" disabled>Save & Continue →</button>
-    <button class="btn-ghost" onclick="skipCheckin()" style="width:100%;margin-top:8px;justify-content:center">Skip</button>
+    <button class="btn-primary" onclick="submitCheckin()" id="checkinSubmitBtn" style="margin-top:0" disabled>${t('saveContinue')}</button>
+    <button class="btn-ghost" onclick="skipCheckin()" style="width:100%;margin-top:8px;justify-content:center">${t('skipBtn')}</button>
   </div>
 </div>
 
@@ -540,14 +540,14 @@ body.dark .pill.selected{color:var(--bg);}
 <div class="share-overlay" id="shareOverlay" style="display:none">
   <div class="share-modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <span style="font-size:13px;font-weight:600;color:var(--muted)">SHARE ACTIVITY</span>
+      <span style="font-size:13px;font-weight:600;color:var(--muted)">${t('shareActivity')}</span>
       <button class="btn-icon" onclick="closeShare()">✕</button>
     </div>
     <div class="share-card" id="shareCardEl"></div>
     <div class="share-btns">
       <button class="share-platform-btn" onclick="shareToKakao()">💬 KakaoTalk</button>
       <button class="share-platform-btn" onclick="shareToTwitter()">🐦 Twitter/X</button>
-      <button class="share-platform-btn" onclick="copyShareLink()">🔗 Copy Link</button>
+      <button class="share-platform-btn" onclick="copyShareLink()">${t('copyLink')}</button>
     </div>
   </div>
 </div>
@@ -687,6 +687,10 @@ body.dark .pill.selected{color:var(--bg);}
             <div class="refine-field-label">🌿 Indoor or outdoor</div>
             <div class="pill-row" id="settingGroup"></div>
           </div>
+          <div>
+            <div class="refine-field-label" id="mobilityFieldLabel">♿ Physical accessibility</div>
+            <div class="pill-row" id="mobilityGroup"></div>
+          </div>
         </div>
       </div>
 
@@ -698,7 +702,7 @@ body.dark .pill.selected{color:var(--bg);}
         <div class="card" style="margin-top:8px">
           <div class="card-title" style="margin-bottom:14px" id="energyCardTitle">How much energy do you have? <span id="energyOptional" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
           <div class="pill-row" id="diffGroup"></div>
-          <div style="margin-top:10px;font-size:11px;color:var(--muted)">🗓️ Start a Project = begin today, continue over time</div>
+          <div style="margin-top:10px;font-size:11px;color:var(--muted)" id="projectNote">🗓️ Start a Project = begin today, continue over time</div>
         </div>
       </div>
 
@@ -872,6 +876,12 @@ const SETTING=[
   {v:'outdoor',l:'🌳 Outdoor',lk:'🌳 야외'},
   {v:'either',l:'✓ Either',lk:'✓ 상관없음'}
 ];
+const MOBILITY=[
+  {v:'full',l:'🧍 Full mobility',lk:'🧍 완전한 이동'},
+  {v:'limited',l:'🦽 Limited mobility',lk:'🦽 제한된 이동'},
+  {v:'seated',l:'♿ Wheelchair / seated',lk:'♿ 휠체어 / 앉은 자세'},
+  {v:'low_energy',l:'🛋️ Low energy / chronic illness',lk:'🛋️ 저에너지 / 만성질환'}
+];
 const DIFF=[
   {v:'easy',l:'✨ Laid-back',lk:'✨ 가볍게'},
   {v:'medium',l:'🧠 Engaging',lk:'🧠 몰입감 있게'},
@@ -883,9 +893,9 @@ const MOOD_THEME={happy:'happy',playful:'happy',grateful:'happy',energetic:'ener
 
 // ── ONBOARDING ─────────────────────────────────────────────
 const ONBOARD_STEPS = [
-  {icon:'✦', title:'Welcome to MoodPick', sub:'Find the perfect activity for any mood, budget, and situation — with step-by-step guides and YouTube tutorials.',type:'info', btn:'Get Started'},
+  {icon:'✦', title:'Welcome to MoodPick', sub:'Find the perfect activity for any mood, budget, and situation — with step-by-step guides and YouTube tutorials.',type:'info', btn:t('getStarted')},
   {icon:'🎭', title:'What do you usually enjoy?', sub:'Pick all that apply — we\'ll use this to personalize your recommendations.',type:'multi', key:'prefTypes',options:['🎨 Creative','🏃 Active','🧘 Relaxing','💬 Social','📚 Learning','🎮 Gaming','🍳 Food & Cooking','🎵 Music','🌲 Nature']},
-  {icon:'🎉', title:'You\'re all set!', sub:'MoodPick is ready. Tell us your mood and we\'ll find the perfect activity for you right now.',type:'finish', btn:'Start Exploring'}
+  {icon:'🎉', title:t('allSetTitle'), sub:'MoodPick is ready. Tell us your mood and we\'ll find the perfect activity for you right now.',type:'finish', btn:'Start Exploring'}
 ];
 
 const CHECKIN_MOODS=[
@@ -997,6 +1007,27 @@ const TRANSLATIONS = {
     checkinToggleSub: 'Ask how you feel after completing an activity',
     startNow: 'Start Now Guide', materials: 'What You Need',
     similar: 'Similar Activities', watchYoutube: '▶ Watch on YouTube',
+    iDidThis: '✓ I Did This!', saveForLater: '🔖 Save for Later', savedBtn: '✓ Saved',
+    notForMe: '👎 Not for me — try another',
+    clickToShop: 'click to shop', sortedByViews: 'sorted by views',
+    nothingNeeded: 'Nothing needed',
+    tasteProfile: t('tasteProfile'), youLove: t('youLove'),
+    notYourThing: t('notYourThing'), topMoodLbl: t('topMoodLbl'),
+    moodImprove: t('moodImprove'),
+    moodImpactTitle: t('moodImpactTitle'), activityPatternsTitle: t('activityPatternsTitle'),
+    mostActiveOn: "You're most active on",
+    findingActivities: 'Finding perfect activities...', aiPersonalizing: 'AI is personalizing your picks',
+    avgRatingLbl: 'Avg Rating',
+    howFeelNow: 'How do you feel now?', justCompleted: 'You just completed',
+    didMoodChange: 'Did your mood change?', rateActivity: 'Rate this activity',
+    saveContinue: 'Save & Continue →', skipBtn: 'Skip',
+    shareActivity: 'SHARE ACTIVITY', copyLink: '🔗 Copy Link',
+    historyCleared: 'History cleared', deletedMsg: 'Deleted',
+    doneMsg: 'Done! 🎉', savedLater: 'Saved for later 🔖', alreadySaved: 'Already saved!',
+    copiedClipboard: 'Copied to clipboard! 📋',
+    foundActivities: 'Found', showingDiff: 'Showing',
+    welcomeTitle: t('welcomeTitle'), getStarted: 'Get Started',
+    allSetTitle: "You're all set!", moodCheckinTitle: '✦ Mood Check-in',
     completed: 'Completed', totalSaved: 'Total Saved', completion: 'Completion',
     allTab: 'All', savedTab: 'Saved', doneTab: 'Done',
     weekSummary: "📆 This Week's Summary", avgRating: 'Avg Rating', topMood: 'Top Mood',
@@ -1008,10 +1039,10 @@ const TRANSLATIONS = {
     weekGoodStart: "Good start! You completed {n} activit{y} this week. Keep it up!",
     weekGreat: 'Great week! You completed {n} activities. Your favorite category was {cat}.',
     appSettings: 'App Settings',
-    moodImpact: '💚 Mood impact', activityPatterns: '📅 Activity patterns',
-    mostActive: "You're most active on", tasteProfile: '🎯 Your Taste Profile',
-    youLove: '✅ You love', notYourThing: '❌ Not really your thing',
-    topMoodLabel: '🎭 Your most common mood', moodImproveRate: '💚 Mood improvement rate',
+    moodImpact: t('moodImpactTitle'), activityPatterns: t('activityPatternsTitle'),
+    mostActive: "You're most active on", tasteProfile: t('tasteProfile'),
+    youLove: t('youLove'), notYourThing: t('notYourThing'),
+    topMoodLabel: t('topMoodLbl'), moodImproveRate: t('moodImprove'),
     sort: 'Sort:', want: 'Want:',
     time: '⏱ Time', cost: '💰 Cost', effort: '💪 Effort',
     laidBack: '✨ Laid-back', engaging: '🧠 Engaging', challenging: '💪 Challenging', project: '🗓️ Project',
@@ -1051,6 +1082,27 @@ const TRANSLATIONS = {
     checkinToggleSub: '활동 완료 후 기분을 물어봅니다',
     startNow: '지금 시작 가이드', materials: '필요한 것',
     similar: '비슷한 활동', watchYoutube: '▶ 유튜브로 보기',
+    iDidThis: '✓ 했어요!', saveForLater: '🔖 나중에 하기', savedBtn: '✓ 저장됨',
+    notForMe: '👎 별로예요 — 다른 것 추천',
+    clickToShop: '눌러서 쇼핑하기', sortedByViews: '조회수 정렬',
+    nothingNeeded: '준비물 없음',
+    tasteProfile: '🎯 나의 취향 프로필', youLove: '✅ 좋아하는 것',
+    notYourThing: '❌ 별로인 것', topMoodLbl: '🎭 가장 많은 기분',
+    moodImprove: '💚 기분 개선율',
+    moodImpactTitle: '💚 기분 변화', activityPatternsTitle: '📅 활동 패턴',
+    mostActiveOn: '가장 활발한 날은',
+    findingActivities: '딱 맞는 활동을 찾고 있어요...', aiPersonalizing: 'AI가 맞춤 추천을 준비 중이에요',
+    avgRatingLbl: '평균 평점',
+    howFeelNow: '지금 기분이 어때요?', justCompleted: '방금 완료했어요',
+    didMoodChange: '기분이 바뀌었나요?', rateActivity: '이 활동을 평가해요',
+    saveContinue: '저장하고 계속 →', skipBtn: '건너뛰기',
+    shareActivity: '활동 공유', copyLink: '🔗 링크 복사',
+    historyCleared: '기록이 삭제되었어요', deletedMsg: '삭제되었어요',
+    doneMsg: '완료했어요! 🎉', savedLater: '나중에 하기로 저장했어요 🔖', alreadySaved: '이미 저장되었어요!',
+    copiedClipboard: '클립보드에 복사되었어요! 📋',
+    foundActivities: '찾았어요', showingDiff: '보여주는 중',
+    welcomeTitle: 'MoodPick에 오신 것을 환영해요 ✦', getStarted: '시작하기',
+    allSetTitle: '준비 완료!', moodCheckinTitle: '✦ 기분 체크인',
     completed: '완료', totalSaved: '전체 저장', completion: '완료율',
     allTab: '전체', savedTab: '저장됨', doneTab: '완료',
     weekSummary: '📆 이번 주 요약', avgRating: '평균 평점', topMood: '주요 기분',
@@ -1099,6 +1151,8 @@ function applyLangToUI(){
   if(refineBack) refineBack.textContent = t('refineBack');
   const refineSubEl = document.querySelector('.refine-screen-header p');
   if(refineSubEl) refineSubEl.textContent = t('refineSub');
+  const mobilityFieldLabelEl = document.getElementById('mobilityFieldLabel');
+  if(mobilityFieldLabelEl) mobilityFieldLabelEl.textContent = t('mobilityLabel');
   const fieldLabels = document.querySelectorAll('.refine-field-label');
   const labelKeys = ['timeLabel','budgetLabel','peopleLabel','activityLabel','settingLabel','mobilityLabel'];
   fieldLabels.forEach((el,i)=>{ if(labelKeys[i]) el.textContent = t(labelKeys[i]); });
@@ -1180,6 +1234,15 @@ function applyLangToUI(){
   const specificInput = document.getElementById('specificInput');
   if(specificInput) specificInput.placeholder = S.lang==='ko'?'예: "영화 보기", "그림 그리기"...':'e.g. "watch a movie", "draw something"...';
 
+  // ── ENERGY PANEL ──
+  const projectNote = document.getElementById('projectNote');
+  if(projectNote) projectNote.textContent = S.lang==='ko'?'🗓️ 프로젝트 시작 = 오늘 시작하고, 계속 이어나가기':'🗓️ Start a Project = begin today, continue over time';
+  const energyBtn2 = document.getElementById('energyToggleBtn');
+  if(energyBtn2){
+    const isOpen2 = document.getElementById('energyPanel')?.style.display !== 'none';
+    energyBtn2.textContent = isOpen2 ? t('hideRefine') : t('refineMore');
+  }
+
   // ── QUICK CONTEXT ──
   const qcTitle = document.getElementById('quickContextTitle');
   if(qcTitle) qcTitle.textContent = S.lang==='ko'?'빠른 설정':'Quick context';
@@ -1241,7 +1304,16 @@ function setLang(lang){
   rp2('peopleGroup',PEOPLE,'people');
   rp2('prefGroup',PREF,'preference');
   rp2('settingGroup',SETTING,'setting');
+  rp2('mobilityGroup',MOBILITY,'mobility');
   renderDiffGroup();
+  // Re-render mood cards with correct language
+  document.getElementById('moodGrid').innerHTML=MOODS.map(m=>`
+    <button class="mood-card" onclick="toggleMood('${m.v}')" id="mood-${m.v}">
+      <span class="mood-card-emoji">${m.e}</span>
+      <span class="mood-card-label">${lang==='ko'&&m.lk?m.lk:m.l}</span>
+    </button>`).join('');
+  // Re-apply selected states
+  S.mood.forEach(mv=>document.getElementById('mood-'+mv)?.classList.add('selected'));
   toast(lang==='ko' ? '한국어로 변경되었습니다 🇰🇷' : 'Switched to English 🇺🇸');
 }
 
@@ -1268,7 +1340,7 @@ function applySettings(){
 
 function clearHistory(){
   if(confirm('Clear all activity history? This cannot be undone.')){
-    S.history=[];saveHistory();renderHistory();toast('History cleared');
+    S.history=[];saveHistory();renderHistory();toast(t('historyCleared'));
   }
 }
 
@@ -1381,7 +1453,7 @@ function toggleEnergy(){
   if(!panel||!btn) return;
   const isOpen=panel.style.display!=='none';
   panel.style.display=isOpen?'none':'block';
-  btn.textContent=isOpen?'\uFF0B Refine further':'\uFF0D Hide';
+  btn.textContent=isOpen?t('refineMore'):t('hideRefine');
 }
 
 // ── PILL SELECTION ──────────────────────────────────────────
@@ -1400,7 +1472,7 @@ function renderDiffGroup(){
   const group=document.getElementById('diffGroup');
   if(!group) return;
   S.difficulty=[];
-  group.innerHTML=DIFF.map(o=>`<button class="pill" onclick="toggleDiff('${o.v}',this)" id="diff-${o.v}">${o.l}</button>`).join('');
+  group.innerHTML=DIFF.map(o=>`<button class="pill" onclick="toggleDiff('${o.v}',this)" id="diff-${o.v}">${S.lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');
 }
 
 function checkReady(){
@@ -1423,7 +1495,7 @@ async function surpriseMe(){
   toast('🎲 Picking something random for you...');
   // Go straight to results — skip refine screen entirely
   showPage('results');
-  document.getElementById('resultsContent').innerHTML=`<div class="loading"><div class="spin"></div><h3>Finding perfect activities...</h3><p>AI is personalizing your picks</p><div class="dots"><span></span><span></span><span></span></div></div>`;
+  document.getElementById('resultsContent').innerHTML=`<div class="loading"><div class="spin"></div><h3>${t('findingActivities')}</h3><p>${t('aiPersonalizing')}</p><div class="dots"><span></span><span></span><span></span></div></div>`;
   try{
     const moodLabel=MOODS.find(x=>x.v===rMood)?.l||rMood;
     const prompt=`Suggest 4 fun activities for someone feeling ${moodLabel}. Time: ${rTime}, Budget: ${rBudget}, People: ${rPeople}, Preference: ${rPref}. MATERIALS RULE: Provide itemized comma-separated materials for every activity. Use "Nothing needed" only for meditation, walking, breathing, stretching. Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"comma-separated list or Nothing needed","steps":["step 1","step 2","step 3"],"youtube":["q1","q2","q3"],"similar":["s1","s2"],"why":"why this fits the mood"}]}`;
@@ -1448,7 +1520,7 @@ async function getRecommendations(){
   }
 
   showPage('results');
-  document.getElementById('resultsContent').innerHTML=`<div class="loading"><div class="spin"></div><h3>Finding perfect activities...</h3><p>AI is personalizing your picks</p><div class="dots"><span></span><span></span><span></span></div></div>`;
+  document.getElementById('resultsContent').innerHTML=`<div class="loading"><div class="spin"></div><h3>${t('findingActivities')}</h3><p>${t('aiPersonalizing')}</p><div class="dots"><span></span><span></span><span></span></div></div>`;
 
   const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
   const specificCtx=S.specific?`User specifically wants: "${S.specific}". Give 4 specific variations. Name exact movies, games, recipes.`:'';
@@ -1572,34 +1644,34 @@ function renderResults(acts,resetRefine=true){
   document.getElementById('resultsContent').innerHTML=`
     <div class="results-header">
       <div>
-        <button class="btn-ghost" onclick="showPage('refine')" style="margin-bottom:12px">← Back</button>
-        <h2>${S.specific?`Ideas for "${S.specific}"` :'Your Activities'}</h2>
-        <div class="results-meta">${sub}</div>
+        <button class="btn-ghost" onclick="showPage('refine')" style="margin-bottom:12px">${S.lang==='ko'?'← 뒤로':'← Back'}</button>
+        <h2>${S.specific?(S.lang==='ko'?`"${S.specific}" 추천`:`Ideas for "${S.specific}"`):(S.lang==='ko'?'추천 활동':'Your Activities')}</h2>
+        <div class="results-meta" style="text-transform:none">${sub}</div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-ghost" onclick="getRecommendations()">↻ Refresh</button>
-        <button class="btn-ghost" onclick="startOver()" style="color:var(--red);border-color:var(--red)">🔄 Start Over</button>
+        <button class="btn-ghost" onclick="getRecommendations()">${S.lang==='ko'?'↻ 새로고침':'↻ Refresh'}</button>
+        <button class="btn-ghost" onclick="startOver()" style="color:var(--red);border-color:var(--red)">${S.lang==='ko'?'🔄 처음부터':'🔄 Start Over'}</button>
       </div>
     </div>
     <div class="refine-bar">
       <div class="refine-input-row">
-        <input class="refine-input" id="refineInput" placeholder='e.g. "no screens", "outdoor only", "under 30 min", "family friendly"' onkeydown="if(event.key==='Enter'){event.preventDefault();addRefineTag();}"/>
-        <button class="btn-ghost" onclick="addRefineTag()">+ Add</button>
+        <input class="refine-input" id="refineInput" placeholder='${S.lang==="ko"?"예: \"화면 없이\", \"야외만\", \"30분 이하\"":'e.g. "no screens", "outdoor only", "under 30 min"'}' onkeydown="if(event.key==='Enter'){event.preventDefault();addRefineTag();}"/>
+        <button class="btn-ghost" onclick="addRefineTag()">${S.lang==='ko'?'+ 추가':'+ Add'}</button>
       </div>
       <div class="refine-tags" id="refineTags"></div>
       <div class="sort-row">
-        <span class="sort-lbl" id="sortLabel">Sort:</span>
-        <button class="sort-pill active" onclick="setSort('default',this)" id="sort-default">Default</button>
-        <button class="sort-pill" onclick="setSort('time',this)" id="sort-time">⏱ Time</button>
-        <button class="sort-pill" onclick="setSort('cost',this)" id="sort-cost">💰 Cost</button>
-        <button class="sort-pill" onclick="setSort('difficulty',this)" id="sort-effort">💪 Effort</button>
+        <span class="sort-lbl" id="sortLabel">${S.lang==='ko'?'정렬:':'Sort:'}</span>
+        <button class="sort-pill active" onclick="setSort('default',this)" id="sort-default">${S.lang==='ko'?'기본':'Default'}</button>
+        <button class="sort-pill" onclick="setSort('time',this)" id="sort-time">${S.lang==='ko'?'⏱ 시간':'⏱ Time'}</button>
+        <button class="sort-pill" onclick="setSort('cost',this)" id="sort-cost">${S.lang==='ko'?'💰 비용':'💰 Cost'}</button>
+        <button class="sort-pill" onclick="setSort('difficulty',this)" id="sort-effort">${S.lang==='ko'?'💪 난이도':'💪 Effort'}</button>
       </div>
       <div class="sort-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
-        <span class="sort-lbl" id="wantLabel">Want:</span>
-        <button class="sort-pill" id="diff-filter-easy" onclick="setDiffFilter('easy')">✨ Laid-back</button>
-        <button class="sort-pill" id="diff-filter-medium" onclick="setDiffFilter('medium')">🧠 Engaging</button>
-        <button class="sort-pill" id="diff-filter-hard" onclick="setDiffFilter('hard')">💪 Challenging</button>
-        <button class="sort-pill" id="diff-filter-long_project" onclick="setDiffFilter('long_project')">🗓️ Project</button>
+        <span class="sort-lbl" id="wantLabel">${S.lang==='ko'?'원하는:':'Want:'}</span>
+        <button class="sort-pill" id="diff-filter-easy" onclick="setDiffFilter('easy')">${S.lang==='ko'?'✨ 가볍게':'✨ Laid-back'}</button>
+        <button class="sort-pill" id="diff-filter-medium" onclick="setDiffFilter('medium')">${S.lang==='ko'?'🧠 몰입감':'🧠 Engaging'}</button>
+        <button class="sort-pill" id="diff-filter-hard" onclick="setDiffFilter('hard')">${S.lang==='ko'?'💪 도전적':'💪 Challenging'}</button>
+        <button class="sort-pill" id="diff-filter-long_project" onclick="setDiffFilter('long_project')">${S.lang==='ko'?'🗓️ 프로젝트':'🗓️ Project'}</button>
       </div>
     </div>
     <div class="activity-grid" id="activityGrid"></div>`;
@@ -1699,7 +1771,7 @@ Return JSON: {"activities":[{"title":"string","description":"string","category":
     const parsed=safeJSON(text);
     window._acts=parsed.activities||[];
     renderActCards();
-    toast(`Found ${window._acts.length} activities matching your filters ✓`);
+    toast(S.lang==='ko'?`${window._acts.length}개의 활동을 찾았어요 ✓`:`Found ${window._acts.length} activities matching your filters ✓`);
   }catch(err){
     if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:20px"><p style="color:var(--red);margin-bottom:12px">Error: ${err.message}</p><button class="btn-ghost" onclick="refetchWithRefinements()">↻ Try again</button></div>`;
   }
@@ -1759,18 +1831,18 @@ function showDetail(i){
       <div class="meta-block"><div class="meta-lbl">Difficulty</div><div class="meta-val">${getDiffLabel(a.difficulty)}</div></div>
       <div class="meta-block"><div class="meta-lbl">Materials</div><div class="meta-val">${materialItems.length?(materialItems.length+' item'+(materialItems.length>1?'s':'')):'Nothing needed'}</div></div>
     </div>
-    ${materialItems.length?`<div class="section-block"><h4>🛍 What You Need <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">click to shop</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
-    ${steps.length?`<div class="section-block"><h4>Start Now Guide</h4><div class="steps-list">${steps.map((s,i)=>`<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s.replace(/^\d+[\.\):\-]\s*/,'')}</div></div>`).join('')}</div></div>`:''}
-    <div class="section-block"><h4>▶ Watch on YouTube <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">sorted by views</span></h4>${buildYouTubeHTML(a.title,a.category,a.difficulty,yt,a.materials,a.description)}</div>
-    ${sim.length?`<div class="section-block"><h4>Similar Activities</h4><div>${sim.map(s=>`<span class="similar-pill">${s}</span>`).join('')}</div></div>`:''}
+    ${materialItems.length?`<div class="section-block"><h4>🛍 ${t('materials')} <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">${t('clickToShop')}</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
+    ${steps.length?`<div class="section-block"><h4>${t('startNow')}</h4><div class="steps-list">${steps.map((s,i)=>`<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s.replace(/^\d+[\.\):\-]\s*/,'')}</div></div>`).join('')}</div></div>`:''}
+    <div class="section-block"><h4>${t('watchYoutube')} <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">${t('sortedByViews')}</span></h4>${buildYouTubeHTML(a.title,a.category,a.difficulty,yt,a.materials,a.description)}</div>
+    ${sim.length?`<div class="section-block"><h4>${t('similar')}</h4><div>${sim.map(s=>`<span class="similar-pill">${s}</span>`).join('')}</div></div>`:''}
     <div class="action-row">
-      <button class="btn-done" onclick="markDone()">✓ I Did This!</button>
-      <button class="btn-save ${isSaved?'saved':''}" id="saveBtn" onclick="saveActivity()">${isSaved?'✓ Saved':'🔖 Save for Later'}</button>
+      <button class="btn-done" onclick="markDone()">${t('iDidThis')}</button>
+      <button class="btn-save ${isSaved?'saved':''}" id="saveBtn" onclick="saveActivity()">${isSaved?t('savedBtn'):t('saveForLater')}</button>
       <button class="btn-share" onclick="openShare()">↗ Share</button>
     </div>
     <div class="action-row" style="margin-top:8px">
       <button class="btn-notforme" onclick="notForMe()" title="Replace this with a different suggestion">
-        👎 Not for me — try another
+        ${t('notForMe')}
       </button>
     </div>`;
   showPage('detail');
@@ -1813,18 +1885,18 @@ function markDone(){
   if(existing){existing.completed=true;saveHistory();}
   else{S.history.unshift({...a,id:Date.now(),date:new Date().toISOString(),completed:true,rating:0,mood:S.mood.join(',')});saveHistory();}
   if(S.settings.checkin) showCheckin(a.title,existing?existing.id:S.history[0].id);
-  else{toast('Activity completed! 🎉');showPage('history');}
+  else{toast(t('doneMsg'));showPage('history');}
 }
 
 function saveActivity(){
   const a=S.current;if(!a)return;
   const existing=S.history.find(h=>h.title===a.title);
-  if(existing){toast('Already saved!');return;}
+  if(existing){toast(t('alreadySaved'));return;}
   S.history.unshift({...a,id:Date.now(),date:new Date().toISOString(),completed:false,rating:0,mood:S.mood.join(',')});
   saveHistory();
   document.getElementById('saveBtn').className='btn-save saved';
   document.getElementById('saveBtn').textContent='✓ Saved';
-  toast('Saved for later 🔖');
+  toast(t('savedLater'));
 }
 
 function saveHistory(){localStorage.setItem('mp_history',JSON.stringify(S.history));}
@@ -1855,7 +1927,7 @@ function submitCheckin(){
   toast(`Rated ${S.checkinData.rating}⭐ — thanks for sharing! 🎉`);
   showPage('history');
 }
-function skipCheckin(){document.getElementById('checkinOverlay').style.display='none';toast('Activity completed! 🎉');showPage('history');}
+function skipCheckin(){document.getElementById('checkinOverlay').style.display='none';toast(t('doneMsg'));showPage('history');}
 
 // ── SHARE ──────────────────────────────────────────────────
 function openShare(){
@@ -1877,7 +1949,7 @@ function openShare(){
 function closeShare(){document.getElementById('shareOverlay').style.display='none';}
 function shareToTwitter(){const a=S.shareActivity;if(!a)return;const text=encodeURIComponent(`Just tried "${a.title}" with MoodPick! 🎯 ${a.estimated_time||''} · ${a.estimated_cost||'Free'}\n\n#MoodPick #ActivityRecommender`);window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');}
 function shareToKakao(){const a=S.shareActivity;if(!a)return;const text=encodeURIComponent(`MoodPick이 추천한 활동: "${a.title}" 🎯\n${a.estimated_time||''} · ${a.estimated_cost||'무료'}\n\n#MoodPick`);window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');toast('Opening share... (KakaoTalk SDK required for native share)');}
-function copyShareLink(){const a=S.shareActivity;if(!a)return;const text=`MoodPick: "${a.title}" — ${a.description} (${a.estimated_time||'?'}, ${a.estimated_cost||'Free'})`;navigator.clipboard.writeText(text).then(()=>toast('Copied to clipboard! 📋')).catch(()=>toast('Could not copy'));}
+function copyShareLink(){const a=S.shareActivity;if(!a)return;const text=`MoodPick: "${a.title}" — ${a.description} (${a.estimated_time||'?'}, ${a.estimated_cost||'Free'})`;navigator.clipboard.writeText(text).then(()=>toast(t('copiedClipboard'))).catch(()=>toast('Could not copy'));}
 
 // ── HISTORY ────────────────────────────────────────────────
 function buildTasteProfile(){
@@ -2016,7 +2088,7 @@ function markHistDone(id){
   const h=S.history.find(h=>h.id===id);
   if(h){h.completed=true;saveHistory();if(S.settings.checkin)showCheckin(h.title,id);else{renderHistory();toast('Done! 🎉');}}
 }
-function deleteItem(id){S.history=S.history.filter(h=>h.id!==id);saveHistory();renderHistory();toast('Deleted');}
+function deleteItem(id){S.history=S.history.filter(h=>h.id!==id);saveHistory();renderHistory();toast(t('deletedMsg'));}
 function openShareFromHistory(id){const item=S.history.find(h=>h.id===id);if(item){S.current=item;openShare();}}
 
 // ── CALENDAR ───────────────────────────────────────────────
@@ -2156,7 +2228,7 @@ function startOver(){
   const continueBtn=document.getElementById('moodContinueBtn');if(continueBtn)continueBtn.disabled=true;
   const discoverBtn=document.getElementById('discoverBtn');if(discoverBtn)discoverBtn.disabled=true;
   const ep=document.getElementById('energyPanel');if(ep)ep.style.display='none';
-  const etb=document.getElementById('energyToggleBtn');if(etb)etb.textContent='\uFF0B Refine further';
+  const etb=document.getElementById('energyToggleBtn');if(etb)etb.textContent=t('refineMore');
   showPage('home');toast('Starting fresh! 🔄');
 }
 
@@ -2190,6 +2262,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   rp('peopleGroup',PEOPLE,'people');
   rp('prefGroup',PREF,'preference');
   rp('settingGroup',SETTING,'setting');
+  rp('mobilityGroup',MOBILITY,'mobility');
   renderDiffGroup();
 
   // Restore filter memory
