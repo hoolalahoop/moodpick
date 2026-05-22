@@ -650,7 +650,7 @@ body.dark .pill.selected{color:var(--bg);}
       <!-- Mood recap chips -->
       <div class="refine-screen-header">
         <div class="refine-mood-recap" id="refineMoodRecap"></div>
-        <div style="font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,34px);line-height:1.25;margin-bottom:6px;">
+        <div style="font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,34px);line-height:1.25;margin-bottom:6px;" id="refineTitleEl">
           Refine your <em style="color:var(--primary)">moment</em>
         </div>
         <p style="color:var(--muted);font-size:14px;line-height:1.6;">Help us find something that truly fits. All fields are optional.</p>
@@ -658,14 +658,14 @@ body.dark .pill.selected{color:var(--bg);}
 
       <!-- Already know what you want? -->
       <div class="card" style="margin-bottom:16px">
-        <div class="card-title" style="margin-bottom:10px">Already know what you want? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
+        <div class="card-title" style="margin-bottom:10px" id="alreadyKnowTitle">Already know what you want? <span id="alreadyKnowOptional" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
         <input class="text-input" id="specificInput" placeholder='e.g. "watch a movie", "draw something"...'/>
         <div id="specificHint" style="display:none;margin-top:8px;font-size:12px;color:var(--primary)">✨ We'll find the best match!</div>
       </div>
 
       <!-- Context fields -->
       <div class="card" style="margin-bottom:16px">
-        <div class="card-title" style="margin-bottom:18px">Quick context</div>
+        <div class="card-title" style="margin-bottom:18px" id="quickContextTitle">Quick context</div>
         <div class="refine-fields">
           <div>
             <div class="refine-field-label">⏱ Time available</div>
@@ -696,7 +696,7 @@ body.dark .pill.selected{color:var(--bg);}
       </button>
       <div class="energy-panel" id="energyPanel">
         <div class="card" style="margin-top:8px">
-          <div class="card-title" style="margin-bottom:14px">How much energy do you have? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
+          <div class="card-title" style="margin-bottom:14px" id="energyCardTitle">How much energy do you have? <span id="energyOptional" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
           <div class="pill-row" id="diffGroup"></div>
           <div style="margin-top:10px;font-size:11px;color:var(--muted)">🗓️ Start a Project = begin today, continue over time</div>
         </div>
@@ -718,7 +718,7 @@ body.dark .pill.selected{color:var(--bg);}
       <div class="hero" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
         <div><div class="hero-eyebrow">✦ Your Journey</div><h1 class="hero-title">Activity <em>History</em></h1></div>
         <button class="btn-ghost" id="calToggleBtn" onclick="toggleCalendarView()" style="margin-top:8px;align-self:flex-end">
-          📅 Calendar view
+          📅 ${S.lang==='ko'?'캘린더 보기':'Calendar view'}
         </button>
       </div>
       <div id="inlineCalendar" style="display:none;margin-bottom:16px">
@@ -743,7 +743,7 @@ body.dark .pill.selected{color:var(--bg);}
 
     <!-- SETTINGS -->
     <div class="page" id="page-settings">
-      <div class="hero"><div class="hero-eyebrow">✦ Preferences</div><h1 class="hero-title">App <em>Settings</em></h1></div>
+      <div class="hero"><div class="hero-eyebrow">✦ Preferences</div><h1 class="hero-title" id="settingsHeroTitle">App <em>Settings</em></h1></div>
       <div class="card">
         <div class="settings-section">
           <div class="settings-title">Language / 언어</div>
@@ -815,19 +815,69 @@ let S = {
 
 // ── CONFIG ─────────────────────────────────────────────────
 const MOODS=[
-  {v:'happy',e:'😊',l:'Happy'},{v:'energetic',e:'⚡',l:'Energetic'},{v:'calm',e:'🌿',l:'Calm'},
-  {v:'inspired',e:'✨',l:'Inspired'},{v:'playful',e:'🎉',l:'Playful'},{v:'curious',e:'🔍',l:'Curious'},
-  {v:'motivated',e:'🔥',l:'Motivated'},{v:'bored',e:'😐',l:'Bored'},{v:'restless',e:'🦋',l:'Restless'},
-  {v:'tired',e:'😴',l:'Tired'},{v:'stressed',e:'😤',l:'Stressed'},{v:'anxious',e:'😰',l:'Anxious'},
-  {v:'sad',e:'🌧️',l:'Sad'},{v:'lonely',e:'🫂',l:'Lonely'},{v:'grateful',e:'🙏',l:'Grateful'},
-  {v:'nostalgic',e:'🌅',l:'Nostalgic'},{v:'frustrated',e:'😠',l:'Frustrated'},{v:'overwhelmed',e:'🌊',l:'Overwhelmed'}
+  {v:'happy',e:'😊',l:'Happy',lk:'행복해'},
+  {v:'energetic',e:'⚡',l:'Energetic',lk:'에너지 넘쳐'},
+  {v:'calm',e:'🌿',l:'Calm',lk:'차분해'},
+  {v:'inspired',e:'✨',l:'Inspired',lk:'영감받았어'},
+  {v:'playful',e:'🎉',l:'Playful',lk:'신나'},
+  {v:'curious',e:'🔍',l:'Curious',lk:'궁금해'},
+  {v:'motivated',e:'🔥',l:'Motivated',lk:'의욕충만'},
+  {v:'bored',e:'😐',l:'Bored',lk:'심심해'},
+  {v:'restless',e:'🦋',l:'Restless',lk:'안절부절'},
+  {v:'tired',e:'😴',l:'Tired',lk:'피곤해'},
+  {v:'stressed',e:'😤',l:'Stressed',lk:'스트레스'},
+  {v:'anxious',e:'😰',l:'Anxious',lk:'불안해'},
+  {v:'sad',e:'🌧️',l:'Sad',lk:'슬퍼'},
+  {v:'lonely',e:'🫂',l:'Lonely',lk:'외로워'},
+  {v:'grateful',e:'🙏',l:'Grateful',lk:'감사해'},
+  {v:'nostalgic',e:'🌅',l:'Nostalgic',lk:'그리워'},
+  {v:'frustrated',e:'😠',l:'Frustrated',lk:'짜증나'},
+  {v:'overwhelmed',e:'🌊',l:'Overwhelmed',lk:'벅차'}
 ];
-const TIME=[{v:'flash',l:'⚡ <10 min'},{v:'short',l:'🕐 10–30 min'},{v:'medium',l:'⏱ 30–90 min'},{v:'long',l:'🌙 1.5–3 hrs'},{v:'day',l:'☀️ Full day'}];
-const BUDGET=[{v:'free',l:'🆓 Free'},{v:'low',l:'💵 Under $10'},{v:'medium',l:'💰 $10–50'},{v:'high',l:'💎 $50+'}];
-const PEOPLE=[{v:'alone',l:'🧍 Solo'},{v:'partner',l:'💑 Partner'},{v:'friends',l:'👥 Friends'},{v:'family',l:'👨‍👩‍👧 Family'},{v:'group',l:'🎊 Group'}];
-const PREF=[{v:'creative',l:'🎨 Creative'},{v:'active',l:'🏃 Active'},{v:'relaxing',l:'🧘 Relaxing'},{v:'social',l:'💬 Social'},{v:'learning',l:'📚 Learning'},{v:'entertainment',l:'🎬 Entertainment'},{v:'food',l:'🍳 Food'},{v:'music',l:'🎵 Music'},{v:'nature',l:'🌲 Nature'},{v:'gaming',l:'🎮 Gaming'},{v:'anything',l:'🎲 Anything'}];
-const SETTING=[{v:'indoor',l:'🏠 Indoor'},{v:'outdoor',l:'🌳 Outdoor'},{v:'either',l:'✓ Either'}];
-const DIFF=[{v:'easy',l:'✨ Laid-back'},{v:'medium',l:'🧠 Engaging'},{v:'hard',l:'💪 Challenging'},{v:'long_project',l:'🗓️ Start a Project'}];
+const TIME=[
+  {v:'flash',l:'⚡ <10 min',lk:'⚡ 10분 이내'},
+  {v:'short',l:'🕐 10–30 min',lk:'🕐 10–30분'},
+  {v:'medium',l:'⏱ 30–90 min',lk:'⏱ 30분–1시간 반'},
+  {v:'long',l:'🌙 1.5–3 hrs',lk:'🌙 1.5–3시간'},
+  {v:'day',l:'☀️ Full day',lk:'☀️ 하루 종일'}
+];
+const BUDGET=[
+  {v:'free',l:'🆓 Free',lk:'🆓 무료'},
+  {v:'low',l:'💵 Under $10',lk:'💵 1만원 이하'},
+  {v:'medium',l:'💰 $10–50',lk:'💰 1만–5만원'},
+  {v:'high',l:'💎 $50+',lk:'💎 5만원 이상'}
+];
+const PEOPLE=[
+  {v:'alone',l:'🧍 Solo',lk:'🧍 혼자'},
+  {v:'partner',l:'💑 Partner',lk:'💑 파트너와'},
+  {v:'friends',l:'👥 Friends',lk:'👥 친구와'},
+  {v:'family',l:'👨‍👩‍👧 Family',lk:'👨‍👩‍👧 가족과'},
+  {v:'group',l:'🎊 Group',lk:'🎊 여러 명'}
+];
+const PREF=[
+  {v:'creative',l:'🎨 Creative',lk:'🎨 창의적'},
+  {v:'active',l:'🏃 Active',lk:'🏃 활동적'},
+  {v:'relaxing',l:'🧘 Relaxing',lk:'🧘 휴식'},
+  {v:'social',l:'💬 Social',lk:'💬 사교적'},
+  {v:'learning',l:'📚 Learning',lk:'📚 배움'},
+  {v:'entertainment',l:'🎬 Entertainment',lk:'🎬 엔터테인먼트'},
+  {v:'food',l:'🍳 Food',lk:'🍳 음식'},
+  {v:'music',l:'🎵 Music',lk:'🎵 음악'},
+  {v:'nature',l:'🌲 Nature',lk:'🌲 자연'},
+  {v:'gaming',l:'🎮 Gaming',lk:'🎮 게임'},
+  {v:'anything',l:'🎲 Anything',lk:'🎲 아무거나'}
+];
+const SETTING=[
+  {v:'indoor',l:'🏠 Indoor',lk:'🏠 실내'},
+  {v:'outdoor',l:'🌳 Outdoor',lk:'🌳 야외'},
+  {v:'either',l:'✓ Either',lk:'✓ 상관없음'}
+];
+const DIFF=[
+  {v:'easy',l:'✨ Laid-back',lk:'✨ 가볍게'},
+  {v:'medium',l:'🧠 Engaging',lk:'🧠 몰입감 있게'},
+  {v:'hard',l:'💪 Challenging',lk:'💪 도전적으로'},
+  {v:'long_project',l:'🗓️ Start a Project',lk:'🗓️ 프로젝트 시작'}
+];
 
 const MOOD_THEME={happy:'happy',playful:'happy',grateful:'happy',energetic:'energetic',motivated:'energetic',restless:'energetic',calm:'calm',inspired:'calm',curious:'calm',sad:'sad',lonely:'sad',stressed:'stressed',anxious:'stressed',frustrated:'stressed',overwhelmed:'stressed',bored:'bored',nostalgic:'bored',tired:'tired'};
 
@@ -910,6 +960,266 @@ function resetOnboarding(){
 // ── SETTINGS ───────────────────────────────────────────────
 function saveSettings(){localStorage.setItem('mp_settings',JSON.stringify(S.settings));}
 
+// ── TRANSLATIONS ──────────────────────────────────────────
+const TRANSLATIONS = {
+  en: {
+    discover: 'Discover', history: 'History', insights: 'Insights', settings: 'Settings',
+    moodCheckin: '✦ Mood Check-in', howFeeling: 'How are you feeling', rightNow: 'right now?',
+    moodSignal: 'Your mood is the signal.', continueRefine: 'Continue → Refine',
+    surpriseMe: '🎲 Surprise me', refineBack: '← Back to mood',
+    refineTitle: 'Refine your', refineMoment: 'moment',
+    refineSub: 'Help us find something that truly fits. All fields are optional.',
+    alreadyKnow: "Already know what you want?", optional: "Optional",
+    specificPlaceholder: 'e.g. "watch a movie", "draw something"...',
+    timeLabel: '⏱ Time available', budgetLabel: '💰 Budget',
+    peopleLabel: "👥 Who's joining", activityLabel: "🎨 Activity type",
+    settingLabel: '🌿 Indoor or outdoor', mobilityLabel: '♿ Physical accessibility',
+    refineMore: '＋ Refine further', hideRefine: '－ Hide',
+    findActivity: '✦ Find My Perfect Activity',
+    yourActivities: 'Your Activities', yourJourney: '✦ Your Journey',
+    activityHistory: 'Activity', historyWord: 'History',
+    analyticsEye: '✦ Analytics', yourInsights: 'Your', insightsWord: 'Insights',
+    preferencesEye: '✦ Preferences', appSettings: 'App', settingsWord: 'Settings',
+    startOver: '🔄 Start Over', refresh: '↻ Refresh', back: '← Back',
+    iDidThis: '✓ I Did This!', saveForLater: '🔖 Save for Later', saved: '✓ Saved',
+    share: '↗ Share', notForMe: "👎 Not for me — try another",
+    markDone: 'Mark done', doAgain: '↺ Again', delete: 'Delete',
+    goToHome: '✦ Go to Home',
+    journeyNotStarted: "Your activity journey hasn't started yet.",
+    tryMoodCheckin: "Try a mood check-in and discover something that fits your moment.",
+    darkMode: 'Dark Mode', darkModeSub: 'Switch between light and dark theme',
+    moodColors: 'Mood-reactive colors', moodColorsSub: 'Background changes with your mood selection',
+    appearance: 'Appearance', language: 'Language / 언어', langSub: 'App language',
+    resetOnboarding: 'Reset onboarding', resetSub: 'Show the onboarding survey again',
+    clearHistory: 'Clear all history', clearSub: 'Delete all saved activities',
+    reset: 'Reset', clear: 'Clear', data: 'Data',
+    checkinToggleLabel: 'Mood check-in after activities',
+    checkinToggleSub: 'Ask how you feel after completing an activity',
+    startNow: 'Start Now Guide', materials: 'What You Need',
+    similar: 'Similar Activities', watchYoutube: '▶ Watch on YouTube',
+    completed: 'Completed', totalSaved: 'Total Saved', completion: 'Completion',
+    allTab: 'All', savedTab: 'Saved', doneTab: 'Done',
+    weekSummary: "📆 This Week's Summary", avgRating: 'Avg Rating', topMood: 'Top Mood',
+    dayStreak: 'day streak!', done: 'done', next: 'Next',
+    categoriesTried: 'Categories tried', doneStatus: 'Done', savedStatus: 'Saved',
+    markDoneBtn: 'Mark done', doAgainBtn: '↺ Again', deleteBtn: 'Delete', shareBtn: '↗ Share',
+    notEnoughData: 'Not enough data yet', notEnoughDataSub: 'Save and complete more activities to see your personal insights.',
+    weekNoActivity: "You haven't completed any activities this week. Try the \"Surprise Me\" button!",
+    weekGoodStart: "Good start! You completed {n} activit{y} this week. Keep it up!",
+    weekGreat: 'Great week! You completed {n} activities. Your favorite category was {cat}.',
+    appSettings: 'App Settings',
+    moodImpact: '💚 Mood impact', activityPatterns: '📅 Activity patterns',
+    mostActive: "You're most active on", tasteProfile: '🎯 Your Taste Profile',
+    youLove: '✅ You love', notYourThing: '❌ Not really your thing',
+    topMoodLabel: '🎭 Your most common mood', moodImproveRate: '💚 Mood improvement rate',
+    sort: 'Sort:', want: 'Want:',
+    time: '⏱ Time', cost: '💰 Cost', effort: '💪 Effort',
+    laidBack: '✨ Laid-back', engaging: '🧠 Engaging', challenging: '💪 Challenging', project: '🗓️ Project',
+  },
+  ko: {
+    discover: '추천', history: '기록', insights: '분석', settings: '설정',
+    moodCheckin: '✦ 기분 체크인', howFeeling: '지금 기분이', rightNow: '어떠세요?',
+    moodSignal: '당신의 기분이 신호입니다.', continueRefine: '계속하기 →',
+    surpriseMe: '🎲 깜짝 추천', refineBack: '← 기분 선택으로',
+    refineTitle: '지금 이 순간을', refineMoment: '맞춰볼게요',
+    refineSub: '딱 맞는 활동을 찾아드릴게요. 모든 항목은 선택 사항입니다.',
+    alreadyKnow: '이미 하고 싶은 게 있나요?', optional: '선택 사항',
+    specificPlaceholder: '예: "영화 보기", "그림 그리기"...',
+    timeLabel: '⏱ 가능한 시간', budgetLabel: '💰 예산',
+    peopleLabel: '👥 함께하는 사람', activityLabel: '🎨 활동 유형',
+    settingLabel: '🌿 실내 또는 야외', mobilityLabel: '♿ 신체 접근성',
+    refineMore: '＋ 더 세부적으로', hideRefine: '－ 숨기기',
+    findActivity: '✦ 나에게 맞는 활동 찾기',
+    yourActivities: '추천 활동', yourJourney: '✦ 나의 여정',
+    activityHistory: '활동', historyWord: '기록',
+    analyticsEye: '✦ 분석', yourInsights: '나의', insightsWord: '인사이트',
+    preferencesEye: '✦ 환경설정', appSettings: '앱', settingsWord: '설정',
+    startOver: '🔄 처음부터', refresh: '↻ 새로고침', back: '← 뒤로',
+    iDidThis: '✓ 했어요!', saveForLater: '🔖 나중에 하기', saved: '✓ 저장됨',
+    share: '↗ 공유', notForMe: '👎 별로예요 — 다른 것 추천',
+    markDone: '완료 표시', doAgain: '↺ 다시', delete: '삭제',
+    goToHome: '✦ 홈으로',
+    journeyNotStarted: '아직 시작된 활동이 없어요.',
+    tryMoodCheckin: '기분 체크인을 하고 지금 딱 맞는 활동을 찾아보세요.',
+    darkMode: '다크 모드', darkModeSub: '라이트/다크 테마 전환',
+    moodColors: '기분 반응 색상', moodColorsSub: '기분 선택에 따라 배경색이 변합니다',
+    appearance: '화면', language: 'Language / 언어', langSub: '앱 언어',
+    resetOnboarding: '온보딩 초기화', resetSub: '온보딩 설문을 다시 표시합니다',
+    clearHistory: '전체 기록 삭제', clearSub: '저장된 모든 활동을 삭제합니다',
+    reset: '초기화', clear: '삭제', data: '데이터',
+    checkinToggleLabel: '활동 후 기분 체크인',
+    checkinToggleSub: '활동 완료 후 기분을 물어봅니다',
+    startNow: '지금 시작 가이드', materials: '필요한 것',
+    similar: '비슷한 활동', watchYoutube: '▶ 유튜브로 보기',
+    completed: '완료', totalSaved: '전체 저장', completion: '완료율',
+    allTab: '전체', savedTab: '저장됨', doneTab: '완료',
+    weekSummary: '📆 이번 주 요약', avgRating: '평균 평점', topMood: '주요 기분',
+    dayStreak: '일 연속!', done: '완료', next: '다음 목표',
+    categoriesTried: '시도한 카테고리', doneStatus: '완료', savedStatus: '저장됨',
+    markDoneBtn: '완료 표시', doAgainBtn: '↺ 다시', deleteBtn: '삭제', shareBtn: '↗ 공유',
+    notEnoughData: '아직 데이터가 충분하지 않아요', notEnoughDataSub: '더 많은 활동을 저장하고 완료하면 인사이트를 볼 수 있어요.',
+    weekNoActivity: '이번 주에 완료한 활동이 없어요. "깜짝 추천" 버튼을 눌러보세요!',
+    weekGoodStart: '좋은 시작이에요! 이번 주에 {n}개의 활동을 완료했어요. 계속해봐요!',
+    weekGreat: '멋진 한 주예요! {n}개의 활동을 완료했어요. 가장 좋아하는 카테고리는 {cat}이에요.',
+    appSettings: '앱 설정',
+    moodImpact: '💚 기분 변화', activityPatterns: '📅 활동 패턴',
+    mostActive: '가장 활발한 날은', tasteProfile: '🎯 나의 취향 프로필',
+    youLove: '✅ 좋아하는 것', notYourThing: '❌ 별로인 것',
+    topMoodLabel: '🎭 가장 많은 기분', moodImproveRate: '💚 기분 개선율',
+    sort: '정렬:', want: '원하는:',
+    time: '⏱ 시간', cost: '💰 비용', effort: '💪 난이도',
+    laidBack: '✨ 편안한', engaging: '🧠 몰입감', challenging: '💪 도전적', project: '🗓️ 프로젝트',
+  }
+};
+
+function t(key){ return (TRANSLATIONS[S.lang]||TRANSLATIONS.en)[key] || key; }
+
+function applyLangToUI(){
+  // ── NAV ──
+  const navMap = {home:'discover',history:'history',insights:'insights',settings:'settings'};
+  Object.entries(navMap).forEach(([page,key])=>{
+    const el = document.querySelector('#nav-'+page+' .nav-label');
+    if(el) el.textContent = t(key);
+  });
+
+  // ── MOOD SCREEN ──
+  const moodEye = document.querySelector('.mood-screen-eyebrow');
+  if(moodEye) moodEye.textContent = t('moodCheckin');
+  const moodTitle = document.querySelector('.mood-screen-title');
+  if(moodTitle) moodTitle.innerHTML = t('howFeeling')+'<br><em>'+t('rightNow')+'</em>';
+  const moodSub = document.querySelector('.mood-screen-sub');
+  if(moodSub) moodSub.textContent = t('moodSignal');
+  const continueBtn = document.getElementById('moodContinueBtn');
+  if(continueBtn) continueBtn.textContent = t('continueRefine');
+  const surpriseBtns = document.querySelectorAll('.btn-ghost');
+  surpriseBtns.forEach(b=>{ if(b.onclick && b.getAttribute('onclick')==='surpriseMe()') b.textContent=t('surpriseMe'); });
+
+  // ── REFINE SCREEN ──
+  const refineBack = document.querySelector('.refine-back');
+  if(refineBack) refineBack.textContent = t('refineBack');
+  const refineSubEl = document.querySelector('.refine-screen-header p');
+  if(refineSubEl) refineSubEl.textContent = t('refineSub');
+  const fieldLabels = document.querySelectorAll('.refine-field-label');
+  const labelKeys = ['timeLabel','budgetLabel','peopleLabel','activityLabel','settingLabel','mobilityLabel'];
+  fieldLabels.forEach((el,i)=>{ if(labelKeys[i]) el.textContent = t(labelKeys[i]); });
+  const findBtn = document.getElementById('discoverBtn');
+  if(findBtn) findBtn.innerHTML = t('findActivity');
+  const energyBtn = document.getElementById('energyToggleBtn');
+  if(energyBtn){
+    const isOpen = document.getElementById('energyPanel')?.style.display !== 'none';
+    energyBtn.textContent = isOpen ? t('hideRefine') : t('refineMore');
+  }
+
+  // ── SETTINGS ──
+  const setEl = (sel, text) => { const el = document.querySelector(sel); if(el) el.textContent = text; };
+  setEl('#page-settings .hero-eyebrow', t('preferencesEye'));
+  // Settings section titles
+  const settingsTitles = document.querySelectorAll('#page-settings .settings-title');
+  const titleKeys = ['language','appearance','data'];
+  settingsTitles.forEach((el,i)=>{ if(titleKeys[i]) el.textContent = t(titleKeys[i]); });
+  // Settings rows
+  const settingsLabels = document.querySelectorAll('#page-settings .settings-label');
+  const settingsSubLabels = document.querySelectorAll('#page-settings .settings-sub');
+  const labelPairs = [
+    ['langSub',''],
+    ['darkMode','darkModeSub'],
+    ['moodColors','moodColorsSub'],
+    ['checkinToggleLabel','checkinToggleSub'],
+    ['resetOnboarding','resetSub'],
+    ['clearHistory','clearSub'],
+  ];
+  settingsLabels.forEach((el,i)=>{ if(labelPairs[i] && labelPairs[i][0]) el.textContent = t(labelPairs[i][0]); });
+  settingsSubLabels.forEach((el,i)=>{ if(labelPairs[i] && labelPairs[i][1]) el.textContent = t(labelPairs[i][1]); });
+  // Settings buttons
+  document.querySelectorAll('#page-settings .btn-ghost').forEach(btn=>{
+    if(btn.getAttribute('onclick')==='resetOnboarding()') btn.textContent = t('reset');
+    if(btn.getAttribute('onclick')==='clearHistory()') btn.textContent = t('clear');
+  });
+
+  // ── HISTORY PAGE ──
+  setEl('#page-history .hero-eyebrow', t('yourJourney'));
+  const histTitle = document.querySelector('#page-history .hero-title');
+  if(histTitle) histTitle.innerHTML = t('activityHistory')+' <em>'+t('historyWord')+'</em>';
+  const calBtn = document.getElementById('calToggleBtn');
+  if(calBtn) calBtn.textContent = S.lang==='ko'?'📅 캘린더 보기':'📅 Calendar view';
+  // Calendar modal
+  const calMonth = document.getElementById('calMonth');
+  // Day labels
+  const calDayLabels = document.querySelectorAll('.cal-day-label');
+  const days_en = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const days_ko = ['일','월','화','수','목','금','토'];
+  calDayLabels.forEach((el,i)=>{ el.textContent = S.lang==='ko'?days_ko[i]:days_en[i]; });
+
+  // ── INSIGHTS PAGE ──
+  setEl('#page-insights .hero-eyebrow', t('analyticsEye'));
+  const insTitle = document.querySelector('#page-insights .hero-title');
+  if(insTitle) insTitle.innerHTML = t('yourInsights')+' <em>'+t('insightsWord')+'</em>';
+
+  // ── REFINE SCREEN TITLES ──
+
+  const alreadyKnowEl = document.getElementById('alreadyKnowTitle');
+  if(alreadyKnowEl){
+    const optSpan = document.getElementById('alreadyKnowOptional');
+    if(optSpan) optSpan.textContent = t('optional');
+    alreadyKnowEl.childNodes[0].textContent = t('alreadyKnow')+' ';
+  }
+  const energyTitleEl = document.getElementById('energyCardTitle');
+  if(energyTitleEl){
+    const optSpan2 = document.getElementById('energyOptional');
+    if(optSpan2) optSpan2.textContent = t('optional');
+    energyTitleEl.childNodes[0].textContent = (S.lang==='ko'?'에너지가 얼마나 있나요? ':'How much energy do you have? ');
+  }
+
+  // ── REFINE SCREEN STATIC TEXT ──
+  const refineTitleEl2 = document.getElementById('refineTitleEl');
+  if(refineTitleEl2) refineTitleEl2.innerHTML = S.lang==='ko'?'지금 이 순간을 <em style="color:var(--primary)">맞춰볼게요</em>':'Refine your <em style="color:var(--primary)">moment</em>';
+  const alreadyKnowTitle = document.getElementById('alreadyKnowTitle');
+  if(alreadyKnowTitle) alreadyKnowTitle.childNodes[0].textContent = S.lang==='ko'?'이미 하고 싶은 게 있나요? ':'Already know what you want? ';
+  const alreadyKnowOpt = document.getElementById('alreadyKnowOptional');
+  if(alreadyKnowOpt) alreadyKnowOpt.textContent = S.lang==='ko'?'선택':'Optional';
+  const specificInput = document.getElementById('specificInput');
+  if(specificInput) specificInput.placeholder = S.lang==='ko'?'예: "영화 보기", "그림 그리기"...':'e.g. "watch a movie", "draw something"...';
+
+  // ── QUICK CONTEXT ──
+  const qcTitle = document.getElementById('quickContextTitle');
+  if(qcTitle) qcTitle.textContent = S.lang==='ko'?'빠른 설정':'Quick context';
+
+  // ── SETTINGS HERO ──
+  const settingsHero = document.getElementById('settingsHeroTitle');
+  if(settingsHero) settingsHero.innerHTML = S.lang==='ko'?'앱 <em>설정</em>':'App <em>Settings</em>';
+
+  // ── EMPTY STATE ──
+  const emptyTitle = document.querySelector('.empty-title');
+  if(emptyTitle) emptyTitle.textContent = t('journeyNotStarted');
+  const emptySub = document.querySelector('.empty-sub');
+  if(emptySub) emptySub.textContent = t('tryMoodCheckin');
+  const emptyCta = document.querySelector('.empty-cta');
+  if(emptyCta) emptyCta.textContent = t('goToHome');
+
+  // ── DIFF FILTER BUTTONS ──
+  const diffMap = {'diff-filter-easy':'laidBack','diff-filter-medium':'engaging','diff-filter-hard':'challenging','diff-filter-long_project':'project'};
+  Object.entries(diffMap).forEach(([id,key])=>{
+    const el = document.getElementById(id);
+    if(el) el.textContent = t(key);
+  });
+
+  // ── SORT/WANT LABELS ──
+  const sortLabel = document.getElementById('sortLabel');
+  if(sortLabel) sortLabel.textContent = t('sort');
+  const wantLabel = document.getElementById('wantLabel');
+  if(wantLabel) wantLabel.textContent = t('want');
+  const sortDefault = document.getElementById('sort-default');
+  if(sortDefault) sortDefault.textContent = S.lang==='ko'?'기본':'Default';
+  const sortTime = document.getElementById('sort-time');
+  if(sortTime) sortTime.textContent = t('time');
+  const sortCost = document.getElementById('sort-cost');
+  if(sortCost) sortCost.textContent = t('cost');
+  const sortEffort = document.getElementById('sort-effort');
+  if(sortEffort) sortEffort.textContent = t('effort');
+
+  // ── PLACEHOLDER — handled in refine section above ──
+}
+
 function setLang(lang){
   S.lang = lang;
   localStorage.setItem('mp_lang', lang);
@@ -923,6 +1233,15 @@ function setLang(lang){
     krBtn.style.color = lang==='ko' ? 'white' : 'var(--text)';
     krBtn.style.borderColor = lang==='ko' ? 'var(--primary)' : 'var(--border)';
   }
+  applyLangToUI();
+  // Re-render all pill groups with correct language
+  const rp2=(id,opts,key)=>{const el=document.getElementById(id);if(!el)return;el.innerHTML=opts.map(o=>`<button class="pill" onclick="selPill('${key}','${o.v}',this)">${lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');};
+  rp2('timeGroup',TIME,'time');
+  rp2('budgetGroup',BUDGET,'budget');
+  rp2('peopleGroup',PEOPLE,'people');
+  rp2('prefGroup',PREF,'preference');
+  rp2('settingGroup',SETTING,'setting');
+  renderDiffGroup();
   toast(lang==='ko' ? '한국어로 변경되었습니다 🇰🇷' : 'Switched to English 🇺🇸');
 }
 
@@ -1028,8 +1347,8 @@ function toggleMood(v){
   const banner=document.getElementById('moodBanner');
   const continueBtn=document.getElementById('moodContinueBtn');
   if(S.mood.length>0){
-    const labels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m);
-    banner.textContent='✦ Feeling '+labels.join(' & ');
+    const labels=S.mood.map(m=>{const md=MOODS.find(x=>x.v===m);return S.lang==='ko'&&md?.lk?md.lk:md?.l||m;});
+    banner.textContent=(S.lang==='ko'?'✦ 지금 기분: ':'✦ Feeling ')+labels.join(' & ');
     banner.classList.add('visible');
     continueBtn.disabled=false;
   } else {
@@ -1044,7 +1363,7 @@ function goToRefine(){
   const recap=document.getElementById('refineMoodRecap');
   recap.innerHTML=S.mood.map(m=>{
     const md=MOODS.find(x=>x.v===m);
-    return `<div class="refine-mood-chip"><span>${md?.e||''}</span>${md?.l||m}</div>`;
+    return `<div class="refine-mood-chip"><span>${md?.e||''}</span>${S.lang==='ko'&&md?.lk?md.lk:md?.l||m}</div>`;
   }).join('');
   // Reset discover button state
   checkReady();
@@ -1193,7 +1512,7 @@ Return JSON: {"activities":[{"title":"string","description":"string","category":
     window._acts=parsed.activities||[];
     renderResults(window._acts);
   }catch(err){
-    document.getElementById('resultsContent').innerHTML=`<div class="loading"><div style="font-size:40px;margin-bottom:16px">⚠️</div><h3>Something went wrong</h3><p style="color:var(--red);margin-bottom:20px">${err.message}</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn-ghost" onclick="showPage('refine')">← Back</button><button class="btn-ghost" onclick="getRecommendations()">↻ Retry</button></div></div>`;
+    document.getElementById('resultsContent').innerHTML=`<div class="loading"><div style="font-size:40px;margin-bottom:16px">⚠️</div><h3>${S.lang==='ko'?'문제가 발생했어요':'Something went wrong'}</h3><p style="color:var(--red);margin-bottom:20px">${err.message}</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn-ghost" onclick="showPage('refine')">${S.lang==='ko'?'← 뒤로':'← Back'}</button><button class="btn-ghost" onclick="getRecommendations()">${S.lang==='ko'?'↻ 다시 시도':'↻ Retry'}</button></div></div>`;
   }
 }
 
@@ -1269,14 +1588,14 @@ function renderResults(acts,resetRefine=true){
       </div>
       <div class="refine-tags" id="refineTags"></div>
       <div class="sort-row">
-        <span class="sort-lbl">Sort:</span>
-        <button class="sort-pill active" onclick="setSort('default',this)">Default</button>
-        <button class="sort-pill" onclick="setSort('time',this)">⏱ Time</button>
-        <button class="sort-pill" onclick="setSort('cost',this)">💰 Cost</button>
-        <button class="sort-pill" onclick="setSort('difficulty',this)">💪 Effort</button>
+        <span class="sort-lbl" id="sortLabel">Sort:</span>
+        <button class="sort-pill active" onclick="setSort('default',this)" id="sort-default">Default</button>
+        <button class="sort-pill" onclick="setSort('time',this)" id="sort-time">⏱ Time</button>
+        <button class="sort-pill" onclick="setSort('cost',this)" id="sort-cost">💰 Cost</button>
+        <button class="sort-pill" onclick="setSort('difficulty',this)" id="sort-effort">💪 Effort</button>
       </div>
       <div class="sort-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
-        <span class="sort-lbl">Want:</span>
+        <span class="sort-lbl" id="wantLabel">Want:</span>
         <button class="sort-pill" id="diff-filter-easy" onclick="setDiffFilter('easy')">✨ Laid-back</button>
         <button class="sort-pill" id="diff-filter-medium" onclick="setDiffFilter('medium')">🧠 Engaging</button>
         <button class="sort-pill" id="diff-filter-hard" onclick="setDiffFilter('hard')">💪 Challenging</button>
@@ -1611,13 +1930,13 @@ function buildWeeklySummary(){
   const topMoodLabel=topMoodKey?MOODS.find(x=>x.v===topMoodKey)?.l:'N/A';
   const topCat=weekDone.reduce((acc,h)=>{if(h.category)acc[h.category]=(acc[h.category]||0)+1;return acc;},{});
   const topCatKey=Object.keys(topCat).sort((a,b)=>topCat[b]-topCat[a])[0]||'—';
-  const insight=weekDone.length===0?`You haven't completed any activities this week. Try the "Surprise Me" button!`:weekDone.length<3?`Good start! You completed ${weekDone.length} activit${weekDone.length===1?'y':'ies'} this week. Keep it up!`:`Great week! You completed ${weekDone.length} activities. Your favorite category was ${topCatKey}.`;
+  const insight=weekDone.length===0?t('weekNoActivity'):weekDone.length<3?(S.lang==='ko'?t('weekGoodStart').replace('{n}',weekDone.length):t('weekGoodStart').replace('{n}',weekDone.length).replace('{y}',weekDone.length===1?'y':'ies')):(S.lang==='ko'?t('weekGreat').replace('{n}',weekDone.length).replace('{cat}',topCatKey):t('weekGreat').replace('{n}',weekDone.length).replace('{cat}',topCatKey));
   return`<div class="weekly-card">
-    <div class="weekly-title">📆 This Week's Summary</div>
+    <div class="weekly-title">${t('weekSummary')}</div>
     <div class="weekly-stats">
-      <div class="weekly-stat"><div class="weekly-num">${weekDone.length}</div><div class="weekly-lbl">Completed</div></div>
-      <div class="weekly-stat"><div class="weekly-num">${weekAvg}</div><div class="weekly-lbl">Avg Rating</div></div>
-      <div class="weekly-stat"><div class="weekly-num">${topMoodLabel}</div><div class="weekly-lbl">Top Mood</div></div>
+      <div class="weekly-stat"><div class="weekly-num">${weekDone.length}</div><div class="weekly-lbl">${t('completed')}</div></div>
+      <div class="weekly-stat"><div class="weekly-num">${weekAvg}</div><div class="weekly-lbl">${t('avgRating')}</div></div>
+      <div class="weekly-stat"><div class="weekly-num">${topMoodLabel}</div><div class="weekly-lbl">${t('topMood')}</div></div>
     </div>
     <div class="weekly-insight">${insight}</div>
   </div>`;
@@ -1645,18 +1964,18 @@ function renderHistory(filter='all'){
   }
   html+=buildWeeklySummary();
   if(S.history.length>0){
-    html+=`<div class="progress-bar-card"><div class="prog-stats"><div class="prog-stat"><div class="prog-num">${done}</div><div class="prog-lbl">Completed</div></div><div class="prog-stat"><div class="prog-num">${S.history.length}</div><div class="prog-lbl">Total Saved</div></div><div class="prog-stat"><div class="prog-num">${done>0?Math.round((done/S.history.length)*100)+'%':'—'}</div><div class="prog-lbl">Completion</div></div></div><div style="font-size:11px;opacity:0.8;margin-bottom:8px;display:flex;justify-content:space-between"><span>${done} done</span><span>Next: ${Math.ceil(Math.max(done,1)/10)*10} 🎯</span></div><div class="prog-bar-wrap"><div class="prog-bar" style="width:${progress}%"></div></div>${streak>0?`<div class="streak-badge">🔥 ${streak} day streak!</div>`:''}</div>`;
+    html+=`<div class="progress-bar-card"><div class="prog-stats"><div class="prog-stat"><div class="prog-num">${done}</div><div class="prog-lbl">${t('completed')}</div></div><div class="prog-stat"><div class="prog-num">${S.history.length}</div><div class="prog-lbl">${t('totalSaved')}</div></div><div class="prog-stat"><div class="prog-num">${done>0?Math.round((done/S.history.length)*100)+'%':'—'}</div><div class="prog-lbl">${t('completion')}</div></div></div><div style="font-size:11px;opacity:0.8;margin-bottom:8px;display:flex;justify-content:space-between"><span>${done} ${t('done')}</span><span>${t('next')}: ${Math.ceil(Math.max(done,1)/10)*10} 🎯</span></div><div class="prog-bar-wrap"><div class="prog-bar" style="width:${progress}%"></div></div>${streak>0?`<div class="streak-badge">🔥 ${streak} ${t('dayStreak')}</div>`:''}</div>`;
     html+=buildTasteProfile();
   }
-  html+=`<div class="hist-tabs"><button class="hist-tab ${filter==='all'?'active':''}" onclick="renderHistory('all')">All (${S.history.length})</button><button class="hist-tab ${filter==='saved'?'active':''}" onclick="renderHistory('saved')">Saved (${S.history.filter(h=>!h.completed).length})</button><button class="hist-tab ${filter==='done'?'active':''}" onclick="renderHistory('done')">Done (${done})</button></div>`;
+  html+=`<div class="hist-tabs"><button class="hist-tab ${filter==='all'?'active':''}" onclick="renderHistory('all')">${t('allTab')} (${S.history.length})</button><button class="hist-tab ${filter==='saved'?'active':''}" onclick="renderHistory('saved')">${t('savedTab')} (${S.history.filter(h=>!h.completed).length})</button><button class="hist-tab ${filter==='done'?'active':''}" onclick="renderHistory('done')">${t('doneTab')} (${done})</button></div>`;
 
   if(items.length===0){
     // Warm, emotionally aligned empty state
     html+=`<div class="empty">
       <span class="empty-ambient">📭</span>
-      <div class="empty-title">Your activity journey hasn't started yet.</div>
-      <div class="empty-sub">Try a mood check-in and discover something that fits your moment.</div>
-      <button class="empty-cta" onclick="showPage('home')">✦ Go to Home</button>
+      <div class="empty-title">${t('journeyNotStarted')}</div>
+      <div class="empty-sub">${t('tryMoodCheckin')}</div>
+      <button class="empty-cta" onclick="showPage('home')">${t('goToHome')}</button>
     </div>`;
   } else {
     html+=`<div class="hist-list">`;
@@ -1665,14 +1984,14 @@ function renderHistory(filter='all'){
       const moodAfterLabel=item.moodAfter?MOODS.find(x=>x.v===item.moodAfter)?.l||item.moodAfter:'';
       html+=`<div class="hist-card">
         <div class="hist-top"><div><div class="hist-title">${item.title}</div><div class="hist-date">${date} · ${item.category||'Activity'}${moodAfterLabel?` · felt ${moodAfterLabel} after`:''}</div></div>
-        <span class="status-badge ${item.completed?'status-done':'status-saved'}">${item.completed?'Done':'Saved'}</span></div>
+        <span class="status-badge ${item.completed?'status-done':'status-saved'}">${item.completed?t('doneStatus'):t('savedStatus')}</span></div>
         <div class="hist-desc">${(item.description||'').substring(0,100)}...</div>
         <div class="hist-bottom">
           <div class="stars">${[1,2,3,4,5].map(s=>`<span class="star" onclick="rateItem(${item.id},${s})" style="color:${s<=(item.rating||0)?'var(--primary)':'var(--border)'}">${s<=(item.rating||0)?'★':'☆'}</span>`).join('')}</div>
-          ${!item.completed?`<button class="btn-ghost" style="padding:4px 12px;font-size:11px" onclick="markHistDone(${item.id})">Mark done</button>`:''}
-          <button class="btn-ghost" style="padding:4px 12px;font-size:11px;color:var(--primary);border-color:var(--primary)" onclick="doAgain(${item.id})">↺ Again</button>
-          <button class="btn-ghost" style="padding:4px 12px;font-size:11px" onclick="openShareFromHistory(${item.id})">↗ Share</button>
-          <button class="btn-ghost" style="padding:4px 12px;font-size:11px;color:var(--red);border-color:var(--red);margin-left:auto" onclick="deleteItem(${item.id})">Delete</button>
+          ${!item.completed?`<button class="btn-ghost" style="padding:4px 12px;font-size:11px" onclick="markHistDone(${item.id})">${t('markDoneBtn')}</button>`:''}
+          <button class="btn-ghost" style="padding:4px 12px;font-size:11px;color:var(--primary);border-color:var(--primary)" onclick="doAgain(${item.id})">${t('doAgainBtn')}</button>
+          <button class="btn-ghost" style="padding:4px 12px;font-size:11px" onclick="openShareFromHistory(${item.id})">${t('shareBtn')}</button>
+          <button class="btn-ghost" style="padding:4px 12px;font-size:11px;color:var(--red);border-color:var(--red);margin-left:auto" onclick="deleteItem(${item.id})">${t('deleteBtn')}</button>
         </div>
       </div>`;
     });
@@ -1705,7 +2024,7 @@ function renderCalendar(){
   const month=S.calMonth,year=month.getFullYear(),mon=month.getMonth();
   const first=new Date(year,mon,1),last=new Date(year,mon+1,0),pad=first.getDay();
   document.getElementById('calMonth').textContent=month.toLocaleDateString('en-US',{month:'long',year:'numeric'});
-  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const days=S.lang==='ko'?['일','월','화','수','목','금','토']:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   let html=days.map(d=>`<div class="cal-day-label">${d}</div>`).join('');
   for(let i=0;i<pad;i++)html+=`<div class="cal-cell empty"></div>`;
   const today=new Date();
@@ -1757,14 +2076,14 @@ function renderInsights(){
   const improvePct=totalWithAfter.length>0?Math.round((improved.length/totalWithAfter.length)*100):null;
 
   let html=`<div class="insights-grid">
-    <div class="insight-stat"><div class="insight-num">${done}</div><div class="insight-lbl">Completed</div></div>
-    <div class="insight-stat"><div class="insight-num">${total}</div><div class="insight-lbl">Total Saved</div></div>
-    <div class="insight-stat"><div class="insight-num">${cats}</div><div class="insight-lbl">Categories tried</div></div>
-    <div class="insight-stat"><div class="insight-num">${streak>0?streak+'🔥':'—'}</div><div class="insight-lbl">Day streak</div></div>
+    <div class="insight-stat"><div class="insight-num">${done}</div><div class="insight-lbl">${t('completed')}</div></div>
+    <div class="insight-stat"><div class="insight-num">${total}</div><div class="insight-lbl">${t('totalSaved')}</div></div>
+    <div class="insight-stat"><div class="insight-num">${cats}</div><div class="insight-lbl">${t('categoriesTried')}</div></div>
+    <div class="insight-stat"><div class="insight-num">${streak>0?streak+'🔥':'—'}</div><div class="insight-lbl">${t('dayStreak')}</div></div>
   </div>`;
 
   if(total<2){
-    html+=`<div class="empty"><span class="empty-ambient">📊</span><div class="empty-title">Not enough data yet</div><div class="empty-sub">Save and complete more activities to see your personal insights.</div></div>`;
+    html+=`<div class="empty"><span class="empty-ambient">📊</span><div class="empty-title">${t('notEnoughData')}</div><div class="empty-sub">${t('notEnoughDataSub')}</div></div>`;
     document.getElementById('insightsContent').innerHTML=html;return;
   }
 
@@ -1861,11 +2180,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('moodGrid').innerHTML=MOODS.map(m=>`
     <button class="mood-card" onclick="toggleMood('${m.v}')" id="mood-${m.v}">
       <span class="mood-card-emoji">${m.e}</span>
-      <span class="mood-card-label">${m.l}</span>
+      <span class="mood-card-label">${S.lang==='ko'&&m.lk?m.lk:m.l}</span>
     </button>`).join('');
 
   // Pill groups on refine screen
-  const rp=(id,opts,key)=>{document.getElementById(id).innerHTML=opts.map(o=>`<button class="pill" onclick="selPill('${key}','${o.v}',this)">${o.l}</button>`).join('');};
+  const rp=(id,opts,key)=>{document.getElementById(id).innerHTML=opts.map(o=>`<button class="pill" onclick="selPill('${key}','${o.v}',this)">${S.lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');};
   rp('timeGroup',TIME,'time');
   rp('budgetGroup',BUDGET,'budget');
   rp('peopleGroup',PEOPLE,'people');
@@ -1877,6 +2196,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   // filter memory disabled — fresh start every session
   // Init language buttons
   setLang(S.lang);
+  applyLangToUI();
 
   // Specific input
   document.getElementById('specificInput').addEventListener('input',function(){
