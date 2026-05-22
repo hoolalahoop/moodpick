@@ -520,24 +520,7 @@ body.dark .pill.selected{color:var(--bg);}
   </div>
 </div>
 
-<!-- API KEY MODAL -->
-<div class="modal-overlay" id="apiModal" style="display:none">
-  <div class="modal">
-    <h3>Welcome to MoodPick ✦</h3>
-    <p>Uses Groq AI — completely free, no credit card needed.</p>
-    <div class="modal-steps">
-      <ol>
-        <li>Go to <a href="https://console.groq.com" target="_blank">console.groq.com</a></li>
-        <li>Sign in with Google</li>
-        <li>Click <strong>API Keys → Create API Key</strong></li>
-        <li>Copy and paste below</li>
-      </ol>
-    </div>
-    <input class="text-input" type="password" id="apiKeyInput" placeholder="gsk_..." style="margin-bottom:12px"/>
-    <button class="btn-primary" onclick="saveApiKey()">Start Exploring →</button>
-    <p class="modal-note">Stored only in your browser. Never shared.</p>
-  </div>
-</div>
+<!-- API handled by Worker -->
 
 <!-- MOOD CHECKIN MODAL -->
 <div class="checkin-overlay" id="checkinOverlay" style="display:none">
@@ -704,10 +687,6 @@ body.dark .pill.selected{color:var(--bg);}
             <div class="refine-field-label">🌿 Indoor or outdoor</div>
             <div class="pill-row" id="settingGroup"></div>
           </div>
-          <div>
-            <div class="refine-field-label">♿ Physical accessibility</div>
-            <div class="pill-row" id="mobilityGroup"></div>
-          </div>
         </div>
       </div>
 
@@ -767,6 +746,16 @@ body.dark .pill.selected{color:var(--bg);}
       <div class="hero"><div class="hero-eyebrow">✦ Preferences</div><h1 class="hero-title">App <em>Settings</em></h1></div>
       <div class="card">
         <div class="settings-section">
+          <div class="settings-title">Language / 언어</div>
+          <div class="settings-row">
+            <div><div class="settings-label">App language</div><div class="settings-sub" id="langSubLabel">Recommendations and UI language</div></div>
+            <div style="display:flex;gap:8px;">
+              <button id="langEnBtn" onclick="setLang('en')" style="padding:6px 14px;border-radius:8px;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg3);color:var(--text);transition:all 0.2s;">EN</button>
+              <button id="langKrBtn" onclick="setLang('ko')" style="padding:6px 14px;border-radius:8px;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg3);color:var(--text);transition:all 0.2s;">한국어</button>
+            </div>
+          </div>
+        </div>
+        <div class="settings-section">
           <div class="settings-title">Appearance</div>
           <div class="settings-row">
             <div><div class="settings-label">Dark Mode</div><div class="settings-sub">Switch between light and dark theme</div></div>
@@ -777,13 +766,7 @@ body.dark .pill.selected{color:var(--bg);}
             <button class="toggle on" id="moodColorToggle" onclick="toggleMoodColors()"></button>
           </div>
         </div>
-        <div class="settings-section">
-          <div class="settings-title">API Connection</div>
-          <div class="settings-row">
-            <div><div class="settings-label">Groq API Key</div><div class="settings-sub" id="apiKeyPreview">Not connected</div></div>
-            <button class="btn-ghost" onclick="showApiModal()">Change</button>
-          </div>
-        </div>
+
         <div class="settings-section">
           <div class="settings-title">Preferences</div>
           <div class="settings-row">
@@ -817,11 +800,11 @@ body.dark .pill.selected{color:var(--bg);}
 <script>
 // ── STATE ──────────────────────────────────────────────────
 let S = {
-  mood:[], time:null, budget:null, people:null, preference:null, setting:null, difficulty:[], specific:'', mobility:null,
+  mood:[], time:null, budget:null, people:null, preference:null, setting:null, difficulty:[], specific:'', mobility:null, lang: localStorage.getItem('mp_lang')||'en',
   current:null,
   history: JSON.parse(localStorage.getItem('mp_history')||'[]'),
   apiKey: localStorage.getItem('mp_groq_key')||'',
-  settings: JSON.parse(localStorage.getItem('mp_settings')||'{"darkMode":false,"moodColors":true,"filterMemory":false,"checkin":true}'),
+  settings: JSON.parse(localStorage.getItem('mp_settings')||'{"darkMode":false,"moodColors":true,"filterMemory":true,"checkin":true}'),
   onboardingDone: localStorage.getItem('mp_onboarded')==='true',
   lastFilters: JSON.parse(localStorage.getItem('mp_lastfilters')||'{}'),
   calMonth: new Date(),
@@ -844,7 +827,6 @@ const BUDGET=[{v:'free',l:'🆓 Free'},{v:'low',l:'💵 Under $10'},{v:'medium',
 const PEOPLE=[{v:'alone',l:'🧍 Solo'},{v:'partner',l:'💑 Partner'},{v:'friends',l:'👥 Friends'},{v:'family',l:'👨‍👩‍👧 Family'},{v:'group',l:'🎊 Group'}];
 const PREF=[{v:'creative',l:'🎨 Creative'},{v:'active',l:'🏃 Active'},{v:'relaxing',l:'🧘 Relaxing'},{v:'social',l:'💬 Social'},{v:'learning',l:'📚 Learning'},{v:'entertainment',l:'🎬 Entertainment'},{v:'food',l:'🍳 Food'},{v:'music',l:'🎵 Music'},{v:'nature',l:'🌲 Nature'},{v:'gaming',l:'🎮 Gaming'},{v:'anything',l:'🎲 Anything'}];
 const SETTING=[{v:'indoor',l:'🏠 Indoor'},{v:'outdoor',l:'🌳 Outdoor'},{v:'either',l:'✓ Either'}];
-const MOBILITY=[{v:'full',l:'🧍 Full mobility'},{v:'limited',l:'🦽 Limited mobility'},{v:'seated',l:'♿ Wheelchair / seated'},{v:'low_energy',l:'🛋️ Low energy / chronic illness'}];
 const DIFF=[{v:'easy',l:'✨ Laid-back'},{v:'medium',l:'🧠 Engaging'},{v:'hard',l:'💪 Challenging'},{v:'long_project',l:'🗓️ Start a Project'}];
 
 const MOOD_THEME={happy:'happy',playful:'happy',grateful:'happy',energetic:'energetic',motivated:'energetic',restless:'energetic',calm:'calm',inspired:'calm',curious:'calm',sad:'sad',lonely:'sad',stressed:'stressed',anxious:'stressed',frustrated:'stressed',overwhelmed:'stressed',bored:'bored',nostalgic:'bored',tired:'tired'};
@@ -867,10 +849,10 @@ let onboardAnswers = {};
 
 function enterApp(){
   localStorage.setItem('mp_visited','true');
-  localStorage.removeItem('mp_lastfilters');
   document.getElementById('landingPage').style.display='none';
   document.querySelector('.app-shell').style.display='flex';
   applySettings();
+  localStorage.removeItem('mp_lastfilters');
   if(!S.onboardingDone) startOnboarding();
   // worker handles auth — no modal needed
 }
@@ -928,6 +910,22 @@ function resetOnboarding(){
 // ── SETTINGS ───────────────────────────────────────────────
 function saveSettings(){localStorage.setItem('mp_settings',JSON.stringify(S.settings));}
 
+function setLang(lang){
+  S.lang = lang;
+  localStorage.setItem('mp_lang', lang);
+  const enBtn = document.getElementById('langEnBtn');
+  const krBtn = document.getElementById('langKrBtn');
+  if(enBtn && krBtn){
+    enBtn.style.background = lang==='en' ? 'var(--primary)' : 'var(--bg3)';
+    enBtn.style.color = lang==='en' ? 'white' : 'var(--text)';
+    enBtn.style.borderColor = lang==='en' ? 'var(--primary)' : 'var(--border)';
+    krBtn.style.background = lang==='ko' ? 'var(--primary)' : 'var(--bg3)';
+    krBtn.style.color = lang==='ko' ? 'white' : 'var(--text)';
+    krBtn.style.borderColor = lang==='ko' ? 'var(--primary)' : 'var(--border)';
+  }
+  toast(lang==='ko' ? '한국어로 변경되었습니다 🇰🇷' : 'Switched to English 🇺🇸');
+}
+
 function toggleDarkMode(){S.settings.darkMode=!S.settings.darkMode;applySettings();saveSettings();}
 function toggleMoodColors(){S.settings.moodColors=!S.settings.moodColors;applySettings();saveSettings();}
 function toggleFilterMemory(){S.settings.filterMemory=!S.settings.filterMemory;document.getElementById('filterMemoryToggle').className='toggle'+(S.settings.filterMemory?' on':'');saveSettings();}
@@ -964,7 +962,7 @@ function applyMoodTheme(moods){
 }
 
 // ── API ────────────────────────────────────────────────────
-function showApiModal(){document.getElementById('apiModal').style.display='flex';}
+function showApiModal(){} // disabled — using Worker
 function saveApiKey(){
   const k=document.getElementById('apiKeyInput').value.trim();
   if(!k.startsWith('gsk_')){toast('Please enter a valid Groq key (starts with gsk_)');return;}
@@ -1126,7 +1124,7 @@ async function getRecommendations(){
   if(false){}// worker handles auth
 
   if(S.settings.filterMemory){
-    const filters={mood:S.mood,time:S.time,budget:S.budget,people:S.people,preference:S.preference,setting:S.setting,difficulty:S.difficulty,mobility:S.mobility};
+    const filters={mood:S.mood,time:S.time,budget:S.budget,people:S.people,preference:S.preference,setting:S.setting,difficulty:S.difficulty};
     localStorage.setItem('mp_lastfilters',JSON.stringify(filters));
   }
 
@@ -1147,7 +1145,7 @@ async function getRecommendations(){
     : '';
 
   const settingCtx = S.setting ? `Setting preference: ${S.setting}.` : '';
-  const mobilityCtx = S.mobility ? `IMPORTANT — Physical accessibility: user has "${S.mobility}" mobility. ${S.mobility==='seated'?'ALL activities MUST be doable from a wheelchair or seated position. No walking, standing, or physical exertion.':S.mobility==='limited'?'Activities should require minimal movement, no running or strenuous physical activity.':S.mobility==='low_energy'?'Activities should be gentle, low-effort, and not physically demanding. Consider chronic illness or fatigue.':''}` : '';
+  const langCtx = S.lang === 'ko' ? 'IMPORTANT: Respond entirely in Korean (한국어). All activity titles, descriptions, steps, and why fields must be in Korean.' : '';
 
   const prompt = `Suggest 4 activities for this person.
 Mood: ${moodLabels||'any'}
@@ -1156,7 +1154,7 @@ Budget: ${S.budget||'any'} (free=no cost, low=under $10, medium=$10-50, high=$50
 People: ${S.people||'any'}
 Preference: ${S.preference||'any'}
 ${settingCtx}
-${mobilityCtx}
+${langCtx}
 ${S.difficulty.length?`Energy/style: ${S.difficulty.join(', ')}. long_project = start today, continue over time.`:''}
 ${timeCtx}
 ${histCtx}
@@ -1195,7 +1193,7 @@ Return JSON: {"activities":[{"title":"string","description":"string","category":
     window._acts=parsed.activities||[];
     renderResults(window._acts);
   }catch(err){
-    document.getElementById('resultsContent').innerHTML=`<div class="loading"><div style="font-size:40px;margin-bottom:16px">⚠️</div><h3>Something went wrong</h3><p style="color:var(--red);margin-bottom:20px">${err.message}</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn-ghost" onclick="showPage('refine')">← Back</button><button class="btn-ghost" onclick="showApiModal()">🔑 API Key</button><button class="btn-ghost" onclick="getRecommendations()">↻ Retry</button></div></div>`;
+    document.getElementById('resultsContent').innerHTML=`<div class="loading"><div style="font-size:40px;margin-bottom:16px">⚠️</div><h3>Something went wrong</h3><p style="color:var(--red);margin-bottom:20px">${err.message}</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn-ghost" onclick="showPage('refine')">← Back</button><button class="btn-ghost" onclick="getRecommendations()">↻ Retry</button></div></div>`;
   }
 }
 
@@ -1829,7 +1827,7 @@ function showPage(name){
 }
 
 function startOver(){
-  S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=null;S.setting=null;S.difficulty=[];S.specific='';S.mobility=null;
+  S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=null;S.setting=null;S.difficulty=[];S.specific='';
   refineState={tags:[],sort:'default'};
   applyMoodTheme([]);
   document.querySelectorAll('.mood-card').forEach(b=>b.classList.remove('selected'));
@@ -1873,31 +1871,12 @@ document.addEventListener('DOMContentLoaded',()=>{
   rp('peopleGroup',PEOPLE,'people');
   rp('prefGroup',PREF,'preference');
   rp('settingGroup',SETTING,'setting');
-  rp('mobilityGroup',MOBILITY,'mobility');
   renderDiffGroup();
 
   // Restore filter memory
-  if(S.settings.filterMemory&&Object.keys(S.lastFilters).length>0){
-    const lf=S.lastFilters;
-    if(lf.mood){S.mood=lf.mood;S.mood.forEach(m=>document.getElementById('mood-'+m)?.classList.add('selected'));applyMoodTheme(S.mood);
-      // Update banner and continue button
-      const banner=document.getElementById('moodBanner');
-      const continueBtn=document.getElementById('moodContinueBtn');
-      if(S.mood.length>0&&banner&&continueBtn){
-        const labels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m);
-        banner.textContent='✦ Feeling '+labels.join(' & ');
-        banner.classList.add('visible');
-        continueBtn.disabled=false;
-      }
-    }
-    if(lf.time){S.time=lf.time;document.querySelector(`#timeGroup .pill[onclick*="${lf.time}"]`)?.classList.add('selected');}
-    if(lf.budget){S.budget=lf.budget;document.querySelector(`#budgetGroup .pill[onclick*="${lf.budget}"]`)?.classList.add('selected');}
-    if(lf.people){S.people=lf.people;document.querySelector(`#peopleGroup .pill[onclick*="${lf.people}"]`)?.classList.add('selected');}
-    if(lf.preference){S.preference=lf.preference;document.querySelector(`#prefGroup .pill[onclick*="${lf.preference}"]`)?.classList.add('selected');}
-    if(lf.setting){S.setting=lf.setting;document.querySelector(`#settingGroup .pill[onclick*="${lf.setting}"]`)?.classList.add('selected');}
-    if(lf.difficulty){S.difficulty=lf.difficulty;S.difficulty.forEach(d=>document.getElementById('diff-'+d)?.classList.add('selected'));}
-    checkReady();
-  }
+  // filter memory disabled — fresh start every session
+  // Init language buttons
+  setLang(S.lang);
 
   // Specific input
   document.getElementById('specificInput').addEventListener('input',function(){
