@@ -526,13 +526,13 @@ body.dark .pill.selected{color:var(--bg);}
 <div class="checkin-overlay" id="checkinOverlay" style="display:none">
   <div class="checkin-modal">
     <div style="font-size:40px;margin-bottom:12px">🎉</div>
-    <h3>${t('howFeelNow')}</h3>
-    <p>${t('justCompleted')} <strong id="checkinActivityName"></strong>. ${t('didMoodChange')}</p>
+    <h3 id="checkinTitle">How do you feel now?</h3>
+    <p id="checkinSubText">You just completed <strong id="checkinActivityName"></strong>. Did your mood change?</p>
     <div class="checkin-moods" id="checkinMoods"></div>
-    <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em">${t('rateActivity')}</div>
+    <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em" id="rateActivityLabel">Rate this activity</div>
     <div class="rating-stars" id="checkinStars"></div>
-    <button class="btn-primary" onclick="submitCheckin()" id="checkinSubmitBtn" style="margin-top:0" disabled>${t('saveContinue')}</button>
-    <button class="btn-ghost" onclick="skipCheckin()" style="width:100%;margin-top:8px;justify-content:center">${t('skipBtn')}</button>
+    <button class="btn-primary" onclick="submitCheckin()" id="checkinSubmitBtn" style="margin-top:0" disabled>Save & Continue →</button>
+    <button class="btn-ghost" onclick="skipCheckin()" style="width:100%;margin-top:8px;justify-content:center" id="skipCheckinBtn">Skip</button>
   </div>
 </div>
 
@@ -540,14 +540,14 @@ body.dark .pill.selected{color:var(--bg);}
 <div class="share-overlay" id="shareOverlay" style="display:none">
   <div class="share-modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <span style="font-size:13px;font-weight:600;color:var(--muted)">${t('shareActivity')}</span>
+      <span style="font-size:13px;font-weight:600;color:var(--muted)" id="shareActivityLabel">SHARE ACTIVITY</span>
       <button class="btn-icon" onclick="closeShare()">✕</button>
     </div>
     <div class="share-card" id="shareCardEl"></div>
     <div class="share-btns">
       <button class="share-platform-btn" onclick="shareToKakao()">💬 KakaoTalk</button>
       <button class="share-platform-btn" onclick="shareToTwitter()">🐦 Twitter/X</button>
-      <button class="share-platform-btn" onclick="copyShareLink()">${t('copyLink')}</button>
+      <button class="share-platform-btn" onclick="copyShareLink()" id="copyLinkBtn">🔗 Copy Link</button>
     </div>
   </div>
 </div>
@@ -722,7 +722,7 @@ body.dark .pill.selected{color:var(--bg);}
       <div class="hero" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
         <div><div class="hero-eyebrow">✦ Your Journey</div><h1 class="hero-title">Activity <em>History</em></h1></div>
         <button class="btn-ghost" id="calToggleBtn" onclick="toggleCalendarView()" style="margin-top:8px;align-self:flex-end">
-          📅 ${S.lang==='ko'?'캘린더 보기':'Calendar view'}
+          📅 Calendar view
         </button>
       </div>
       <div id="inlineCalendar" style="display:none;margin-bottom:16px">
@@ -893,9 +893,9 @@ const MOOD_THEME={happy:'happy',playful:'happy',grateful:'happy',energetic:'ener
 
 // ── ONBOARDING ─────────────────────────────────────────────
 const ONBOARD_STEPS = [
-  {icon:'✦', title:'Welcome to MoodPick', sub:'Find the perfect activity for any mood, budget, and situation — with step-by-step guides and YouTube tutorials.',type:'info', btn:t('getStarted')},
+  {icon:'✦', title:'Welcome to MoodPick', sub:'Find the perfect activity for any mood, budget, and situation — with step-by-step guides and YouTube tutorials.',type:'info', btn:'Get Started'},
   {icon:'🎭', title:'What do you usually enjoy?', sub:'Pick all that apply — we\'ll use this to personalize your recommendations.',type:'multi', key:'prefTypes',options:['🎨 Creative','🏃 Active','🧘 Relaxing','💬 Social','📚 Learning','🎮 Gaming','🍳 Food & Cooking','🎵 Music','🌲 Nature']},
-  {icon:'🎉', title:t('allSetTitle'), sub:'MoodPick is ready. Tell us your mood and we\'ll find the perfect activity for you right now.',type:'finish', btn:'Start Exploring'}
+  {icon:'🎉', title:'You\'re all set!', sub:'MoodPick is ready. Tell us your mood and we\'ll find the perfect activity for you right now.',type:'finish', btn:'Start Exploring'}
 ];
 
 const CHECKIN_MOODS=[
@@ -1011,10 +1011,10 @@ const TRANSLATIONS = {
     notForMe: '👎 Not for me — try another',
     clickToShop: 'click to shop', sortedByViews: 'sorted by views',
     nothingNeeded: 'Nothing needed',
-    tasteProfile: t('tasteProfile'), youLove: t('youLove'),
-    notYourThing: t('notYourThing'), topMoodLbl: t('topMoodLbl'),
-    moodImprove: t('moodImprove'),
-    moodImpactTitle: t('moodImpactTitle'), activityPatternsTitle: t('activityPatternsTitle'),
+    tasteProfile: '🎯 Taste Profile', youLove: '✅ You Love',
+    notYourThing: '❌ Not Your Thing', topMoodLbl: '🎭 Top Mood',
+    moodImprove: '💚 Mood Improve Rate',
+    moodImpactTitle: '💚 Mood Impact', activityPatternsTitle: '📅 Activity Patterns',
     mostActiveOn: "You're most active on",
     findingActivities: 'Finding perfect activities...', aiPersonalizing: 'AI is personalizing your picks',
     avgRatingLbl: 'Avg Rating',
@@ -1026,7 +1026,7 @@ const TRANSLATIONS = {
     doneMsg: 'Done! 🎉', savedLater: 'Saved for later 🔖', alreadySaved: 'Already saved!',
     copiedClipboard: 'Copied to clipboard! 📋',
     foundActivities: 'Found', showingDiff: 'Showing',
-    welcomeTitle: t('welcomeTitle'), getStarted: 'Get Started',
+    welcomeTitle: 'Welcome to MoodPick ✦', getStarted: 'Get Started',
     allSetTitle: "You're all set!", moodCheckinTitle: '✦ Mood Check-in',
     completed: 'Completed', totalSaved: 'Total Saved', completion: 'Completion',
     allTab: 'All', savedTab: 'Saved', doneTab: 'Done',
@@ -1039,10 +1039,10 @@ const TRANSLATIONS = {
     weekGoodStart: "Good start! You completed {n} activit{y} this week. Keep it up!",
     weekGreat: 'Great week! You completed {n} activities. Your favorite category was {cat}.',
     appSettings: 'App Settings',
-    moodImpact: t('moodImpactTitle'), activityPatterns: t('activityPatternsTitle'),
-    mostActive: "You're most active on", tasteProfile: t('tasteProfile'),
-    youLove: t('youLove'), notYourThing: t('notYourThing'),
-    topMoodLabel: t('topMoodLbl'), moodImproveRate: t('moodImprove'),
+    moodImpact: '💚 Mood Impact', activityPatterns: '📅 Activity Patterns',
+    mostActive: "You're most active on", tasteProfile: '🎯 Taste Profile',
+    youLove: '✅ You Love', notYourThing: '❌ Not Your Thing',
+    topMoodLabel: '🎭 Top Mood', moodImproveRate: '💚 Mood Improve Rate',
     sort: 'Sort:', want: 'Want:',
     time: '⏱ Time', cost: '💰 Cost', effort: '💪 Effort',
     laidBack: '✨ Laid-back', engaging: '🧠 Engaging', challenging: '💪 Challenging', project: '🗓️ Project',
@@ -1233,6 +1233,23 @@ function applyLangToUI(){
   if(alreadyKnowOpt) alreadyKnowOpt.textContent = S.lang==='ko'?'선택':'Optional';
   const specificInput = document.getElementById('specificInput');
   if(specificInput) specificInput.placeholder = S.lang==='ko'?'예: "영화 보기", "그림 그리기"...':'e.g. "watch a movie", "draw something"...';
+
+  // ── CHECKIN MODAL ──
+  const checkinTitle = document.getElementById('checkinTitle');
+  if(checkinTitle) checkinTitle.textContent = t('howFeelNow');
+  const checkinSubText = document.getElementById('checkinSubText');
+  if(checkinSubText) checkinSubText.innerHTML = t('justCompleted')+' <strong id="checkinActivityName"></strong>. '+t('didMoodChange');
+  const rateActivityLabel = document.getElementById('rateActivityLabel');
+  if(rateActivityLabel) rateActivityLabel.textContent = t('rateActivity');
+  const checkinSubmitBtn = document.getElementById('checkinSubmitBtn');
+  if(checkinSubmitBtn && checkinSubmitBtn.disabled) checkinSubmitBtn.textContent = t('saveContinue');
+  const skipCheckinBtn = document.getElementById('skipCheckinBtn');
+  if(skipCheckinBtn) skipCheckinBtn.textContent = t('skipBtn');
+  // ── SHARE MODAL ──
+  const shareActivityLabel = document.getElementById('shareActivityLabel');
+  if(shareActivityLabel) shareActivityLabel.textContent = t('shareActivity');
+  const copyLinkBtn = document.getElementById('copyLinkBtn');
+  if(copyLinkBtn) copyLinkBtn.textContent = t('copyLink');
 
   // ── ENERGY PANEL ──
   const projectNote = document.getElementById('projectNote');
