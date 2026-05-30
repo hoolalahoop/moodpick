@@ -22,14 +22,14 @@
   --accent:#c17f3a;--bg2:rgba(235,210,210,0.3);--bg3:rgba(235,210,210,0.2);
   --transition:background 0.5s ease,color 0.3s ease;
 }
-/* Mood group backgrounds */
-body.mood-stressed{--bg:#f5ebeb;--signal:#eb5b5b;}
-body.mood-energetic{--bg:#fdf6e3;--signal:#c4933a;}
-body.mood-bored{--bg:#fdf6e3;--signal:#c4933a;}
-body.mood-sad{--bg:#eef0f8;--signal:#6b7bbf;}
-body.mood-tired{--bg:#eef0f8;--signal:#6b7bbf;}
-body.mood-happy{--bg:#eef5ee;--signal:#4a9e5a;}
-body.mood-calm{--bg:#eef5ee;--signal:#4a9e5a;}
+/* Mood group backgrounds — card + signal-dim change per group */
+body.mood-stressed{--bg:#f5ebeb;--signal:#eb5b5b;--signal-dim:rgba(235,91,91,0.14);--card:rgba(242,139,130,0.38);}
+body.mood-energetic{--bg:#fdf6e3;--signal:#c4933a;--signal-dim:rgba(196,147,58,0.16);--card:rgba(232,192,96,0.38);}
+body.mood-bored{--bg:#fdf6e3;--signal:#c4933a;--signal-dim:rgba(196,147,58,0.16);--card:rgba(232,192,96,0.38);}
+body.mood-sad{--bg:#eef0f8;--signal:#6b7bbf;--signal-dim:rgba(107,123,191,0.16);--card:rgba(158,168,216,0.38);}
+body.mood-tired{--bg:#eef0f8;--signal:#6b7bbf;--signal-dim:rgba(107,123,191,0.16);--card:rgba(158,168,216,0.38);}
+body.mood-happy{--bg:#eef5ee;--signal:#4a9e5a;--signal-dim:rgba(74,158,90,0.16);--card:rgba(141,200,138,0.38);}
+body.mood-calm{--bg:#eef5ee;--signal:#4a9e5a;--signal-dim:rgba(74,158,90,0.16);--card:rgba(141,200,138,0.38);}
 body.dark{
   --bg:#1a1714;--card:rgba(55,45,42,0.8);--card-white:rgba(40,34,30,0.9);
   --nav-bg:#1e1a17;--text:#f0eee8;--muted:#7a6f68;
@@ -274,7 +274,8 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
   margin-bottom:14px;flex-wrap:wrap;gap:8px;
 }
 .results-header h2{font-family:'Numans',sans-serif;font-size:23px;color:var(--text);}
-.results-meta{color:var(--muted);font-size:12px;margin-top:3px;}
+.results-meta{color:var(--signal);font-size:12px;margin-top:4px;display:flex;align-items:center;gap:5px;}
+.results-meta::before{content:'•';color:var(--signal);}
 
 /* ── REFINE BAR ─────────────────────────────────────────── */
 .refine-bar{
@@ -311,11 +312,17 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 /* ── ACTIVITY CARDS ─────────────────────────────────────── */
 .activity-grid{display:flex;flex-direction:column;gap:9px;}
 .act-card{
-  background:rgba(235,210,210,0.6);border-radius:var(--radius);
+  background:var(--card);border-radius:var(--radius);
   padding:15px;cursor:pointer;transition:all 0.2s;
-  box-shadow:var(--shadow-sm);
+  box-shadow:var(--shadow-sm);position:relative;
 }
 .act-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
+.act-card.act-selected{outline:2px solid var(--signal);outline-offset:1px;}
+.act-check-btn{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;border:2px solid var(--muted);background:var(--card-white);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;transition:all 0.2s;z-index:2;flex-shrink:0;}
+.act-card.act-selected .act-check-btn{background:var(--signal);border-color:var(--signal);color:#fff;}
+#act-selection-bar{position:fixed;bottom:72px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 20px;border-radius:100px;display:flex;align-items:center;gap:12px;font-size:14px;font-weight:600;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:opacity 0.2s,transform 0.2s;}
+#act-selection-bar.hidden{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(10px);}
+#act-selection-bar button{background:var(--signal);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Numans',sans-serif;}
 .act-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;}
 .cat-badge{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;}
 .diff-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#e2afaf;color:#7a4040;}
@@ -325,7 +332,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 .why-tag{font-size:11px;color:var(--text);opacity:0.65;margin-bottom:7px;}
 .act-meta{display:flex;gap:10px;font-size:11px;color:var(--muted);}
 .match-bar{height:3px;border-radius:100px;margin-top:9px;background:rgba(210,185,180,0.3);}
-.match-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--signal),rgba(235,91,91,0.35));}
+.match-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--signal),var(--signal-dim));}
 
 /* ── DETAIL ─────────────────────────────────────────────── */
 .detail-title{font-family:'Numans',sans-serif;font-size:26px;margin:9px 0 7px;line-height:1.2;color:var(--text);}
@@ -338,7 +345,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 .section-block h4{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:9px;}
 .steps-list{display:flex;flex-direction:column;gap:9px;}
 .step-row{display:flex;gap:10px;align-items:flex-start;}
-.step-n{width:21px;height:21px;border-radius:50%;background:rgba(235,91,91,0.14);color:var(--signal);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.step-n{width:21px;height:21px;border-radius:50%;background:var(--signal-dim);color:var(--signal);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
 .step-t{font-size:13px;color:var(--text);line-height:1.5;}
 
 /* ── SHOPPING ────────────────────────────────────────────── */
@@ -349,13 +356,13 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 .shop-btns{display:flex;gap:5px;flex-shrink:0;}
 .shop-btn{display:inline-flex;align-items:center;gap:3px;padding:4px 8px;border-radius:5px;font-size:10px;font-weight:600;text-decoration:none;transition:all 0.2s;white-space:nowrap;}
 .shop-btn-google,.shop-btn-coupang{background:rgba(235,210,210,0.6);color:var(--muted);border:none;}
-.shop-btn-google:hover,.shop-btn-coupang:hover{background:rgba(235,91,91,0.12);color:var(--signal);}
+.shop-btn-google:hover,.shop-btn-coupang:hover{background:var(--signal-dim);color:var(--signal);}
 
 /* ── YOUTUBE ─────────────────────────────────────────────── */
 .yt-link{display:flex;gap:10px;align-items:center;padding:10px;border-radius:var(--radius-sm);background:rgba(235,210,210,0.5);margin-bottom:7px;text-decoration:none;color:var(--text);transition:all 0.2s;}
 .yt-link:hover{background:rgba(235,210,210,0.8);}
 .yt-icon{width:36px;height:36px;border-radius:6px;background:#ff4444;display:flex;align-items:center;justify-content:center;font-size:14px;color:white;flex-shrink:0;}
-.yt-tag{display:inline-block;padding:2px 6px;border-radius:3px;background:rgba(235,91,91,0.14);color:var(--signal);font-size:9px;font-weight:600;margin-bottom:3px;}
+.yt-tag{display:inline-block;padding:2px 6px;border-radius:3px;background:var(--signal-dim);color:var(--signal);font-size:9px;font-weight:600;margin-bottom:3px;}
 .yt-t{font-size:12px;font-weight:500;margin-bottom:2px;}
 .yt-s{font-size:10px;color:var(--muted);}
 .similar-pill{display:inline-flex;padding:5px 12px;border-radius:100px;background:rgba(255,255,255,0.6);border:1px solid rgba(210,185,180,0.3);font-size:11px;color:var(--muted);margin:3px;}
@@ -410,7 +417,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 
 /* ── EMPTY STATE ─────────────────────────────────────────── */
 .empty{text-align:center;padding:56px 20px 44px;color:var(--muted);}
-.empty-ambient{font-size:44px;margin-bottom:14px;opacity:0.5;display:block;line-height:1;}
+.empty-ambient{width:72px;height:72px;margin:0 auto 18px;background:rgba(0,0,0,0.07);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;color:rgba(0,0,0,0.25);line-height:1;}
 .empty-title{font-family:'Numans',sans-serif;font-size:18px;color:var(--text);margin-bottom:7px;}
 .empty-sub{font-size:13px;color:var(--muted);line-height:1.7;max-width:240px;margin:0 auto 18px;}
 .empty-cta{display:inline-flex;align-items:center;gap:7px;padding:11px 20px;border-radius:var(--radius-sm);background:#1a1714;color:white;border:none;cursor:pointer;font-family:'Numans',sans-serif;font-size:13px;font-weight:600;transition:all 0.2s;}
@@ -624,13 +631,13 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 </div>
 
 <!-- LANDING PAGE -->
-<div id="landingPage" onclick="enterApp()" style="display:none">
+<div id="landingPage" onclick="enterApp()">
   <div class="start-screen">
     <div class="start-logo-text">
       <div class="start-bar-wrap"><span class="start-vbar">|</span>poow<span class="start-vbar">|</span></div>
       <div class="start-bar-wrap"><span class="start-vbar">|</span>mood<span class="start-vbar">|</span></div>
     </div>
-    <p class="start-tagline">tap anywhere to start</p>
+    <p class="start-tagline">every mood is a signal<br>every signal moves you</p>
     <div class="start-bars">
       <div class="start-bar"></div>
       <div class="start-bar"></div>
@@ -641,7 +648,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
   </div>
 </div>
 
-<div class="app-shell">
+<div class="app-shell" style="display:none">
   <nav class="bottom-nav">
     <button class="nav-btn active" id="nav-home" onclick="showPage('home')">
       <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
@@ -682,7 +689,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
             <button class="btn-ghost" onclick="surpriseMe()">Surprise me</button>
             <button class="btn-primary" id="moodContinueBtn" onclick="goToRefine()" disabled style="width:auto;padding:14px 28px;margin-top:0">
-              Continue → Refine
+              Continue →
             </button>
           </div>
         </div>
@@ -716,27 +723,27 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
         <div class="card-title" style="margin-bottom:18px" id="quickContextTitle">Quick context</div>
         <div class="refine-fields">
           <div>
-            <div class="refine-field-label">⏱ Time available</div>
+            <div class="refine-field-label">⏱ Time Available</div>
             <div class="pill-row" id="timeGroup"></div>
           </div>
           <div>
-            <div class="refine-field-label">💰 Budget</div>
+            <div class="refine-field-label">$ Budget</div>
             <div class="pill-row" id="budgetGroup"></div>
           </div>
           <div>
-            <div class="refine-field-label">👥 Who's joining</div>
+            <div class="refine-field-label">👥 Who's Joining</div>
             <div class="pill-row" id="peopleGroup"></div>
           </div>
           <div>
-            <div class="refine-field-label">🎨 Activity type</div>
+            <div class="refine-field-label">🎨 Activity Type</div>
             <div class="pill-row" id="prefGroup"></div>
           </div>
           <div>
-            <div class="refine-field-label">🌿 Indoor or outdoor</div>
+            <div class="refine-field-label">🏠 Indoor or outdoor</div>
             <div class="pill-row" id="settingGroup"></div>
           </div>
           <div>
-            <div class="refine-field-label" id="mobilityFieldLabel">♿ Physical accessibility</div>
+            <div class="refine-field-label" id="mobilityFieldLabel">♿ Physical Accessibility</div>
             <div class="pill-row" id="mobilityGroup"></div>
           </div>
         </div>
@@ -769,6 +776,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
     <div class="page" id="page-history">
       <div class="hero" style="position:relative;text-align:center;">
         <h1 class="hero-title">History</h1>
+        <p class="hero-sub">Your Activity Journey</p>
         <button class="btn-ghost" id="calToggleBtn" onclick="toggleCalendarView()" style="position:absolute;right:0;top:0;font-size:11px;padding:6px 10px;">
           + Calendar
         </button>
@@ -849,6 +857,14 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 
 <div class="toast" id="toast"></div>
 
+<!-- Hidden stub elements required by JS (were in sidebar, now removed) -->
+<div style="display:none" aria-hidden="true">
+  <div id="apiDot" class="api-dot off"></div>
+  <span id="apiStatusText">Connect API</span>
+  <div id="apiStatusEl"></div>
+  <div id="apiKeyPreview"></div>
+</div>
+
 <script>
 // ── STATE ──────────────────────────────────────────────────
 let S = {
@@ -869,72 +885,71 @@ let S = {
 const MOODS=[
   {v:'stressed',e:'😤',l:'Stressed',lk:'스트레스'},
   {v:'frustrated',e:'😠',l:'Frustrated',lk:'짜증나'},
-  {v:'anxious',e:'😰',l:'Anxious',lk:'불안해'},
-  {v:'overwhelmed',e:'🌊',l:'Overwhelmed',lk:'벅차'},
   {v:'bored',e:'😐',l:'Bored',lk:'심심해'},
   {v:'restless',e:'🦋',l:'Restless',lk:'안절부절'},
+  {v:'anxious',e:'😰',l:'Anxious',lk:'불안해'},
+  {v:'overwhelmed',e:'🌊',l:'Overwhelmed',lk:'벅차'},
   {v:'motivated',e:'🔥',l:'Motivated',lk:'의욕충만'},
   {v:'energetic',e:'⚡',l:'Energetic',lk:'에너지 넘쳐'},
   {v:'sad',e:'🌧️',l:'Sad',lk:'슬퍼'},
   {v:'tired',e:'😴',l:'Tired',lk:'피곤해'},
-  {v:'lonely',e:'🫂',l:'Lonely',lk:'외로워'},
-  {v:'nostalgic',e:'🌅',l:'Nostalgic',lk:'그리워'},
   {v:'happy',e:'😊',l:'Happy',lk:'행복해'},
   {v:'inspired',e:'✨',l:'Inspired',lk:'영감받았어'},
+  {v:'lonely',e:'🫂',l:'Lonely',lk:'외로워'},
+  {v:'nostalgic',e:'🌅',l:'Nostalgic',lk:'그리워'},
   {v:'calm',e:'🌿',l:'Calm',lk:'차분해'},
-  {v:'grateful',e:'🙏',l:'Grateful',lk:'감사해'},
-  {v:'playful',e:'🎉',l:'Playful',lk:'신나'},
-  {v:'curious',e:'🔍',l:'Curious',lk:'궁금해'}
+  {v:'grateful',e:'🙏',l:'Grateful',lk:'감사해'}
 ];
 const TIME=[
-  {v:'flash',l:'⚡ <10 min',lk:'⚡ 10분 이내'},
-  {v:'short',l:'🕐 10–30 min',lk:'🕐 10–30분'},
-  {v:'medium',l:'⏱ 30–90 min',lk:'⏱ 30분–1시간 반'},
-  {v:'long',l:'🌙 1.5–3 hrs',lk:'🌙 1.5–3시간'},
-  {v:'day',l:'☀️ Full day',lk:'☀️ 하루 종일'}
+  {v:'flash',l:'15 min+',lk:'15분+'},
+  {v:'short',l:'10-30 min',lk:'10-30분'},
+  {v:'medium',l:'30-90 min',lk:'30-90분'},
+  {v:'long',l:'1.5-2 hrs',lk:'1.5-2시간'},
+  {v:'day',l:'Full day',lk:'하루 종일'}
 ];
 const BUDGET=[
-  {v:'free',l:'🆓 Free',lk:'🆓 무료'},
-  {v:'low',l:'💵 Under $10',lk:'💵 1만원 이하'},
-  {v:'medium',l:'💰 $10–50',lk:'💰 1만–5만원'},
-  {v:'high',l:'💎 $50+',lk:'💎 5만원 이상'}
+  {v:'free',l:'Free',lk:'무료'},
+  {v:'low',l:'Under $10',lk:'1만원 이하'},
+  {v:'medium',l:'$10-$50',lk:'1만–5만원'},
+  {v:'high',l:'$50+',lk:'5만원 이상'}
 ];
 const PEOPLE=[
-  {v:'alone',l:'🧍 Solo',lk:'🧍 혼자'},
-  {v:'partner',l:'💑 Partner',lk:'💑 파트너와'},
-  {v:'friends',l:'👥 Friends',lk:'👥 친구와'},
-  {v:'family',l:'👨‍👩‍👧 Family',lk:'👨‍👩‍👧 가족과'},
-  {v:'group',l:'🎊 Group',lk:'🎊 여러 명'}
+  {v:'alone',l:'Solo',lk:'혼자'},
+  {v:'partner',l:'Partner',lk:'파트너와'},
+  {v:'friends',l:'Friends',lk:'친구와'},
+  {v:'family',l:'Family',lk:'가족과'},
+  {v:'group',l:'Group',lk:'여러 명'}
 ];
 const PREF=[
-  {v:'creative',l:'🎨 Creative',lk:'🎨 창의적'},
-  {v:'active',l:'🏃 Active',lk:'🏃 활동적'},
-  {v:'relaxing',l:'🧘 Relaxing',lk:'🧘 휴식'},
-  {v:'social',l:'💬 Social',lk:'💬 사교적'},
-  {v:'learning',l:'📚 Learning',lk:'📚 배움'},
-  {v:'entertainment',l:'🎬 Entertainment',lk:'🎬 엔터테인먼트'},
-  {v:'food',l:'🍳 Food',lk:'🍳 음식'},
-  {v:'music',l:'🎵 Music',lk:'🎵 음악'},
-  {v:'nature',l:'🌲 Nature',lk:'🌲 자연'},
-  {v:'gaming',l:'🎮 Gaming',lk:'🎮 게임'},
-  {v:'anything',l:'🎲 Anything',lk:'🎲 아무거나'}
+  {v:'creative',l:'Creative',lk:'창의적'},
+  {v:'learning',l:'Learning',lk:'배움'},
+  {v:'productive',l:'Productive',lk:'생산적'},
+  {v:'food',l:'Food',lk:'음식'},
+  {v:'active',l:'Active',lk:'활동적'},
+  {v:'social',l:'Social',lk:'사교적'},
+  {v:'relaxing',l:'Relaxing',lk:'휴식'},
+  {v:'nature',l:'Nature',lk:'자연'},
+  {v:'music',l:'Music',lk:'음악'},
+  {v:'entertainment',l:'Entertainment',lk:'엔터테인먼트'},
+  {v:'gaming',l:'Gaming',lk:'게임'},
+  {v:'anything',l:'Anything',lk:'아무거나'}
 ];
 const SETTING=[
-  {v:'indoor',l:'🏠 Indoor',lk:'🏠 실내'},
-  {v:'outdoor',l:'🌳 Outdoor',lk:'🌳 야외'},
-  {v:'either',l:'✓ Either',lk:'✓ 상관없음'}
+  {v:'indoor',l:'Indoor',lk:'실내'},
+  {v:'outdoor',l:'Outdoor',lk:'야외'},
+  {v:'either',l:'Either',lk:'상관없음'}
 ];
 const MOBILITY=[
-  {v:'full',l:'🧍 Full mobility',lk:'🧍 완전한 이동'},
-  {v:'limited',l:'🦽 Limited mobility',lk:'🦽 제한된 이동'},
-  {v:'seated',l:'♿ Wheelchair / seated',lk:'♿ 휠체어 / 앉은 자세'},
-  {v:'low_energy',l:'🛋️ Low energy / chronic illness',lk:'🛋️ 저에너지 / 만성질환'}
+  {v:'full',l:'Full mobility',lk:'완전한 이동'},
+  {v:'limited',l:'Limited mobility',lk:'제한된 이동'},
+  {v:'seated',l:'Wheelchair / seated',lk:'휠체어 / 앉은 자세'},
+  {v:'low_energy',l:'Low energy / Chronic Illness',lk:'저에너지 / 만성질환'}
 ];
 const DIFF=[
-  {v:'easy',l:'✨ Laid-back',lk:'✨ 가볍게'},
-  {v:'medium',l:'🧠 Engaging',lk:'🧠 몰입감 있게'},
-  {v:'hard',l:'💪 Challenging',lk:'💪 도전적으로'},
-  {v:'long_project',l:'🗓️ Start a Project',lk:'🗓️ 프로젝트 시작'}
+  {v:'easy',l:'Laid-back',lk:'가볍게'},
+  {v:'medium',l:'Engaging',lk:'몰입감 있게'},
+  {v:'hard',l:'Challenging',lk:'도전적으로'},
+  {v:'long_project',l:'Start a Project',lk:'프로젝트 시작'}
 ];
 
 const MOOD_THEME={happy:'happy',playful:'happy',grateful:'happy',energetic:'energetic',motivated:'energetic',restless:'energetic',calm:'calm',inspired:'calm',curious:'calm',sad:'sad',lonely:'sad',stressed:'stressed',anxious:'stressed',frustrated:'stressed',overwhelmed:'stressed',bored:'bored',nostalgic:'bored',tired:'tired'};
@@ -1023,7 +1038,7 @@ const TRANSLATIONS = {
   en: {
     discover: 'Discover', history: 'History', insights: 'Insights', settings: 'Settings',
     moodCheckin: '✦ Mood Check-in', howFeeling: 'How are you feeling', rightNow: 'right now?',
-    moodSignal: 'Your mood is the signal.', continueRefine: 'Continue → Refine',
+    moodSignal: 'Your mood is the signal.', continueRefine: 'Continue →',
     surpriseMe: '🎲 Surprise me', refineBack: '← Back to mood',
     refineTitle: 'Refine your', refineMoment: 'moment',
     refineSub: 'Help us find something that truly fits. All fields are optional.',
@@ -1042,7 +1057,7 @@ const TRANSLATIONS = {
     iDidThis: '✓ I Did This!', saveForLater: '🔖 Save for Later', saved: '✓ Saved',
     share: '↗ Share', notForMe: "👎 Not for me — try another",
     markDone: 'Mark done', doAgain: '↺ Again', delete: 'Delete',
-    goToHome: '✦ Go to Home',
+    goToHome: '+ Discover Activities',
     journeyNotStarted: "Your activity journey hasn't started yet.",
     tryMoodCheckin: "Try a mood check-in and discover something that fits your moment.",
     darkMode: 'Dark Mode', darkModeSub: 'Switch between light and dark theme',
@@ -1078,7 +1093,7 @@ const TRANSLATIONS = {
     allSetTitle: "You're all set!", moodCheckinTitle: '✦ Mood Check-in',
     completed: 'Completed', totalSaved: 'Total Saved', completion: 'Completion',
     allTab: 'All', savedTab: 'Saved', doneTab: 'Done',
-    weekSummary: "📆 This Week's Summary", avgRating: 'Avg Rating', topMood: 'Top Mood',
+    weekSummary: "This Week's Summary", avgRating: 'Avg Rating', topMood: 'Top Mood',
     dayStreak: 'day streak!', done: 'done', next: 'Next',
     categoriesTried: 'Categories tried', doneStatus: 'Done', savedStatus: 'Saved',
     markDoneBtn: 'Mark done', doAgainBtn: '↺ Again', deleteBtn: 'Delete', shareBtn: '↗ Share',
@@ -1117,7 +1132,7 @@ const TRANSLATIONS = {
     iDidThis: '✓ 했어요!', saveForLater: '🔖 나중에 하기', saved: '✓ 저장됨',
     share: '↗ 공유', notForMe: '👎 별로예요 — 다른 것 추천',
     markDone: '완료 표시', doAgain: '↺ 다시', delete: '삭제',
-    goToHome: '✦ 홈으로',
+    goToHome: '+ 활동 찾기',
     journeyNotStarted: '아직 시작된 활동이 없어요.',
     tryMoodCheckin: '기분 체크인을 하고 지금 딱 맞는 활동을 찾아보세요.',
     darkMode: '다크 모드', darkModeSub: '라이트/다크 테마 전환',
@@ -1153,7 +1168,7 @@ const TRANSLATIONS = {
     allSetTitle: '준비 완료!', moodCheckinTitle: '✦ 기분 체크인',
     completed: '완료', totalSaved: '전체 저장', completion: '완료율',
     allTab: '전체', savedTab: '저장됨', doneTab: '완료',
-    weekSummary: '📆 이번 주 요약', avgRating: '평균 평점', topMood: '주요 기분',
+    weekSummary: '이번 주 요약', avgRating: '평균 평점', topMood: '주요 기분',
     dayStreak: '일 연속!', done: '완료', next: '다음 목표',
     categoriesTried: '시도한 카테고리', doneStatus: '완료', savedStatus: '저장됨',
     markDoneBtn: '완료 표시', doAgainBtn: '↺ 다시', deleteBtn: '삭제', shareBtn: '↗ 공유',
@@ -1704,6 +1719,7 @@ async function refetchWithDifficulty(diff){
 function renderResults(acts,resetRefine=true){
   if(resetRefine)refineState={tags:[],sort:'default',diffFilter:null};
   window._acts=acts;
+  window._selectedActs=new Set();
   const moodText=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(' & ');
   const sub=[S.specific,moodText,S.preference,S.time].filter(Boolean).join(' · ');
   document.getElementById('resultsContent').innerHTML=`
@@ -1739,7 +1755,12 @@ function renderResults(acts,resetRefine=true){
         <button class="sort-pill" id="diff-filter-long_project" onclick="setDiffFilter('long_project')">${S.lang==='ko'?'🗓️ 프로젝트':'🗓️ Project'}</button>
       </div>
     </div>
-    <div class="activity-grid" id="activityGrid"></div>`;
+    <div class="activity-grid" id="activityGrid"></div>
+    <div id="act-selection-bar" class="hidden">
+      <span id="act-sel-count">0 selected</span>
+      <button onclick="saveAllSelected()">${S.lang==='ko'?'선택 저장':'Save Selected'}</button>
+      <button onclick="clearActSelection()" style="background:transparent;color:var(--bg);border:1px solid rgba(255,255,255,0.3);">${S.lang==='ko'?'취소':'Clear'}</button>
+    </div>`;
   renderActCards();
 }
 
@@ -1773,21 +1794,68 @@ function renderActCards(){
   if(refineState.sort==='time')acts.sort((a,b)=>parseTime(a.estimated_time)-parseTime(b.estimated_time));
   else if(refineState.sort==='cost')acts.sort((a,b)=>parseCost(a.estimated_cost)-parseCost(b.estimated_cost));
   else if(refineState.sort==='difficulty')acts.sort((a,b)=>(diffOrder[a.difficulty]||0)-(diffOrder[b.difficulty]||0));
+  const sel=window._selectedActs||(window._selectedActs=new Set());
   grid.innerHTML=acts.map((a,i)=>{
+    const idx=window._acts.indexOf(a);
     const matchPct=calcMatchScore(a);
+    const isSelected=sel.has(idx);
     return `
-    <div class="act-card" onclick="showDetail(${window._acts.indexOf(a)})" style="animation:fadeUp 0.4s ease both;animation-delay:${i*0.08}s">
-      <div class="act-top">
-        <span class="cat-badge">${a.category||'Activity'}</span>
-        <span class="diff-badge ${getDiffClass(a.difficulty)}">${getDiffLabel(a.difficulty)}</span>
+    <div class="act-card${isSelected?' act-selected':''}" data-idx="${idx}" style="animation:fadeUp 0.4s ease both;animation-delay:${i*0.08}s">
+      <button class="act-check-btn" onclick="event.stopPropagation();toggleActSelect(${idx})" title="Select">${isSelected?'✓':''}</button>
+      <div onclick="showDetail(${idx})">
+        <div class="act-top">
+          <span class="cat-badge">${a.category||'Activity'}</span>
+          <span class="diff-badge ${getDiffClass(a.difficulty)}">${getDiffLabel(a.difficulty)}</span>
+        </div>
+        <div class="act-title">${a.title}</div>
+        <div class="act-desc">${a.description}</div>
+        ${a.why?`<div class="why-tag">✦ ${a.why}</div>`:''}
+        <div class="act-meta" style="margin-top:10px"><span>⏱ ${a.estimated_time||'?'}</span><span>💰 ${a.estimated_cost||'Free'}</span></div>
+        <div class="match-bar" title="Mood match score"><div class="match-fill" style="width:${matchPct}%"></div></div>
       </div>
-      <div class="act-title">${a.title}</div>
-      <div class="act-desc">${a.description}</div>
-      ${a.why?`<div class="why-tag">✦ ${a.why}</div>`:''}
-      <div class="act-meta" style="margin-top:10px"><span>⏱ ${a.estimated_time||'?'}</span><span>💰 ${a.estimated_cost||'Free'}</span></div>
-      <div class="match-bar" title="Mood match score"><div class="match-fill" style="width:${matchPct}%"></div></div>
     </div>`;
   }).join('');
+}
+
+function toggleActSelect(idx){
+  const sel=window._selectedActs||(window._selectedActs=new Set());
+  if(sel.has(idx))sel.delete(idx);else sel.add(idx);
+  const card=document.querySelector(`.act-card[data-idx="${idx}"]`);
+  if(card){
+    card.classList.toggle('act-selected',sel.has(idx));
+    const btn=card.querySelector('.act-check-btn');
+    if(btn)btn.textContent=sel.has(idx)?'✓':'';
+  }
+  updateSelectionBar();
+}
+function updateSelectionBar(){
+  const sel=window._selectedActs;
+  const bar=document.getElementById('act-selection-bar');
+  if(!bar)return;
+  const count=sel?sel.size:0;
+  bar.classList.toggle('hidden',count===0);
+  const countEl=document.getElementById('act-sel-count');
+  if(countEl)countEl.textContent=count+(S.lang==='ko'?' 개 선택':count===1?' selected':' selected');
+}
+function saveAllSelected(){
+  const sel=window._selectedActs;if(!sel||sel.size===0)return;
+  sel.forEach(idx=>{
+    const a=window._acts[idx];if(!a)return;
+    if(!S.history.some(h=>h.title===a.title&&!h.completed)){
+      S.history.unshift({...a,savedAt:new Date().toISOString(),rating:0,completed:false});
+    }
+  });
+  save();
+  toast(sel.size+' activit'+(sel.size===1?'y':'ies')+' saved! ✓');
+  clearActSelection();
+}
+function clearActSelection(){
+  window._selectedActs=new Set();
+  document.querySelectorAll('.act-card.act-selected').forEach(c=>{
+    c.classList.remove('act-selected');
+    const btn=c.querySelector('.act-check-btn');if(btn)btn.textContent='';
+  });
+  updateSelectionBar();
 }
 
 function calcMatchScore(activity){
@@ -1916,7 +1984,7 @@ function showDetail(i){
 // ── SAVE / DONE ────────────────────────────────────────────
 async function notForMe(){
   const a=S.current;
-  if(!a||!S.apiKey) return;
+  if(!a) return;
   const idx=window._acts.findIndex(x=>x.title===a.title);
   toast('Finding a better match... 🔄');
 
@@ -2278,7 +2346,15 @@ function showPage(name){
   document.getElementById('nav-'+navName)?.classList.add('active');
   if(name==='history')renderHistory();
   if(name==='insights')renderInsights();
-  applyMoodTheme(S.mood);
+  if(['history','insights','settings'].includes(name)){
+    S.mood=[];
+    document.querySelectorAll('.mood-card').forEach(b=>b.classList.remove('selected'));
+    const banner=document.getElementById('moodBanner');if(banner)banner.classList.remove('visible');
+    const continueBtn=document.getElementById('moodContinueBtn');if(continueBtn)continueBtn.disabled=true;
+    applyMoodTheme([]);
+  } else {
+    applyMoodTheme(S.mood);
+  }
   window.scrollTo(0,0);
 }
 
@@ -2299,16 +2375,9 @@ function startOver(){
 
 // ── SETUP ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
-  const hasVisited=localStorage.getItem('mp_visited');
-  if(!hasVisited){
-    document.getElementById('landingPage').style.display='block';
-    document.querySelector('.app-shell').style.display='none';
-  } else {
-    document.getElementById('landingPage').style.display='none';
-    document.querySelector('.app-shell').style.display='flex';
-    if(!S.onboardingDone) startOnboarding();
-    // worker handles auth — no modal needed
-  }
+  document.getElementById('landingPage').style.display='block';
+  document.querySelector('.app-shell').style.display='none';
+  setTimeout(()=>enterApp(),2500);
 
   applySettings();
   updateApiStatus();
