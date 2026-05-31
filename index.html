@@ -565,12 +565,12 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 /* ── START / LANDING SCREEN ──────────────────────────────── */
 #landingPage{
   position:fixed;inset:0;z-index:500;
-  background:#1a1714;
+  background:#000000;
   display:flex;align-items:center;justify-content:center;
 }
 .start-screen{
   width:390px;max-width:100vw;height:100vh;
-  background:#1a1714;
+  background:#000000;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:32px;position:relative;
 }
@@ -883,6 +883,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 <script>
 // ── STATE ──────────────────────────────────────────────────
 let _currentPage = 'home'; // tracks active page for double-tap behavior
+let _suppressMoodTheme = false; // when true, showPage won't apply mood colors
 let _lastDiscoverPage = 'home'; // remembers last discover screen (home/refine/results/detail)
 let S = {
   mood:[], time:null, budget:null, people:null, preference:[], setting:null, difficulty:[], specific:'', mobility:null, lang: localStorage.getItem('mp_lang')||'en',
@@ -1475,7 +1476,8 @@ function applyMoodTheme(moods){
   if(S.settings.darkMode) return;
   document.body.classList.remove('mood-happy','mood-energetic','mood-calm','mood-sad','mood-stressed','mood-bored','mood-tired');
   if(!S.settings.moodColors) return;
-  if(moods.length>0){const theme=MOOD_THEME[moods[0]];if(theme)document.body.classList.add('mood-'+theme);}
+  // Only apply color if user explicitly selected a mood
+  if(S.mood.length>0 && moods.length>0){const theme=MOOD_THEME[moods[0]];if(theme)document.body.classList.add('mood-'+theme);}
 }
 
 // ── API ────────────────────────────────────────────────────
@@ -1626,15 +1628,22 @@ async function surpriseMe(){
   const rBudget=BUDGET[Math.floor(Math.random()*BUDGET.length)].v;
   const rPeople=PEOPLE[Math.floor(Math.random()*PEOPLE.length)].v;
   const rPref=PREF[Math.floor(Math.random()*PREF.length)].v;
-  S.mood=[rMood];S.time=rTime;S.budget=rBudget;S.people=rPeople;S.preference=[rPref];
-  applyMoodTheme(S.mood);
+  // Don't update S.mood or apply theme — keep existing mood/color state
+  const useMood=S.mood.length>0?S.mood:[rMood];
+  const useTime=S.time||rTime;
+  const useBudget=S.budget||rBudget;
+  const usePeople=S.people||rPeople;
+  const usePref=S.preference.length>0?S.preference:[rPref];
   toast('🎲 Picking something random for you...');
+  // If no mood was selected, suppress color theme
+  _suppressMoodTheme = S.mood.length === 0;
   // Go straight to results — skip refine screen entirely
   showPage('results');
+  _suppressMoodTheme = false; // reset after showPage
   document.getElementById('resultsContent').innerHTML=`<div class="loading"><div class="spin"></div><h3>${t('findingActivities')}</h3><p>${t('aiPersonalizing')}</p><div class="dots"><span></span><span></span><span></span></div></div>`;
   try{
-    const moodLabel=MOODS.find(x=>x.v===rMood)?.l||rMood;
-    const prompt=`Suggest 4 fun activities for someone feeling ${moodLabel}. Time: ${rTime}, Budget: ${rBudget}, People: ${rPeople}, Preference: ${rPref}. MATERIALS RULE: Provide itemized comma-separated materials for every activity. Use "Nothing needed" only for meditation, walking, breathing, stretching. Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"comma-separated list or Nothing needed","steps":["step 1","step 2","step 3"],"youtube":["q1","q2","q3"],"similar":["s1","s2"],"why":"why this fits the mood"}]}`;
+    const moodLabel=useMood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(' & ');
+    const prompt=`Suggest 4 fun activities for someone feeling ${moodLabel}. Time: ${useTime}, Budget: ${useBudget}, People: ${usePeople}, Preference: ${usePref.join(', ')}. MATERIALS RULE: Provide itemized comma-separated materials for every activity. Use "Nothing needed" only for meditation, walking, breathing, stretching. Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"comma-separated list or Nothing needed","steps":["step 1","step 2","step 3"],"youtube":["q1","q2","q3"],"similar":["s1","s2"],"why":"why this fits the mood"}]}`;
     const text=await callGroq(prompt);
     const parsed=safeJSON(text);
     window._acts=parsed.activities||[];
@@ -2463,7 +2472,7 @@ function showPage(name){
   document.getElementById('nav-'+navName)?.classList.add('active');
   if(name==='history')renderHistory();
   if(name==='insights')renderInsights();
-  if(discoverPages.includes(name)) applyMoodTheme(S.mood);
+  if(discoverPages.includes(name) && !_suppressMoodTheme) applyMoodTheme(S.mood);
   window.scrollTo(0,0);
 }
 
