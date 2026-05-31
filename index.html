@@ -105,10 +105,12 @@ body{
 
 /* ── MOOD SCREEN ─────────────────────────────────────────── */
 .mood-screen{
-  padding:36px 0 28px;
+  padding:0 0 16px;
+  min-height:calc(100svh - 176px);
   display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:22px;
 }
-.mood-screen-header{text-align:center;margin-bottom:28px;width:100%;}
+.mood-screen-header{text-align:center;width:100%;}
 .mood-screen-eyebrow{display:none;}
 .mood-screen-title{
   font-family:'Numans',sans-serif;font-size:23px;line-height:1.3;
@@ -127,7 +129,7 @@ body.mood-calm .mood-screen-sub{color:var(--signal);}
 /* ── MOOD CARD GRID ──────────────────────────────────────── */
 .mood-card-grid{
   display:grid;grid-template-columns:repeat(4,1fr);
-  gap:7px;margin-bottom:22px;width:100%;
+  gap:8px;width:100%;
 }
 .mood-card{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -150,12 +152,15 @@ body.mood-calm .mood-screen-sub{color:var(--signal);}
 #mood-playful{background:#8DC88A;}#mood-curious{background:#9EA8D8;}
 
 /* ── MOOD CONTINUE AREA ──────────────────────────────────── */
-.mood-continue-area{width:100%;text-align:center;}
+.mood-continue-area{width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;}
 .mood-selected-banner{
   display:inline-flex;align-items:center;gap:6px;
-  font-size:12px;color:var(--text);margin-bottom:14px;
+  font-size:12px;color:var(--text);
   opacity:0;transition:opacity 0.3s;
 }
+/* Equal-height mood screen buttons */
+.mood-continue-area .btn-ghost{padding:13px 22px;font-size:14px;}
+.mood-continue-area .btn-primary{margin-top:0;}
 .mood-selected-banner::before{content:'•';color:var(--signal);}
 .mood-selected-banner.visible{opacity:1;}
 
@@ -485,6 +490,12 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 .toggle.on{background:var(--signal);}
 .toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:white;transition:transform 0.2s;}
 .toggle.on::after{transform:translateX(18px);}
+/* Settings page — no signal color ever */
+#page-settings .toggle.on{background:#555;}
+#page-settings .card{background:rgba(255,255,255,0.85) !important;border:1px solid rgba(210,185,180,0.2);}
+#page-settings .btn-ghost{background:rgba(240,238,234,0.8);color:var(--text);border-color:rgba(180,165,155,0.4);}
+#page-settings .btn-ghost:hover{background:rgba(228,224,218,0.9);color:var(--text);border-color:rgba(150,130,120,0.6);}
+#page-settings{background:#f8f6f2 !important;}
 
 /* ── MODALS ──────────────────────────────────────────────── */
 .modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;}
@@ -540,7 +551,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 .share-platform-btn:hover{border-color:var(--signal);color:var(--signal);}
 
 /* ── TOAST ───────────────────────────────────────────────── */
-.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(50px);z-index:400;background:rgba(26,23,20,0.94);color:white;padding:9px 16px;border-radius:7px;font-size:13px;box-shadow:var(--shadow);opacity:0;transition:all 0.3s;max-width:280px;white-space:nowrap;}
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(50px);z-index:400;background:rgba(26,23,20,0.94);color:white;padding:9px 16px;border-radius:7px;font-size:13px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:all 0.3s;max-width:280px;white-space:nowrap;}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 
 /* ── ANIMATIONS ──────────────────────────────────────────── */
@@ -557,34 +568,42 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 #landingPage{
   position:fixed;inset:0;z-index:500;
   background:#1a1714;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
 }
 .start-screen{
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:28px;padding:40px 20px;
-  min-height:100vh;width:100%;
+  width:390px;max-width:100vw;height:100vh;
+  background:#1a1714;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:32px;position:relative;
 }
-.start-logo-text{
+/* Crosswalk wordmark: | poow | / | mood | */
+.start-wordmark{
+  display:flex;flex-direction:column;align-items:flex-start;gap:0;
+}
+.start-word-row{
+  display:flex;align-items:center;gap:10px;
+}
+.start-vbar{
+  width:5px;height:56px;background:rgba(255,255,255,0.9);border-radius:2px;flex-shrink:0;
+}
+.start-word{
   font-family:'Numans',sans-serif;font-size:52px;font-weight:700;
-  color:white;line-height:1.05;text-align:center;letter-spacing:-0.02em;
+  color:white;line-height:1;letter-spacing:-0.01em;
 }
-.start-bar-wrap{display:inline-flex;align-items:stretch;gap:0;line-height:1;}
-.start-vbar{color:rgba(255,255,255,0.55);font-weight:300;font-size:48px;margin:0 2px;}
 .start-tagline{
   font-family:'Numans',sans-serif;font-size:13px;
   color:rgba(255,255,255,0.45);text-align:center;line-height:1.9;letter-spacing:0.01em;
 }
-.start-bars{display:flex;gap:5px;align-items:flex-end;height:34px;}
-.start-bar{width:5px;background:rgba(255,255,255,0.35);border-radius:2px;animation:barPulse 1.5s ease-in-out infinite;}
-.start-bar:nth-child(1){height:55%;animation-delay:0s;}
-.start-bar:nth-child(2){height:88%;animation-delay:0.12s;}
-.start-bar:nth-child(3){height:68%;animation-delay:0.24s;}
-.start-bar:nth-child(4){height:82%;animation-delay:0.36s;}
-.start-bar:nth-child(5){height:48%;animation-delay:0.48s;}
+.start-bars{display:flex;gap:8px;align-items:center;height:44px;}
+.start-bar{width:6px;border-radius:3px;background:rgba(255,255,255,0.4);animation:barPulse 1.4s ease-in-out infinite;}
+.start-bar:nth-child(1){height:50%;animation-delay:0s;}
+.start-bar:nth-child(2){height:85%;animation-delay:0.14s;}
+.start-bar:nth-child(3){height:65%;animation-delay:0.28s;}
+.start-bar:nth-child(4){height:80%;animation-delay:0.42s;}
+.start-bar:nth-child(5){height:45%;animation-delay:0.56s;}
 @keyframes barPulse{
-  0%,100%{opacity:0.28;transform:scaleY(0.65);}
-  50%{opacity:0.75;transform:scaleY(1);}
+  0%,100%{opacity:0.3;transform:scaleY(0.6);}
+  50%{opacity:0.8;transform:scaleY(1);}
 }
 </style>
 </head>
@@ -631,11 +650,19 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 </div>
 
 <!-- LANDING PAGE -->
-<div id="landingPage" onclick="enterApp()">
+<div id="landingPage">
   <div class="start-screen">
-    <div class="start-logo-text">
-      <div class="start-bar-wrap"><span class="start-vbar">|</span>poow<span class="start-vbar">|</span></div>
-      <div class="start-bar-wrap"><span class="start-vbar">|</span>mood<span class="start-vbar">|</span></div>
+    <div class="start-wordmark">
+      <div class="start-word-row">
+        <div class="start-vbar"></div>
+        <span class="start-word">poow</span>
+        <div class="start-vbar"></div>
+      </div>
+      <div class="start-word-row">
+        <div class="start-vbar"></div>
+        <span class="start-word">mood</span>
+        <div class="start-vbar"></div>
+      </div>
     </div>
     <p class="start-tagline">every mood is a signal<br>every signal moves you</p>
     <div class="start-bars">
@@ -684,11 +711,11 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
         <div class="mood-card-grid" id="moodGrid"></div>
 
         <!-- Selected mood indicator + continue -->
-        <div class="mood-continue-area" style="margin-top:16px">
+        <div class="mood-continue-area">
           <div class="mood-selected-banner" id="moodBanner"></div>
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
             <button class="btn-ghost" onclick="surpriseMe()">Surprise me</button>
-            <button class="btn-primary" id="moodContinueBtn" onclick="goToRefine()" disabled style="width:auto;padding:14px 28px;margin-top:0">
+            <button class="btn-primary" id="moodContinueBtn" onclick="goToRefine()" disabled style="width:auto;padding:13px 28px;">
               Continue →
             </button>
           </div>
@@ -845,8 +872,8 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
             <button class="btn-ghost" onclick="resetOnboarding()">Reset</button>
           </div>
           <div class="settings-row">
-            <div><div class="settings-label" style="color:var(--red)">Clear all history</div><div class="settings-sub">Delete all saved activities</div></div>
-            <button class="btn-ghost" style="color:var(--red);border-color:var(--red)" onclick="clearHistory()">Clear</button>
+            <div><div class="settings-label">Clear all history</div><div class="settings-sub">Delete all saved activities</div></div>
+            <button class="btn-ghost" onclick="clearHistory()">Clear</button>
           </div>
         </div>
       </div>
@@ -952,7 +979,7 @@ const DIFF=[
   {v:'long_project',l:'Start a Project',lk:'프로젝트 시작'}
 ];
 
-const MOOD_THEME={happy:'happy',playful:'happy',grateful:'happy',energetic:'energetic',motivated:'energetic',restless:'energetic',calm:'calm',inspired:'calm',curious:'calm',sad:'sad',lonely:'sad',stressed:'stressed',anxious:'stressed',frustrated:'stressed',overwhelmed:'stressed',bored:'bored',nostalgic:'bored',tired:'tired'};
+const MOOD_THEME={happy:'happy',playful:'happy',grateful:'happy',energetic:'energetic',motivated:'energetic',restless:'energetic',calm:'calm',inspired:'calm',curious:'calm',sad:'sad',lonely:'sad',nostalgic:'sad',stressed:'stressed',anxious:'stressed',frustrated:'stressed',overwhelmed:'stressed',bored:'bored',tired:'tired'};
 
 // ── ONBOARDING ─────────────────────────────────────────────
 const ONBOARD_STEPS = [
@@ -962,9 +989,9 @@ const ONBOARD_STEPS = [
 ];
 
 const CHECKIN_MOODS=[
-  {v:'happy',e:'😊',l:'Happy'},{v:'calm',e:'🌿',l:'Calm'},{v:'energetic',e:'⚡',l:'Energized'},
-  {v:'motivated',e:'🔥',l:'Motivated'},{v:'tired',e:'😴',l:'Tired'},{v:'sad',e:'🌧️',l:'Sad'},
-  {v:'stressed',e:'😤',l:'Still stressed'},{v:'peaceful',e:'☁️',l:'Peaceful'}
+  {v:'happy',e:'😊',l:'Happy',lk:'행복해'},{v:'calm',e:'🌿',l:'Calm',lk:'차분해'},{v:'energetic',e:'⚡',l:'Energized',lk:'활기차'},
+  {v:'motivated',e:'🔥',l:'Motivated',lk:'의욕적'},{v:'tired',e:'😴',l:'Tired',lk:'피곤해'},{v:'sad',e:'🌧️',l:'Sad',lk:'슬퍼'},
+  {v:'stressed',e:'😤',l:'Still stressed',lk:'긴장해'},{v:'peaceful',e:'☁️',l:'Peaceful',lk:'평화로워'}
 ];
 
 let onboardStep = 0;
@@ -976,7 +1003,6 @@ function enterApp(){
   document.querySelector('.app-shell').style.display='flex';
   applySettings();
   localStorage.removeItem('mp_lastfilters');
-  if(!S.onboardingDone) startOnboarding();
   // worker handles auth — no modal needed
 }
 
@@ -1109,6 +1135,20 @@ const TRANSLATIONS = {
     sort: 'Sort:', want: 'Want:',
     time: '⏱ Time', cost: '💰 Cost', effort: '💪 Effort',
     laidBack: '✨ Laid-back', engaging: '🧠 Engaging', challenging: '💪 Challenging', project: '🗓️ Project',
+    metaTime: 'Time', metaCost: 'Cost', metaDifficulty: 'Difficulty', metaMaterials: 'Materials',
+    backToResults: '← Results', free: 'Free',
+    youLoveLabel: '✅ You love', notReallyYourThing: '❌ Not really your thing',
+    topMoodCommon: '🎭 Your most common mood', moodImproveLabel: '💚 Mood improvement rate',
+    moodImproveText: '% of activities improved your mood', bestCatLabel: 'Best:',
+    tasteEmpty: 'Rate more activities (⭐) to build your taste profile',
+    findingBetter: 'Finding a better match... 🔄',
+    savedDaysAgo: ' days ago', stillWantTry: 'Still want to try it? Tap to view →',
+    feltAfterLabel: ' · felt ', moodImpactCard: '💚 Mood impact',
+    moodImpactText: '% of the time, doing an activity improved your mood.',
+    helpsYouMost: ' activities help you the most.',
+    actPatternsCard: '📅 Activity patterns', mostActiveOnCard: "You're most active on",
+    ytMostViewed: '🔥 Most Viewed', ytHowTo: '📚 How To', ytTips: '💡 Tips & Tricks',
+    ytSortedViews: 'Sorted by view count', ytStepByStep: 'Step-by-step tutorial', ytExpertTips: 'Expert tips',
   },
   ko: {
     discover: '추천', history: '기록', insights: '분석', settings: '설정',
@@ -1184,6 +1224,20 @@ const TRANSLATIONS = {
     sort: '정렬:', want: '원하는:',
     time: '⏱ 시간', cost: '💰 비용', effort: '💪 난이도',
     laidBack: '✨ 편안한', engaging: '🧠 몰입감', challenging: '💪 도전적', project: '🗓️ 프로젝트',
+    metaTime: '시간', metaCost: '비용', metaDifficulty: '난이도', metaMaterials: '준비물',
+    backToResults: '← 결과로', free: '무료',
+    youLoveLabel: '✅ 좋아하는 것', notReallyYourThing: '❌ 별로인 것',
+    topMoodCommon: '🎭 가장 많은 기분', moodImproveLabel: '💚 기분 개선율',
+    moodImproveText: '% 의 활동이 기분을 개선했어요', bestCatLabel: '최고:',
+    tasteEmpty: '더 많은 활동을 평가 (⭐) 하면 취향 프로필을 만들 수 있어요',
+    findingBetter: '더 좋은 것을 찾고 있어요... 🔄',
+    savedDaysAgo: '일 전', stillWantTry: '아직 하고 싶나요? 탭해서 보기 →',
+    feltAfterLabel: ' · 이후: ', moodImpactCard: '💚 기분 변화',
+    moodImpactText: '%의 활동이 기분을 좋게 만들었어요.',
+    helpsYouMost: ' 활동이 가장 도움이 돼요.',
+    actPatternsCard: '📅 활동 패턴', mostActiveOnCard: '가장 활발한 날:',
+    ytMostViewed: '🔥 최다 조회', ytHowTo: '📚 방법 소개', ytTips: '💡 팁 & 트릭',
+    ytSortedViews: '조회수 순 정렬', ytStepByStep: '단계별 튜토리얼', ytExpertTips: '전문가 팁',
   }
 };
 
@@ -1453,13 +1507,16 @@ const WORKER_URL = 'https://autumn-recipe-dfe4.hoolalayeonhoo.workers.dev';
 async function callGroq(prompt){
   const url = WORKER_URL;
   const headers = {'Content-Type':'application/json'};
+  const sysMsg = S.lang==='ko'
+    ? 'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values. IMPORTANT: You MUST respond entirely in Korean (한국어). Every single field in the JSON — title, description, why, steps, materials, youtube, similar, category — must be written in Korean. Do not use any English.'
+    : 'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values.';
   const r = await fetch(url,{
     method:'POST',
     headers,
     body:JSON.stringify({
       model:'llama-3.1-8b-instant',
       messages:[
-        {role:'system',content:'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values.'},
+        {role:'system',content:sysMsg},
         {role:'user',content:prompt}
       ],
       temperature:0.7,max_tokens:3500,
@@ -1720,7 +1777,7 @@ function renderResults(acts,resetRefine=true){
   if(resetRefine)refineState={tags:[],sort:'default',diffFilter:null};
   window._acts=acts;
   window._selectedActs=new Set();
-  const moodText=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(' & ');
+  const moodText=S.mood.map(m=>{const md=MOODS.find(x=>x.v===m);return md?(S.lang==='ko'&&md.lk?md.lk:md.l):m;}).join(' & ');
   const sub=[S.specific,moodText,S.preference,S.time].filter(Boolean).join(' · ');
   document.getElementById('resultsContent').innerHTML=`
     <div class="results-header">
@@ -1810,7 +1867,7 @@ function renderActCards(){
         <div class="act-title">${a.title}</div>
         <div class="act-desc">${a.description}</div>
         ${a.why?`<div class="why-tag">✦ ${a.why}</div>`:''}
-        <div class="act-meta" style="margin-top:10px"><span>⏱ ${a.estimated_time||'?'}</span><span>💰 ${a.estimated_cost||'Free'}</span></div>
+        <div class="act-meta" style="margin-top:10px"><span>⏱ ${a.estimated_time||'?'}</span><span>💰 ${a.estimated_cost||t('free')}</span></div>
         <div class="match-bar" title="Mood match score"><div class="match-fill" style="width:${matchPct}%"></div></div>
       </div>
     </div>`;
@@ -1846,7 +1903,7 @@ function saveAllSelected(){
     }
   });
   save();
-  toast(sel.size+' activit'+(sel.size===1?'y':'ies')+' saved! ✓');
+  toast(S.lang==='ko'?sel.size+'개 저장됨! ✓':sel.size+' activit'+(sel.size===1?'y':'ies')+' saved! ✓');
   clearActSelection();
 }
 function clearActSelection(){
@@ -1871,10 +1928,10 @@ function calcMatchScore(activity){
 }
 
 function getDiffLabel(difficulty){
-  if(difficulty==='long_project')return '🗓️ Start a Project';
-  if(difficulty==='hard')return '💪 Challenging';
-  if(difficulty==='medium')return '🧠 Engaging';
-  return '✨ Laid-back';
+  if(difficulty==='long_project')return t('project');
+  if(difficulty==='hard')return t('challenging');
+  if(difficulty==='medium')return t('engaging');
+  return t('laidBack');
 }
 function getDiffClass(difficulty){
   if(difficulty==='long_project')return 'diff-long_project';
@@ -1931,9 +1988,9 @@ function buildYouTubeHTML(title,category,difficulty,aiQueries,materials,descript
     (aiQueries&&aiQueries[1]&&aiQueries[1].length>5)?aiQueries[1]:`${cleanTitle} tips and tricks ${new Date().getFullYear()}`
   ];
   const configs=[
-    {tag:'🔥 Most Viewed',label:'Sorted by view count',sort:'&sp=CAISAhAB'},
-    {tag:'📚 How To',label:'Step-by-step tutorial',sort:'&sp=CAISAhAB'},
-    {tag:'💡 Tips & Tricks',label:'Expert tips',sort:'&sp=CAISAhAB'},
+    {tag:t('ytMostViewed'),label:t('ytSortedViews'),sort:'&sp=CAISAhAB'},
+    {tag:t('ytHowTo'),label:t('ytStepByStep'),sort:'&sp=CAISAhAB'},
+    {tag:t('ytTips'),label:t('ytExpertTips'),sort:'&sp=CAISAhAB'},
   ];
   return queries.slice(0,3).map((q,i)=>{
     const cfg=configs[i]||configs[0];
@@ -1951,7 +2008,7 @@ function showDetail(i){
   const materialItems=parseMaterials(a.materials);
 
   document.getElementById('detailContent').innerHTML=`
-    <div style="margin-bottom:24px"><button class="btn-ghost" onclick="showPage('results')">← Results</button></div>
+    <div style="margin-bottom:24px"><button class="btn-ghost" onclick="showPage('results')">${t('backToResults')}</button></div>
     <div>
       <span class="cat-badge">${a.category||'Activity'}</span>
       <div class="detail-title">${a.title}</div>
@@ -1959,10 +2016,10 @@ function showDetail(i){
       ${a.why?`<div style="padding:10px 14px;border-radius:10px;background:var(--primary-dim);border:1px solid var(--border);font-size:13px;color:var(--primary);margin-bottom:20px;font-style:italic">✦ ${a.why}</div>`:''}
     </div>
     <div class="meta-grid">
-      <div class="meta-block"><div class="meta-lbl">Time</div><div class="meta-val">⏱ ${a.estimated_time||'?'}</div></div>
-      <div class="meta-block"><div class="meta-lbl">Cost</div><div class="meta-val">💰 ${a.estimated_cost||'Free'}</div></div>
-      <div class="meta-block"><div class="meta-lbl">Difficulty</div><div class="meta-val">${getDiffLabel(a.difficulty)}</div></div>
-      <div class="meta-block"><div class="meta-lbl">Materials</div><div class="meta-val">${materialItems.length?(materialItems.length+' item'+(materialItems.length>1?'s':'')):'Nothing needed'}</div></div>
+      <div class="meta-block"><div class="meta-lbl">${t('metaTime')}</div><div class="meta-val">⏱ ${a.estimated_time||'?'}</div></div>
+      <div class="meta-block"><div class="meta-lbl">${t('metaCost')}</div><div class="meta-val">💰 ${a.estimated_cost||t('free')}</div></div>
+      <div class="meta-block"><div class="meta-lbl">${t('metaDifficulty')}</div><div class="meta-val">${getDiffLabel(a.difficulty)}</div></div>
+      <div class="meta-block"><div class="meta-lbl">${t('metaMaterials')}</div><div class="meta-val">${materialItems.length?(materialItems.length+(S.lang==='ko'?' 개 준비물':' item'+(materialItems.length>1?'s':''))):t('nothingNeeded')}</div></div>
     </div>
     ${materialItems.length?`<div class="section-block"><h4>🛍 ${t('materials')} <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">${t('clickToShop')}</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
     ${steps.length?`<div class="section-block"><h4>${t('startNow')}</h4><div class="steps-list">${steps.map((s,i)=>`<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s.replace(/^\d+[\.\):\-]\s*/,'')}</div></div>`).join('')}</div></div>`:''}
@@ -1986,7 +2043,7 @@ async function notForMe(){
   const a=S.current;
   if(!a) return;
   const idx=window._acts.findIndex(x=>x.title===a.title);
-  toast('Finding a better match... 🔄');
+  toast(t('findingBetter'));
 
   const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
   const dislikedCats=getDislikedCategories();
@@ -2038,7 +2095,7 @@ function saveHistory(){localStorage.setItem('mp_history',JSON.stringify(S.histor
 function showCheckin(activityName,activityId){
   S.checkinData={activityId,mood:null,rating:0};
   document.getElementById('checkinActivityName').textContent=`"${activityName}"`;
-  document.getElementById('checkinMoods').innerHTML=CHECKIN_MOODS.map(m=>`<div class="checkin-mood" onclick="selectCheckinMood('${m.v}',this)" id="cm-${m.v}"><span class="checkin-emoji">${m.e}</span><span class="checkin-label">${m.l}</span></div>`).join('');
+  document.getElementById('checkinMoods').innerHTML=CHECKIN_MOODS.map(m=>`<div class="checkin-mood" onclick="selectCheckinMood('${m.v}',this)" id="cm-${m.v}"><span class="checkin-emoji">${m.e}</span><span class="checkin-label">${S.lang==='ko'&&m.lk?m.lk:m.l}</span></div>`).join('');
   document.getElementById('checkinStars').innerHTML=[1,2,3,4,5].map(s=>`<span class="r-star" onclick="setCheckinRating(${s})" id="rs-${s}">⭐</span>`).join('');
   updateCheckinStars();
   document.getElementById('checkinOverlay').style.display='flex';
@@ -2057,7 +2114,7 @@ function submitCheckin(){
   const item=S.history.find(h=>h.id===S.checkinData.activityId);
   if(item){item.rating=S.checkinData.rating;item.moodAfter=S.checkinData.mood;saveHistory();}
   document.getElementById('checkinOverlay').style.display='none';
-  toast(`Rated ${S.checkinData.rating}⭐ — thanks for sharing! 🎉`);
+  toast(S.lang==='ko'?`${S.checkinData.rating}⭐ 평가 완료 — 공유해줘서 고마워요! 🎉`:`Rated ${S.checkinData.rating}⭐ — thanks for sharing! 🎉`);
   showPage('history');
 }
 function skipCheckin(){document.getElementById('checkinOverlay').style.display='none';toast(t('doneMsg'));showPage('history');}
@@ -2067,7 +2124,7 @@ function openShare(){
   const a=S.current;if(!a)return;
   S.shareActivity=a;
   const moodEmoji=S.mood.length>0?MOODS.find(x=>x.v===S.mood[0])?.e||'✨':'✨';
-  const moodLabel=S.mood.length>0?S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(' & '):'Good vibes';
+  const moodLabel=S.mood.length>0?S.mood.map(m=>{const md=MOODS.find(x=>x.v===m);return md?(S.lang==='ko'&&md.lk?md.lk:md.l):m;}).join(' & '):(S.lang==='ko'?'좋은 기운':'Good vibes');
   document.getElementById('shareCardEl').innerHTML=`
     <div class="share-card-eyebrow">poow Activity</div>
     <div class="share-card-mood">${moodEmoji}</div>
@@ -2107,13 +2164,14 @@ function buildTasteProfile(){
   const improvePct=totalWithAfter.length>0?Math.round((improved.length/totalWithAfter.length)*100):null;
   const catImprove={};improved.forEach(h=>{if(h.category)catImprove[h.category]=(catImprove[h.category]||0)+1;});
   const bestCat=Object.entries(catImprove).sort((a,b)=>b[1]-a[1])[0];
+  const topMoodName=topMoodData?(S.lang==='ko'&&topMoodData.lk?topMoodData.lk:topMoodData.l):'';
   return`<div class="taste-profile">
-    <div class="taste-title">🎯 Your Taste Profile</div>
-    ${loved.length>0?`<div class="taste-row"><div class="taste-row-label">✅ You love</div><div class="taste-tags">${loved.map(x=>`<span class="taste-tag taste-tag-loved">${x.cat} ${'⭐'.repeat(Math.round(x.avg))}</span>`).join('')}</div></div>`:''}
-    ${disliked.length>0?`<div class="taste-row"><div class="taste-row-label">❌ Not really your thing</div><div class="taste-tags">${disliked.map(x=>`<span class="taste-tag taste-tag-meh">${x.cat}</span>`).join('')}</div></div>`:''}
-    ${topMoodData?`<div class="taste-row"><div class="taste-row-label">🎭 Your most common mood</div><div class="taste-tags"><span class="taste-tag taste-tag-mood">${topMoodData.e} ${topMoodData.l} (${topMood[1]}x)</span></div></div>`:''}
-    ${improvePct!==null?`<div class="taste-row"><div class="taste-row-label">💚 Mood improvement rate</div><div class="mood-improve-bar"><div class="mood-improve-label"><span>${improvePct}% of activities improved your mood</span><span>${bestCat?`Best: ${bestCat[0]}`:''}</span></div><div class="mood-improve-track"><div class="mood-improve-fill" style="width:${improvePct}%"></div></div></div></div>`:''}
-    ${loved.length===0&&disliked.length===0?`<div class="taste-empty">Rate more activities (⭐) to build your taste profile</div>`:''}
+    <div class="taste-title">${t('tasteProfile')}</div>
+    ${loved.length>0?`<div class="taste-row"><div class="taste-row-label">${t('youLoveLabel')}</div><div class="taste-tags">${loved.map(x=>`<span class="taste-tag taste-tag-loved">${x.cat} ${'⭐'.repeat(Math.round(x.avg))}</span>`).join('')}</div></div>`:''}
+    ${disliked.length>0?`<div class="taste-row"><div class="taste-row-label">${t('notReallyYourThing')}</div><div class="taste-tags">${disliked.map(x=>`<span class="taste-tag taste-tag-meh">${x.cat}</span>`).join('')}</div></div>`:''}
+    ${topMoodData?`<div class="taste-row"><div class="taste-row-label">${t('topMoodCommon')}</div><div class="taste-tags"><span class="taste-tag taste-tag-mood">${topMoodData.e} ${topMoodName} (${topMood[1]}x)</span></div></div>`:''}
+    ${improvePct!==null?`<div class="taste-row"><div class="taste-row-label">${t('moodImproveLabel')}</div><div class="mood-improve-bar"><div class="mood-improve-label"><span>${improvePct}${t('moodImproveText')}</span><span>${bestCat?`${t('bestCatLabel')} ${bestCat[0]}`:''}</span></div><div class="mood-improve-track"><div class="mood-improve-fill" style="width:${improvePct}%"></div></div></div></div>`:''}
+    ${loved.length===0&&disliked.length===0?`<div class="taste-empty">${t('tasteEmpty')}</div>`:''}
   </div>`;
 }
 
@@ -2132,7 +2190,8 @@ function buildWeeklySummary(){
   const weekAvg=weekRated.length?(weekRated.reduce((s,h)=>s+h.rating,0)/weekRated.length).toFixed(1):'—';
   const topMood=weekItems.reduce((acc,h)=>{if(h.mood)h.mood.split(',').forEach(m=>{if(m)acc[m]=(acc[m]||0)+1;});return acc;},{});
   const topMoodKey=Object.keys(topMood).sort((a,b)=>topMood[b]-topMood[a])[0];
-  const topMoodLabel=topMoodKey?MOODS.find(x=>x.v===topMoodKey)?.l:'N/A';
+  const topMoodObj=topMoodKey?MOODS.find(x=>x.v===topMoodKey):null;
+  const topMoodLabel=topMoodObj?(S.lang==='ko'&&topMoodObj.lk?topMoodObj.lk:topMoodObj.l):'N/A';
   const topCat=weekDone.reduce((acc,h)=>{if(h.category)acc[h.category]=(acc[h.category]||0)+1;return acc;},{});
   const topCatKey=Object.keys(topCat).sort((a,b)=>topCat[b]-topCat[a])[0]||'—';
   const insight=weekDone.length===0?t('weekNoActivity'):weekDone.length<3?(S.lang==='ko'?t('weekGoodStart').replace('{n}',weekDone.length):t('weekGoodStart').replace('{n}',weekDone.length).replace('{y}',weekDone.length===1?'y':'ies')):(S.lang==='ko'?t('weekGreat').replace('{n}',weekDone.length).replace('{cat}',topCatKey):t('weekGreat').replace('{n}',weekDone.length).replace('{cat}',topCatKey));
@@ -2159,11 +2218,12 @@ function renderHistory(filter='all'){
   let html='';
   if(oldSaved.length>0){
     const item=oldSaved[0];
+    const daysAgo=Math.floor((Date.now()-new Date(item.date).getTime())/86400000);
     html+=`<div class="saved-reminder" onclick="showSavedItem(${item.id})">
       <div class="saved-reminder-icon">🔖</div>
       <div class="saved-reminder-text">
-        You saved "<strong>${item.title}</strong>" ${Math.floor((Date.now()-new Date(item.date).getTime())/86400000)} days ago
-        <div class="saved-reminder-sub">Still want to try it? Tap to view →</div>
+        ${S.lang==='ko'?`"<strong>${item.title}</strong>" — ${daysAgo}${t('savedDaysAgo')}`:`You saved "<strong>${item.title}</strong>" ${daysAgo} days ago`}
+        <div class="saved-reminder-sub">${t('stillWantTry')}</div>
       </div>
     </div>`;
   }
@@ -2185,10 +2245,11 @@ function renderHistory(filter='all'){
   } else {
     html+=`<div class="hist-list">`;
     items.forEach(item=>{
-      const date=new Date(item.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-      const moodAfterLabel=item.moodAfter?MOODS.find(x=>x.v===item.moodAfter)?.l||item.moodAfter:'';
+      const date=new Date(item.date).toLocaleDateString(S.lang==='ko'?'ko-KR':'en-US',{month:'short',day:'numeric'});
+      const moodAfterData=item.moodAfter?MOODS.find(x=>x.v===item.moodAfter):null;
+      const moodAfterLabel=moodAfterData?(S.lang==='ko'&&moodAfterData.lk?moodAfterData.lk:moodAfterData.l):'';
       html+=`<div class="hist-card">
-        <div class="hist-top"><div><div class="hist-title">${item.title}</div><div class="hist-date">${date} · ${item.category||'Activity'}${moodAfterLabel?` · felt ${moodAfterLabel} after`:''}</div></div>
+        <div class="hist-top"><div><div class="hist-title">${item.title}</div><div class="hist-date">${date} · ${item.category||(S.lang==='ko'?'활동':'Activity')}${moodAfterLabel?`${t('feltAfterLabel')}${moodAfterLabel}`:''}</div></div>
         <span class="status-badge ${item.completed?'status-done':'status-saved'}">${item.completed?t('doneStatus'):t('savedStatus')}</span></div>
         <div class="hist-desc">${(item.description||'').substring(0,100)}...</div>
         <div class="hist-bottom">
@@ -2213,7 +2274,7 @@ function doAgain(id){
   const existing=window._acts.findIndex(a=>a.title===item.title);
   if(existing>-1)window._acts.splice(existing,1);
   window._acts.unshift(item);
-  showDetail(0);toast('Showing "'+item.title+'" again ↺');
+  showDetail(0);toast(S.lang==='ko'?`"${item.title}" 다시 보기 ↺`:'Showing "'+item.title+'" again ↺');
 }
 
 function rateItem(id,r){const h=S.history.find(h=>h.id===id);if(h){h.rating=r;saveHistory();renderHistory();}}
@@ -2298,27 +2359,27 @@ function renderInsights(){
     const catImprove={};improved.forEach(h=>{if(h.category)catImprove[h.category]=(catImprove[h.category]||0)+1;});
     const bestCat=Object.entries(catImprove).sort((a,b)=>b[1]-a[1])[0];
     html+=`<div class="card">
-      <div class="card-title" style="margin-bottom:12px">💚 Mood impact</div>
+      <div class="card-title" style="margin-bottom:12px">${t('moodImpactCard')}</div>
       <div style="font-size:13px;color:var(--muted);margin-bottom:12px">
-        ${improvePct}% of the time, doing an activity improved your mood from negative to positive.
-        ${bestCat?`<strong style="color:var(--text)">${bestCat[0]}</strong> activities help you the most.`:''}
+        ${improvePct}${t('moodImpactText')}
+        ${bestCat?`<strong style="color:var(--text)">${bestCat[0]}</strong>${t('helpsYouMost')}`:''}
       </div>
       <div class="mood-improve-track"><div class="mood-improve-fill" style="width:${improvePct}%"></div></div>
     </div>`;
   }
 
   const dayCounts=[0,0,0,0,0,0,0];
-  const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const dayNames=S.lang==='ko'?['일','월','화','수','목','금','토']:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   S.history.forEach(h=>{dayCounts[new Date(h.date).getDay()]++;});
   const peakDay=dayNames[dayCounts.indexOf(Math.max(...dayCounts))];
   const totalActivities=dayCounts.reduce((a,b)=>a+b,0);
   if(totalActivities>3){
     html+=`<div class="card">
-      <div class="card-title" style="margin-bottom:12px">📅 Activity patterns</div>
+      <div class="card-title" style="margin-bottom:12px">${t('actPatternsCard')}</div>
       <div style="display:flex;gap:6px;align-items:flex-end;height:60px;margin-bottom:8px">
         ${dayCounts.map((c,i)=>{const max=Math.max(...dayCounts)||1;const h=Math.round((c/max)*100);return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;background:var(--primary);border-radius:4px 4px 0 0;height:${h}%;opacity:${c===Math.max(...dayCounts)?1:0.4};transition:height 0.5s ease"></div><div style="font-size:9px;color:var(--muted)">${dayNames[i]}</div></div>`;}).join('')}
       </div>
-      <div style="font-size:12px;color:var(--muted)">You're most active on <strong style="color:var(--text)">${peakDay}</strong></div>
+      <div style="font-size:12px;color:var(--muted)">${t('mostActiveOnCard')} <strong style="color:var(--text)">${peakDay}</strong></div>
     </div>`;
   }
 
