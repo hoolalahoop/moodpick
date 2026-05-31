@@ -323,11 +323,9 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 }
 .act-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
 .act-card.act-selected{outline:2px solid var(--signal);outline-offset:1px;}
-.act-check-btn{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;border:2px solid var(--muted);background:var(--card-white);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;transition:all 0.2s;z-index:2;flex-shrink:0;}
-.act-card.act-selected .act-check-btn{background:var(--signal);border-color:var(--signal);color:#fff;}
-#act-selection-bar{position:fixed;bottom:72px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 20px;border-radius:100px;display:flex;align-items:center;gap:12px;font-size:14px;font-weight:600;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:opacity 0.2s,transform 0.2s;}
-#act-selection-bar.hidden{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(10px);}
-#act-selection-bar button{background:var(--signal);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Numans',sans-serif;}
+.act-check-btn{display:none;}
+.act-card.act-selected{outline:none;}
+#act-selection-bar{display:none!important;}
 .act-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;}
 .cat-badge{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;}
 .diff-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#e2afaf;color:#7a4040;}
@@ -595,16 +593,16 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
   font-family:'Numans',sans-serif;font-size:12px;
   color:rgba(255,255,255,0.4);text-align:center;line-height:1.9;letter-spacing:0.01em;
 }
-.start-bars{display:flex;gap:7px;align-items:flex-end;height:40px;}
-.start-bar{width:5px;border-radius:2px;background:rgba(255,255,255,0.35);animation:barPulse 1.4s ease-in-out infinite;}
-.start-bar:nth-child(1){height:40%;animation-delay:0s;}
-.start-bar:nth-child(2){height:80%;animation-delay:0.16s;}
-.start-bar:nth-child(3){height:55%;animation-delay:0.32s;}
-.start-bar:nth-child(4){height:70%;animation-delay:0.48s;}
-.start-bar:nth-child(5){height:35%;animation-delay:0.64s;}
-@keyframes barPulse{
-  0%,100%{opacity:0.25;transform:scaleY(0.5);}
-  50%{opacity:0.75;transform:scaleY(1);}
+.start-bars{display:flex;gap:6px;align-items:center;height:44px;}
+.start-bar{width:10px;height:36px;border-radius:2px;background:rgba(255,255,255,0.25);animation:barLoad 1.2s ease-in-out infinite;}
+.start-bar:nth-child(1){animation-delay:0s;}
+.start-bar:nth-child(2){animation-delay:0.15s;}
+.start-bar:nth-child(3){animation-delay:0.3s;}
+.start-bar:nth-child(4){animation-delay:0.45s;}
+.start-bar:nth-child(5){animation-delay:0.6s;}
+@keyframes barLoad{
+  0%,100%{background:rgba(255,255,255,0.2);}
+  50%{background:rgba(255,255,255,0.75);}
 }
 </style>
 </head>
@@ -887,7 +885,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 let _currentPage = 'home'; // tracks active page for double-tap behavior
 let _lastDiscoverPage = 'home'; // remembers last discover screen (home/refine/results/detail)
 let S = {
-  mood:[], time:null, budget:null, people:null, preference:null, setting:null, difficulty:[], specific:'', mobility:null, lang: localStorage.getItem('mp_lang')||'en',
+  mood:[], time:null, budget:null, people:null, preference:[], setting:null, difficulty:[], specific:'', mobility:null, lang: localStorage.getItem('mp_lang')||'en',
   current:null,
   history: JSON.parse(localStorage.getItem('mp_history')||'[]'),
   apiKey: localStorage.getItem('mp_groq_key')||'',
@@ -1428,7 +1426,9 @@ function setLang(lang){
   rp2('timeGroup',TIME,'time');
   rp2('budgetGroup',BUDGET,'budget');
   rp2('peopleGroup',PEOPLE,'people');
-  rp2('prefGroup',PREF,'preference');
+  // Preference uses multi-select
+  const prefEl=document.getElementById('prefGroup');
+  if(prefEl) prefEl.innerHTML=PREF.map(o=>`<button class="pill" onclick="togglePref('${o.v}',this)">${lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');
   rp2('settingGroup',SETTING,'setting');
   rp2('mobilityGroup',MOBILITY,'mobility');
   renderDiffGroup();
@@ -1586,6 +1586,13 @@ function toggleEnergy(){
 }
 
 // ── PILL SELECTION ──────────────────────────────────────────
+function togglePref(val,el){
+  const i=S.preference.indexOf(val);
+  if(i>-1){S.preference.splice(i,1);el.classList.remove('selected');}
+  else{S.preference.push(val);el.classList.add('selected');}
+  checkReady();
+}
+
 function selPill(key,val,el){
   el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('selected'));
   el.classList.add('selected');S[key]=val;checkReady();
@@ -1619,7 +1626,7 @@ async function surpriseMe(){
   const rBudget=BUDGET[Math.floor(Math.random()*BUDGET.length)].v;
   const rPeople=PEOPLE[Math.floor(Math.random()*PEOPLE.length)].v;
   const rPref=PREF[Math.floor(Math.random()*PREF.length)].v;
-  S.mood=[rMood];S.time=rTime;S.budget=rBudget;S.people=rPeople;S.preference=rPref;
+  S.mood=[rMood];S.time=rTime;S.budget=rBudget;S.people=rPeople;S.preference=[rPref];
   applyMoodTheme(S.mood);
   toast('🎲 Picking something random for you...');
   // Go straight to results — skip refine screen entirely
@@ -1672,7 +1679,7 @@ Mood: ${moodLabels||'any'}
 Time available: ${S.time||'any'} (flash=under 10min, short=10-30min, medium=30-90min, long=1.5-3hrs, day=full day)
 Budget: ${S.budget||'any'} (free=no cost, low=under $10, medium=$10-50, high=$50+)
 People: ${S.people||'any'}
-Preference: ${S.preference||'any'}
+Preference: ${S.preference.length?S.preference.join(', '):'any'}
 ${settingCtx}
 ${langCtx}
 ${S.difficulty.length?`Energy/style: ${S.difficulty.join(', ')}. long_project = start today, continue over time.`:''}
@@ -1750,7 +1757,7 @@ async function refetchWithDifficulty(diff){
   if(diff==='long_project') extraCtx='Each project must include how to START TODAY plus what to continue over coming days/weeks.';
   if(diff==='hard') extraCtx='Activities should require real skill, focus, or physical effort.';
   var prompt='Suggest exactly 4 activities at "'+diff+'" difficulty ('+diffLabel+'). '
-    +'Mood: '+(moodLabels||'any')+', Time: '+(S.time||'any')+', Budget: '+(S.budget||'any')+', People: '+(S.people||'any')+', Preference: '+(S.preference||'any')+'. '
+    +'Mood: '+(moodLabels||'any')+', Time: '+(S.time||'any')+', Budget: '+(S.budget||'any')+', People: '+(S.people||'any')+', Preference: '+(S.preference.length?S.preference.join(', '):'any')+'. '
     +'Every activity MUST have difficulty "'+diff+'". Do not mix levels. '+extraCtx+' '
     +'MATERIALS: itemized comma-separated list; "Nothing needed" only for meditation/walking/breathing/stretching. '
     +'Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"'+diff+'","materials":"string","steps":["s1","s2","s3","s4"],"youtube":["q1","q2","q3"],"similar":["s1","s2"],"why":"string"}]}';
@@ -1770,7 +1777,7 @@ function renderResults(acts,resetRefine=true){
   window._acts=acts;
   window._selectedActs=new Set();
   const moodText=S.mood.map(m=>{const md=MOODS.find(x=>x.v===m);return md?(S.lang==='ko'&&md.lk?md.lk:md.l):m;}).join(' & ');
-  const sub=[S.specific,moodText,S.preference,S.time].filter(Boolean).join(' · ');
+  const sub=[S.specific,moodText,S.preference.length?S.preference.join(', '):null,S.time].filter(Boolean).join(' · ');
   document.getElementById('resultsContent').innerHTML=`
     <div class="results-header">
       <div>
@@ -1805,11 +1812,7 @@ function renderResults(acts,resetRefine=true){
       </div>
     </div>
     <div class="activity-grid" id="activityGrid"></div>
-    <div id="act-selection-bar" class="hidden">
-      <span id="act-sel-count">0 selected</span>
-      <button onclick="saveAllSelected()">${S.lang==='ko'?'선택 저장':'Save Selected'}</button>
-      <button onclick="clearActSelection()" style="background:transparent;color:var(--bg);border:1px solid rgba(255,255,255,0.3);">${S.lang==='ko'?'취소':'Clear'}</button>
-    </div>`;
+    `;
   renderActCards();
 }
 
@@ -1850,7 +1853,7 @@ function renderActCards(){
     const isSelected=sel.has(idx);
     return `
     <div class="act-card${isSelected?' act-selected':''}" data-idx="${idx}" style="animation:fadeUp 0.4s ease both;animation-delay:${i*0.08}s">
-      <button class="act-check-btn" onclick="event.stopPropagation();toggleActSelect(${idx})" title="Select">${isSelected?'✓':''}</button>
+
       <div onclick="showDetail(${idx})">
         <div class="act-top">
           <span class="cat-badge">${a.category||'Activity'}</span>
@@ -1913,7 +1916,7 @@ function calcMatchScore(activity){
   const desc=(activity.description||'').toLowerCase();
   const title=(activity.title||'').toLowerCase();
   moodLabels.forEach(m=>{if(desc.includes(m)||title.includes(m))score+=10;});
-  if(S.preference&&activity.category&&activity.category.toLowerCase().includes(S.preference))score+=15;
+  if(S.preference.length&&activity.category&&S.preference.some(p=>activity.category.toLowerCase().includes(p)))score+=15;
   const likedCats=getLikedCategories();
   if(likedCats.includes(activity.category))score+=10;
   return Math.min(score,98);
@@ -1942,7 +1945,7 @@ async function refetchWithRefinements(){
   if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div class="spin" style="margin:0 auto 12px"></div><p>Finding activities matching: <strong>${refineState.tags.join(', ')}</strong></p></div>`;
   const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
   const prompt=`Suggest exactly 4 activities.
-Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}
+Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference.length?S.preference.join(', '):'any'}
 IMPORTANT - All activities MUST satisfy: ${refineState.tags.join(', ')}
 
 MATERIALS RULE: Always provide an itemized comma-separated list of materials needed (e.g. "Sketchbook, Pencils, Eraser" or "Mixing bowl, Flour, Sugar, Baking tray"). Only use "Nothing needed" for activities like meditation, walking, breathing exercises, or stretching.
@@ -2041,7 +2044,7 @@ async function notForMe(){
   const dislikedCats=getDislikedCategories();
 
   const prompt=`Suggest 1 alternative activity to replace "${a.title}" which the user didn't like.
-Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference||'any'}
+Mood: ${moodLabels||'any'}, Time: ${S.time||'any'}, Budget: ${S.budget||'any'}, People: ${S.people||'any'}, Preference: ${S.preference.length?S.preference.join(', '):'any'}
 Do NOT suggest: ${a.title}, ${a.category}${dislikedCats.length?`, ${dislikedCats.join(', ')}`:''}
 MATERIALS RULE: Always provide itemized comma-separated materials. Use "Nothing needed" only for meditation/walking/breathing/stretching.
 Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"comma-separated list or Nothing needed","steps":["step 1","step 2","step 3"],"youtube":["q1","q2","q3"],"similar":["s1","s2"],"why":"why this fits mood"}]}`;
@@ -2500,7 +2503,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   rp('timeGroup',TIME,'time');
   rp('budgetGroup',BUDGET,'budget');
   rp('peopleGroup',PEOPLE,'people');
-  rp('prefGroup',PREF,'preference');
+  // Preference uses multi-select
+  const prefElInit=document.getElementById('prefGroup');
+  if(prefElInit) prefElInit.innerHTML=PREF.map(o=>`<button class="pill" onclick="togglePref('${o.v}',this)">${S.lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');
   rp('settingGroup',SETTING,'setting');
   rp('mobilityGroup',MOBILITY,'mobility');
   renderDiffGroup();
