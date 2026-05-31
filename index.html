@@ -269,18 +269,16 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 
 /* ── LOADING ─────────────────────────────────────────────── */
 .loading{text-align:center;padding:60px 20px;}
-.spin{
-  width:30px;height:30px;margin:0 auto 16px;
-  border:2px solid rgba(235,210,210,0.5);border-top-color:var(--signal);
-  border-radius:50%;animation:spin 0.7s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg);}}
 .loading h3{font-family:'Numans',sans-serif;font-size:19px;margin-bottom:7px;}
 .loading p{color:var(--muted);font-size:13px;}
-.dots{display:flex;gap:5px;justify-content:center;margin-top:13px;}
-.dots span{width:6px;height:6px;border-radius:50%;background:var(--signal);opacity:0.4;animation:pulse 0.8s ease-in-out infinite;}
-.dots span:nth-child(2){animation-delay:0.15s;}.dots span:nth-child(3){animation-delay:0.3s;}
-@keyframes pulse{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+.load-bars{display:flex;gap:6px;align-items:center;justify-content:center;height:44px;margin:0 auto 24px;}
+.load-bar{width:10px;border-radius:3px;background:#EFEAE1;animation:loadWave 1.2s ease-in-out infinite;}
+.load-bar:nth-child(1){height:36px;animation-delay:0s;}
+.load-bar:nth-child(2){height:36px;animation-delay:0.15s;}
+.load-bar:nth-child(3){height:36px;animation-delay:0.3s;}
+.load-bar:nth-child(4){height:36px;animation-delay:0.45s;}
+.load-bar:nth-child(5){height:36px;animation-delay:0.6s;}
+@keyframes loadWave{0%,100%{background:#EFEAE1;}50%{background:#2a2420;}}
 
 /* ── RESULTS ─────────────────────────────────────────────── */
 .results-header{
@@ -783,18 +781,6 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
             <div class="refine-field-label" id="mobilityFieldLabel">♿ Physical Accessibility</div>
             <div class="pill-row" id="mobilityGroup"></div>
           </div>
-        </div>
-      </div>
-
-      <!-- Collapsible energy section -->
-      <button class="energy-toggle-btn" id="energyToggleBtn" onclick="toggleEnergy()">
-        ＋ Refine further
-      </button>
-      <div class="energy-panel" id="energyPanel">
-        <div class="card" style="margin-top:8px">
-          <div class="card-title" style="margin-bottom:14px" id="energyCardTitle">How much energy do you have? <span id="energyOptional" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">Optional</span></div>
-          <div class="pill-row" id="diffGroup"></div>
-          <div style="margin-top:10px;font-size:11px;color:var(--muted)" id="projectNote">🗓️ Start a Project = begin today, continue over time</div>
         </div>
       </div>
 
@@ -1445,13 +1431,13 @@ function setLang(lang){
   }
   applyLangToUI();
   // Re-render all pill groups with correct language
-  const rp2=(id,opts,key)=>{const el=document.getElementById(id);if(!el)return;el.innerHTML=opts.map(o=>`<button class="pill" onclick="selPill('${key}','${o.v}',this)">${lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');};
+  const rp2=(id,opts,key)=>{const el=document.getElementById(id);if(!el)return;el.innerHTML=opts.map(o=>`<button class="pill${S[key]===o.v?' selected':''}" onclick="selPill('${key}','${o.v}',this)">${lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');};
   rp2('timeGroup',TIME,'time');
   rp2('budgetGroup',BUDGET,'budget');
   rp2('peopleGroup',PEOPLE,'people');
   // Preference uses multi-select
   const prefEl=document.getElementById('prefGroup');
-  if(prefEl) prefEl.innerHTML=PREF.map(o=>`<button class="pill" onclick="togglePref('${o.v}',this)">${lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');
+  if(prefEl) prefEl.innerHTML=PREF.map(o=>`<button class="pill${(S.preference||[]).includes(o.v)?' selected':''}" onclick="togglePref('${o.v}',this)">${lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');
   rp2('settingGroup',SETTING,'setting');
   rp2('mobilityGroup',MOBILITY,'mobility');
   renderDiffGroup();
@@ -1664,7 +1650,7 @@ async function surpriseMe(){
   const noMoodSelected = S.mood.length === 0;
   showPage('results');
   if(noMoodSelected) document.body.classList.add('surprise-neutral');
-  document.getElementById('resultsContent').innerHTML=`<div class="loading"><div class="spin"></div><h3>${t('findingActivities')}</h3><p>${t('aiPersonalizing')}</p><div class="dots"><span></span><span></span><span></span></div></div>`;
+  document.getElementById('resultsContent').innerHTML=`<div class="loading"><div class="load-bars"><div class="load-bar"></div><div class="load-bar"></div><div class="load-bar"></div><div class="load-bar"></div><div class="load-bar"></div></div><h3>${t('findingActivities')}</h3><p>${t('aiPersonalizing')}</p></div>`;
   try{
     const moodLabel=useMood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(' & ');
     const prompt=`Suggest 4 fun activities for someone feeling ${moodLabel}. Time: ${useTime}, Budget: ${useBudget}, People: ${usePeople}, Preference: ${usePref.join(', ')}. MATERIALS RULE: Provide itemized comma-separated materials for every activity. Use "Nothing needed" only for meditation, walking, breathing, stretching. Return JSON: {"activities":[{"title":"string","description":"string","category":"string","estimated_time":"string","estimated_cost":"string","difficulty":"easy","materials":"comma-separated list or Nothing needed","steps":["step 1","step 2","step 3"],"youtube":["q1","q2","q3"],"similar":["s1","s2"],"why":"why this fits the mood"}]}`;
@@ -1689,7 +1675,7 @@ async function getRecommendations(){
   }
 
   showPage('results');
-  document.getElementById('resultsContent').innerHTML=`<div class="loading"><div class="spin"></div><h3>${t('findingActivities')}</h3><p>${t('aiPersonalizing')}</p><div class="dots"><span></span><span></span><span></span></div></div>`;
+  document.getElementById('resultsContent').innerHTML=`<div class="loading"><div class="load-bars"><div class="load-bar"></div><div class="load-bar"></div><div class="load-bar"></div><div class="load-bar"></div><div class="load-bar"></div></div><h3>${t('findingActivities')}</h3><p>${t('aiPersonalizing')}</p></div>`;
 
   const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
   const specificCtx=S.specific?`User specifically wants: "${S.specific}". Give 4 specific variations. Name exact movies, games, recipes.`:'';
@@ -1831,17 +1817,17 @@ function renderResults(acts,resetRefine=true){
       <div class="refine-tags" id="refineTags"></div>
       <div class="sort-row">
         <span class="sort-lbl" id="sortLabel">${S.lang==='ko'?'정렬:':'Sort:'}</span>
-        <button class="sort-pill active" onclick="setSort('default',this)" id="sort-default">${S.lang==='ko'?'기본':'Default'}</button>
-        <button class="sort-pill" onclick="setSort('time',this)" id="sort-time">${S.lang==='ko'?'⏱ 시간':'⏱ Time'}</button>
-        <button class="sort-pill" onclick="setSort('cost',this)" id="sort-cost">${S.lang==='ko'?'💰 비용':'💰 Cost'}</button>
-        <button class="sort-pill" onclick="setSort('difficulty',this)" id="sort-effort">${S.lang==='ko'?'💪 난이도':'💪 Effort'}</button>
+        <button class="sort-pill ${refineState.sort==='default'?'active':''}" onclick="setSort('default',this)" id="sort-default">${S.lang==='ko'?'기본':'Default'}</button>
+        <button class="sort-pill ${refineState.sort==='time'?'active':''}" onclick="setSort('time',this)" id="sort-time">${S.lang==='ko'?'⏱ 시간':'⏱ Time'}</button>
+        <button class="sort-pill ${refineState.sort==='cost'?'active':''}" onclick="setSort('cost',this)" id="sort-cost">${S.lang==='ko'?'💰 비용':'💰 Cost'}</button>
+        <button class="sort-pill ${refineState.sort==='difficulty'?'active':''}" onclick="setSort('difficulty',this)" id="sort-effort">${S.lang==='ko'?'💪 난이도':'💪 Effort'}</button>
       </div>
       <div class="sort-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
         <span class="sort-lbl" id="wantLabel">${S.lang==='ko'?'원하는:':'Want:'}</span>
-        <button class="sort-pill" id="diff-filter-easy" onclick="setDiffFilter('easy')">${S.lang==='ko'?'✨ 가볍게':'✨ Laid-back'}</button>
-        <button class="sort-pill" id="diff-filter-medium" onclick="setDiffFilter('medium')">${S.lang==='ko'?'🧠 몰입감':'🧠 Engaging'}</button>
-        <button class="sort-pill" id="diff-filter-hard" onclick="setDiffFilter('hard')">${S.lang==='ko'?'💪 도전적':'💪 Challenging'}</button>
-        <button class="sort-pill" id="diff-filter-long_project" onclick="setDiffFilter('long_project')">${S.lang==='ko'?'🗓️ 프로젝트':'🗓️ Project'}</button>
+        <button class="sort-pill ${refineState.diffFilter==='easy'?'active':''}" id="diff-filter-easy" onclick="setDiffFilter('easy')">${S.lang==='ko'?'✨ 가볍게':'✨ Laid-back'}</button>
+        <button class="sort-pill ${refineState.diffFilter==='medium'?'active':''}" id="diff-filter-medium" onclick="setDiffFilter('medium')">${S.lang==='ko'?'🧠 몰입감':'🧠 Engaging'}</button>
+        <button class="sort-pill ${refineState.diffFilter==='hard'?'active':''}" id="diff-filter-hard" onclick="setDiffFilter('hard')">${S.lang==='ko'?'💪 도전적':'💪 Challenging'}</button>
+        <button class="sort-pill ${refineState.diffFilter==='long_project'?'active':''}" id="diff-filter-long_project" onclick="setDiffFilter('long_project')">${S.lang==='ko'?'🗓️ 프로젝트':'🗓️ Project'}</button>
       </div>
     </div>
     <div class="activity-grid" id="activityGrid"></div>
@@ -2501,7 +2487,7 @@ function showPage(name){
 }
 
 function startOver(){
-  S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=null;S.setting=null;S.difficulty=[];S.specific='';
+  S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=[];S.setting=null;S.difficulty=[];S.specific='';
   refineState={tags:[],sort:'default'};
   applyMoodTheme([]);
   document.body.classList.remove('surprise-neutral');
@@ -2539,7 +2525,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   rp('peopleGroup',PEOPLE,'people');
   // Preference uses multi-select
   const prefElInit=document.getElementById('prefGroup');
-  if(prefElInit) prefElInit.innerHTML=PREF.map(o=>`<button class="pill" onclick="togglePref('${o.v}',this)">${S.lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');
+  if(prefElInit) prefElInit.innerHTML=PREF.map(o=>`<button class="pill${(S.preference||[]).includes(o.v)?' selected':''}" onclick="togglePref('${o.v}',this)">${S.lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');
   rp('settingGroup',SETTING,'setting');
   rp('mobilityGroup',MOBILITY,'mobility');
   renderDiffGroup();
