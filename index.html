@@ -468,9 +468,14 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 
 /* ── INSIGHTS ────────────────────────────────────────────── */
 .insights-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:16px;}
-.insight-stat{background:rgba(255,255,255,0.75);border-radius:var(--radius-sm);padding:15px;text-align:center;box-shadow:var(--shadow-sm);}
-.insight-num{font-size:26px;font-weight:700;color:var(--signal);}
-.insight-lbl{font-size:10px;color:var(--muted);margin-top:2px;}
+.insight-stat{border-radius:var(--radius-sm);padding:14px;text-align:center;box-shadow:var(--shadow-sm);}
+.insight-icon{font-size:18px;margin-bottom:4px;}
+.insight-num{font-size:24px;font-weight:700;line-height:1;}
+.insight-lbl{font-size:10px;color:var(--muted);margin-top:3px;}
+.insight-stat-green{background:rgba(74,158,90,0.12);}.insight-stat-green .insight-num{color:#4a9e5a;}
+.insight-stat-amber{background:rgba(196,147,58,0.13);}.insight-stat-amber .insight-num{color:#c4933a;}
+.insight-stat-purple{background:rgba(107,123,191,0.13);}.insight-stat-purple .insight-num{color:#6b7bbf;}
+.insight-stat-warm{background:rgba(235,140,60,0.11);}.insight-stat-warm .insight-num{color:#c47030;}
 .chart-card{background:rgba(255,255,255,0.75);border-radius:var(--radius);padding:16px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
 .chart-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:12px;}
 
@@ -1119,7 +1124,7 @@ const TRANSLATIONS = {
     completed: 'Completed', totalSaved: 'Total Saved', completion: 'Completion',
     allTab: 'All', savedTab: 'Saved', doneTab: 'Done',
     weekSummary: "This Week's Summary", avgRating: 'Avg Rating', topMood: 'Top Mood',
-    dayStreak: 'day streak!', done: 'done', next: 'Next',
+    dayStreak: 'Day Streak!', done: 'done', next: 'Next',
     categoriesTried: 'Categories tried', doneStatus: 'Done', savedStatus: 'Saved',
     markDoneBtn: 'Mark done', doAgainBtn: '↺ Again', deleteBtn: 'Delete', shareBtn: '↗ Share',
     notEnoughData: 'Not enough data yet', notEnoughDataSub: 'Save and complete more activities to see your personal insights.',
@@ -1146,6 +1151,7 @@ const TRANSLATIONS = {
     moodImpactText: '% of the time, doing an activity improved your mood.',
     helpsYouMost: ' activities help you the most.',
     actPatternsCard: '📅 Activity patterns', mostActiveOnCard: "You're most active on",
+    topCatsCard: '🗂️ Top Categories', activityCountSuffix: 'activities',
     ytMostViewed: '🔥 Most Viewed', ytHowTo: '📚 How To', ytTips: '💡 Tips & Tricks',
     ytSortedViews: 'Sorted by view count', ytStepByStep: 'Step-by-step tutorial', ytExpertTips: 'Expert tips',
   },
@@ -1235,12 +1241,45 @@ const TRANSLATIONS = {
     moodImpactText: '%의 활동이 기분을 좋게 만들었어요.',
     helpsYouMost: ' 활동이 가장 도움이 돼요.',
     actPatternsCard: '📅 활동 패턴', mostActiveOnCard: '가장 활발한 날:',
+    topCatsCard: '🗂️ 주요 카테고리', activityCountSuffix: '개',
     ytMostViewed: '🔥 최다 조회', ytHowTo: '📚 방법 소개', ytTips: '💡 팁 & 트릭',
     ytSortedViews: '조회수 순 정렬', ytStepByStep: '단계별 튜토리얼', ytExpertTips: '전문가 팁',
   }
 };
 
 function t(key){ return (TRANSLATIONS[S.lang]||TRANSLATIONS.en)[key] || key; }
+
+const CAT_KO={
+  'mindfulness':'마음챙김','creative':'창의','exercise':'운동','social':'사교',
+  'learning':'학습','relaxation':'휴식','outdoor':'야외활동','art':'예술',
+  'music':'음악','cooking':'요리','reading':'독서','gaming':'게임',
+  'wellness':'웰니스','adventure':'모험','fitness':'피트니스','writing':'글쓰기',
+  'photography':'사진','crafts':'공예','sports':'스포츠','travel':'여행',
+  'food':'음식','entertainment':'오락','nature':'자연','home':'집',
+  'productivity':'생산성','self-care':'자기관리','meditation':'명상',
+  'yoga':'요가','dance':'댄스','gardening':'정원 가꾸기','journaling':'일기쓰기',
+  'crafting':'공예','diy':'DIY','drawing':'그림그리기','painting':'그림',
+  'hiking':'하이킹','running':'달리기','walking':'산책','stretching':'스트레칭',
+  'baking':'베이킹','board games':'보드게임','volunteering':'봉사활동',
+  'shopping':'쇼핑','movies':'영화','theater':'연극','film':'영화',
+  'music & arts':'음악·예술','creative arts':'창의예술','physical activity':'신체활동',
+  'mental health':'정신건강','mental wellness':'정신건강','social connection':'소통',
+  'indoor activities':'실내활동','outdoor activities':'야외활동',
+  'arts & crafts':'예술공예','music & relaxation':'음악·휴식',
+  'creative writing':'창작글쓰기','home improvement':'집 꾸미기',
+  'personal development':'자기계발','stress relief':'스트레스 해소',
+  'social activities':'사교활동','relaxation & wellness':'휴식·웰니스',
+  'mind & body':'몸과 마음','creative expression':'창의적 표현',
+  'activity':'활동','general':'일반','hobby':'취미','hobbies':'취미',
+  'lifestyle':'라이프스타일','culture':'문화','exercise & fitness':'운동·피트니스',
+};
+function catLabel(cat){
+  if(!cat||S.lang!=='ko') return cat||'';
+  const key=cat.toLowerCase().trim();
+  if(CAT_KO[key]) return CAT_KO[key];
+  for(const [k,v] of Object.entries(CAT_KO)){if(key.includes(k)||k.includes(key))return v;}
+  return cat;
+}
 
 function applyLangToUI(){
   // ── NAV ──
@@ -1450,6 +1489,7 @@ function setLang(lang){
   // Re-apply selected states
   S.mood.forEach(mv=>document.getElementById('mood-'+mv)?.classList.add('selected'));
   toast(lang==='ko' ? '한국어로 변경되었습니다 🇰🇷' : 'Switched to English 🇺🇸');
+  if(lang==='ko') translateHistoryTitlesToKo();
 }
 
 function toggleDarkMode(){S.settings.darkMode=!S.settings.darkMode;applySettings();saveSettings();}
@@ -1490,15 +1530,10 @@ function applyMoodTheme(moods){
 
 // ── API ────────────────────────────────────────────────────
 function showApiModal(){} // disabled — using Worker
-function saveApiKey(){
-  const k=document.getElementById('apiKeyInput').value.trim();
-  if(!k.startsWith('gsk_')){toast('Please enter a valid Groq key (starts with gsk_)');return;}
-  S.apiKey=k;localStorage.setItem('mp_groq_key',k);
-  document.getElementById('apiModal').style.display='none';
-  updateApiStatus();applySettings();toast('Connected! Ready to explore 🎉');
-}
+function saveApiKey(){}
 function updateApiStatus(){
   const dot=document.getElementById('apiDot'),txt=document.getElementById('apiStatusText');
+  if(!dot||!txt)return;
   if(S.apiKey){dot.className='api-dot';txt.textContent='Groq Connected';}
   else{dot.className='api-dot off';txt.textContent='Connect API';}
 }
@@ -1511,10 +1546,10 @@ async function callGroq(prompt){
   const headers = {'Content-Type':'application/json'};
   const isKo = S.lang==='ko';
   const sysMsg = isKo
-    ? '당신은 JSON API입니다. 모든 응답은 반드시 한국어로 작성하세요. JSON의 모든 필드(title, description, why, steps, materials, youtube, similar, category)를 한국어로 작성하세요. 영어를 절대 사용하지 마세요. Return only valid JSON. Never use newlines or special characters inside string values.'
+    ? '당신은 JSON API입니다. 반드시 한국어(Korean, Hangul 한글)만 사용하세요. 중국어(Chinese), 일본어(Japanese), 영어(English)는 절대 사용하지 마세요. JSON의 모든 텍스트 필드를 한국어 한글로 작성하세요. Return only valid JSON. Never use newlines or special characters inside string values.'
     : 'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values.';
   const finalPrompt = isKo
-    ? prompt + '\n중요: 위 JSON의 모든 텍스트 필드를 반드시 한국어로 작성하세요. 영어 단어를 하나도 사용하지 마세요.'
+    ? prompt + '\n중요: 모든 텍스트를 반드시 한국어(한글)로 작성하세요. 중국어나 영어를 절대 사용하지 마세요.'
     : prompt;
   const r = await fetch(url,{
     method:'POST',
@@ -1533,6 +1568,21 @@ async function callGroq(prompt){
   const d=await r.json();
   if(d.error) throw new Error(d.error?.message||JSON.stringify(d.error));
   return d.choices[0].message.content;
+}
+
+function itemTitle(item){return S.lang==='ko'&&item.titleKo?item.titleKo:item.title;}
+
+async function translateHistoryTitlesToKo(){
+  S.history.forEach(h=>{if(h.titleKo&&/[一-鿿㐀-䶿]/.test(h.titleKo))delete h.titleKo;});
+  const toTx=S.history.filter(h=>!h.titleKo&&h.title&&!/[가-힣]/.test(h.title));
+  if(!toTx.length)return;
+  try{
+    const list=toTx.map((h,i)=>`${i+1}. ${h.title}`).join('\n');
+    const prompt=`다음 영어 제목들을 한국어(Korean 한글)로 번역하세요. 반드시 한글만 사용하고 중국어는 절대 쓰지 마세요. JSON만 반환: {"t":["한국어번역1","한국어번역2",...]}\n${list}`;
+    const text=await callGroq(prompt);
+    const data=safeJSON(text);
+    if(data&&Array.isArray(data.t)){data.t.forEach((v,i)=>{if(toTx[i]&&v)toTx[i].titleKo=v;});saveHistory();renderHistory();}
+  }catch(e){}
 }
 
 function safeJSON(text){
@@ -1875,7 +1925,7 @@ function renderActCards(){
 
       <div onclick="showDetail(${idx})">
         <div class="act-top">
-          <span class="cat-badge">${a.category||'Activity'}</span>
+          <span class="cat-badge">${catLabel(a.category)||(S.lang==='ko'?'활동':'Activity')}</span>
           <span class="diff-badge ${getDiffClass(a.difficulty)}">${getDiffLabel(a.difficulty)}</span>
         </div>
         <div class="act-title">${a.title}</div>
@@ -2024,7 +2074,7 @@ function showDetail(i){
   document.getElementById('detailContent').innerHTML=`
     <div style="margin-bottom:24px"><button class="btn-ghost" onclick="showPage('results')">${t('backToResults')}</button></div>
     <div>
-      <span class="cat-badge">${a.category||'Activity'}</span>
+      <span class="cat-badge">${catLabel(a.category)||(S.lang==='ko'?'활동':'Activity')}</span>
       <div class="detail-title">${a.title}</div>
       <div class="detail-desc">${a.description}</div>
       ${a.why?`<div style="padding:10px 14px;border-radius:10px;background:var(--primary-dim);border:1px solid var(--border);font-size:13px;color:var(--primary);margin-bottom:20px;font-style:italic">✦ ${a.why}</div>`:''}
@@ -2042,7 +2092,7 @@ function showDetail(i){
     <div class="action-row">
       <button class="btn-done" onclick="markDone()">${t('iDidThis')}</button>
       <button class="btn-save ${isSaved?'saved':''}" id="saveBtn" onclick="saveActivity()">${isSaved?t('savedBtn'):t('saveForLater')}</button>
-      <button class="btn-share" onclick="openShare()">↗ Share</button>
+      <button class="btn-share" onclick="openShare()">${t('shareBtn')}</button>
     </div>
     <div class="action-row" style="margin-top:8px">
       <button class="btn-notforme" onclick="notForMe()" title="Replace this with a different suggestion">
@@ -2074,12 +2124,12 @@ Return JSON: {"activities":[{"title":"string","description":"string","category":
     if(parsed.activities&&parsed.activities[0]){
       if(idx>-1) window._acts.splice(idx,1,parsed.activities[0]);
       else window._acts.push(parsed.activities[0]);
-      toast('Found a better match! ✓');
+      toast(t('findingBetter'));
       showPage('results');
       renderActCards();
     }
   }catch(err){
-    toast('Could not find alternative: '+err.message);
+    toast(S.lang==='ko'?'다른 활동을 찾지 못했어요 😅':'Could not find alternative 😅');
   }
 }
 
@@ -2098,8 +2148,8 @@ function saveActivity(){
   if(existing){toast(t('alreadySaved'));return;}
   S.history.unshift({...a,id:Date.now(),date:new Date().toISOString(),completed:false,rating:0,mood:S.mood.join(',')});
   saveHistory();
-  document.getElementById('saveBtn').className='btn-save saved';
-  document.getElementById('saveBtn').textContent='✓ Saved';
+  const btn=document.getElementById('saveBtn');
+  if(btn){btn.className='btn-save saved';btn.textContent=t('savedBtn');}
   toast(t('savedLater'));
 }
 
@@ -2153,7 +2203,7 @@ function openShare(){
 function closeShare(){document.getElementById('shareOverlay').style.display='none';}
 function shareToTwitter(){const a=S.shareActivity;if(!a)return;const text=encodeURIComponent(`Just tried "${a.title}" with poow! 🎯 ${a.estimated_time||''} · ${a.estimated_cost||'Free'}\n\n#poow #ActivityRecommender`);window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');}
 function shareToKakao(){const a=S.shareActivity;if(!a)return;const text=encodeURIComponent(`poow이 추천한 활동: "${a.title}" 🎯\n${a.estimated_time||''} · ${a.estimated_cost||'무료'}\n\n#poow`);window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');toast('Opening share... (KakaoTalk SDK required for native share)');}
-function copyShareLink(){const a=S.shareActivity;if(!a)return;const text=`poow: "${a.title}" — ${a.description} (${a.estimated_time||'?'}, ${a.estimated_cost||'Free'})`;navigator.clipboard.writeText(text).then(()=>toast(t('copiedClipboard'))).catch(()=>toast('Could not copy'));}
+function copyShareLink(){const a=S.shareActivity;if(!a)return;const text=`poow: "${a.title}" — ${a.description} (${a.estimated_time||'?'}, ${a.estimated_cost||'Free'})`;navigator.clipboard.writeText(text).then(()=>toast(t('copiedClipboard'))).catch(()=>toast(S.lang==='ko'?'복사 실패':'Could not copy'));}
 
 // ── HISTORY ────────────────────────────────────────────────
 function buildTasteProfile(){
@@ -2165,7 +2215,7 @@ function buildTasteProfile(){
     if(h.completed)catRatings[h.category].completed++;else catRatings[h.category].saved++;
   });
   const avgByCat=Object.entries(catRatings).map(([cat,d])=>({cat,avg:d.total/d.count,count:d.count,completion:d.completed/(d.completed+d.saved)}));
-  const loved=avgByCat.filter(x=>x.avg>=4).sort((a,b)=>b.avg-a.avg).slice(0,4);
+  const loved=avgByCat.filter(x=>x.avg>=5).sort((a,b)=>b.avg-a.avg).slice(0,4);
   const disliked=avgByCat.filter(x=>x.avg<=2.5).sort((a,b)=>a.avg-b.avg).slice(0,3);
   const moodCounts={};
   S.history.forEach(h=>{if(h.mood)h.mood.split(',').forEach(m=>{if(m)moodCounts[m]=(moodCounts[m]||0)+1;});});
@@ -2181,10 +2231,10 @@ function buildTasteProfile(){
   const topMoodName=topMoodData?(S.lang==='ko'&&topMoodData.lk?topMoodData.lk:topMoodData.l):'';
   return`<div class="taste-profile">
     <div class="taste-title">${t('tasteProfile')}</div>
-    ${loved.length>0?`<div class="taste-row"><div class="taste-row-label">${t('youLoveLabel')}</div><div class="taste-tags">${loved.map(x=>`<span class="taste-tag taste-tag-loved">${x.cat} ${'⭐'.repeat(Math.round(x.avg))}</span>`).join('')}</div></div>`:''}
-    ${disliked.length>0?`<div class="taste-row"><div class="taste-row-label">${t('notReallyYourThing')}</div><div class="taste-tags">${disliked.map(x=>`<span class="taste-tag taste-tag-meh">${x.cat}</span>`).join('')}</div></div>`:''}
+    ${loved.length>0?`<div class="taste-row"><div class="taste-row-label">${t('youLoveLabel')}</div><div class="taste-tags">${loved.map(x=>`<span class="taste-tag taste-tag-loved">${catLabel(x.cat)} ${'⭐'.repeat(Math.round(x.avg))}</span>`).join('')}</div></div>`:''}
+    ${disliked.length>0?`<div class="taste-row"><div class="taste-row-label">${t('notReallyYourThing')}</div><div class="taste-tags">${disliked.map(x=>`<span class="taste-tag taste-tag-meh">${catLabel(x.cat)}</span>`).join('')}</div></div>`:''}
     ${topMoodData?`<div class="taste-row"><div class="taste-row-label">${t('topMoodCommon')}</div><div class="taste-tags"><span class="taste-tag taste-tag-mood">${topMoodData.e} ${topMoodName} (${topMood[1]}x)</span></div></div>`:''}
-    ${improvePct!==null?`<div class="taste-row"><div class="taste-row-label">${t('moodImproveLabel')}</div><div class="mood-improve-bar"><div class="mood-improve-label"><span>${improvePct}${t('moodImproveText')}</span><span>${bestCat?`${t('bestCatLabel')} ${bestCat[0]}`:''}</span></div><div class="mood-improve-track"><div class="mood-improve-fill" style="width:${improvePct}%"></div></div></div></div>`:''}
+    ${improvePct!==null?`<div class="taste-row"><div class="taste-row-label">${t('moodImproveLabel')}</div><div class="mood-improve-bar"><div class="mood-improve-label"><span>${improvePct}${t('moodImproveText')}</span><span>${bestCat?`${t('bestCatLabel')} ${catLabel(bestCat[0])}`:''}</span></div><div class="mood-improve-track"><div class="mood-improve-fill" style="width:${improvePct}%"></div></div></div></div>`:''}
     ${loved.length===0&&disliked.length===0?`<div class="taste-empty">${t('tasteEmpty')}</div>`:''}
   </div>`;
 }
@@ -2208,7 +2258,8 @@ function buildWeeklySummary(){
   const topMoodLabel=topMoodObj?(S.lang==='ko'&&topMoodObj.lk?topMoodObj.lk:topMoodObj.l):'N/A';
   const topCat=weekDone.reduce((acc,h)=>{if(h.category)acc[h.category]=(acc[h.category]||0)+1;return acc;},{});
   const topCatKey=Object.keys(topCat).sort((a,b)=>topCat[b]-topCat[a])[0]||'—';
-  const insight=weekDone.length===0?t('weekNoActivity'):weekDone.length<3?(S.lang==='ko'?t('weekGoodStart').replace('{n}',weekDone.length):t('weekGoodStart').replace('{n}',weekDone.length).replace('{y}',weekDone.length===1?'y':'ies')):(S.lang==='ko'?t('weekGreat').replace('{n}',weekDone.length).replace('{cat}',topCatKey):t('weekGreat').replace('{n}',weekDone.length).replace('{cat}',topCatKey));
+  const topCatLabel=catLabel(topCatKey);
+  const insight=weekDone.length===0?t('weekNoActivity'):weekDone.length<3?(S.lang==='ko'?t('weekGoodStart').replace('{n}',weekDone.length):t('weekGoodStart').replace('{n}',weekDone.length).replace('{y}',weekDone.length===1?'y':'ies')):(S.lang==='ko'?t('weekGreat').replace('{n}',weekDone.length).replace('{cat}',topCatLabel):t('weekGreat').replace('{n}',weekDone.length).replace('{cat}',topCatLabel));
   return`<div class="weekly-card">
     <div class="weekly-title">${t('weekSummary')}</div>
     <div class="weekly-stats">
@@ -2236,7 +2287,7 @@ function renderHistory(filter='all'){
     html+=`<div class="saved-reminder" onclick="showSavedItem(${item.id})">
       <div class="saved-reminder-icon">🔖</div>
       <div class="saved-reminder-text">
-        ${S.lang==='ko'?`"<strong>${item.title}</strong>" — ${daysAgo}${t('savedDaysAgo')}`:`You saved "<strong>${item.title}</strong>" ${daysAgo} days ago`}
+        ${S.lang==='ko'?`"<strong>${itemTitle(item)}</strong>" — ${daysAgo}${t('savedDaysAgo')}`:`You saved "<strong>${itemTitle(item)}</strong>" ${daysAgo} days ago`}
         <div class="saved-reminder-sub">${t('stillWantTry')}</div>
       </div>
     </div>`;
@@ -2244,7 +2295,6 @@ function renderHistory(filter='all'){
   html+=buildWeeklySummary();
   if(S.history.length>0){
     html+=`<div class="progress-bar-card"><div class="prog-stats"><div class="prog-stat"><div class="prog-num">${done}</div><div class="prog-lbl">${t('completed')}</div></div><div class="prog-stat"><div class="prog-num">${S.history.length}</div><div class="prog-lbl">${t('totalSaved')}</div></div><div class="prog-stat"><div class="prog-num">${done>0?Math.round((done/S.history.length)*100)+'%':'—'}</div><div class="prog-lbl">${t('completion')}</div></div></div><div style="font-size:11px;opacity:0.8;margin-bottom:8px;display:flex;justify-content:space-between"><span>${done} ${t('done')}</span><span>${t('next')}: ${Math.ceil(Math.max(done,1)/10)*10} 🎯</span></div><div class="prog-bar-wrap"><div class="prog-bar" style="width:${progress}%"></div></div>${streak>0?`<div class="streak-badge">🔥 ${streak} ${t('dayStreak')}</div>`:''}</div>`;
-    html+=buildTasteProfile();
   }
   html+=`<div class="hist-tabs"><button class="hist-tab ${filter==='all'?'active':''}" onclick="renderHistory('all')">${t('allTab')} (${S.history.length})</button><button class="hist-tab ${filter==='saved'?'active':''}" onclick="renderHistory('saved')">${t('savedTab')} (${S.history.filter(h=>!h.completed).length})</button><button class="hist-tab ${filter==='done'?'active':''}" onclick="renderHistory('done')">${t('doneTab')} (${done})</button></div>`;
 
@@ -2263,15 +2313,15 @@ function renderHistory(filter='all'){
       const moodAfterData=item.moodAfter?MOODS.find(x=>x.v===item.moodAfter):null;
       const moodAfterLabel=moodAfterData?(S.lang==='ko'&&moodAfterData.lk?moodAfterData.lk:moodAfterData.l):'';
       html+=`<div class="hist-card">
-        <div class="hist-top"><div><div class="hist-title">${item.title}</div><div class="hist-date">${date} · ${item.category||(S.lang==='ko'?'활동':'Activity')}${moodAfterLabel?`${t('feltAfterLabel')}${moodAfterLabel}`:''}</div></div>
+        <div class="hist-top"><div><div class="hist-title">${itemTitle(item)}</div><div class="hist-date">${date} · ${catLabel(item.category)||(S.lang==='ko'?'활동':'Activity')}${moodAfterLabel?`${t('feltAfterLabel')}${moodAfterLabel}`:''}</div></div>
         <span class="status-badge ${item.completed?'status-done':'status-saved'}">${item.completed?t('doneStatus'):t('savedStatus')}</span></div>
-        <div class="hist-desc">${(item.description||'').substring(0,100)}...</div>
+        <div class="hist-desc">${(()=>{const d=item.description||'';if(S.lang==='ko'&&d&&!/[가-힣]/.test(d))return'';return d.substring(0,100)+(d.length>100?'...':'');})()}</div>
         <div class="hist-bottom">
           <div class="stars">${[1,2,3,4,5].map(s=>`<span class="star" onclick="rateItem(${item.id},${s})" style="color:${s<=(item.rating||0)?'var(--primary)':'var(--border)'}">${s<=(item.rating||0)?'★':'☆'}</span>`).join('')}</div>
-          ${!item.completed?`<button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="markHistDone(${item.id})">Mark done</button>`:''}
-          <button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="doAgain(${item.id})">↺ Again</button>
-          <button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="openShareFromHistory(${item.id})">Share</button>
-          <button class="btn-ghost" style="padding:4px 10px;font-size:11px;color:var(--red);border-color:var(--red);margin-left:auto;background:rgba(235,91,91,0.08)" onclick="deleteItem(${item.id})">Delete</button>
+          ${!item.completed?`<button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="markHistDone(${item.id})">${t('markDoneBtn')}</button>`:''}
+          <button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="doAgain(${item.id})">${t('doAgainBtn')}</button>
+          <button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="openShareFromHistory(${item.id})">${t('shareBtn')}</button>
+          <button class="btn-ghost" style="padding:4px 10px;font-size:11px;color:var(--red);border-color:var(--red);margin-left:auto;background:rgba(235,91,91,0.08)" onclick="deleteItem(${item.id})">${t('deleteBtn')}</button>
         </div>
       </div>`;
     });
@@ -2288,33 +2338,35 @@ function doAgain(id){
   const existing=window._acts.findIndex(a=>a.title===item.title);
   if(existing>-1)window._acts.splice(existing,1);
   window._acts.unshift(item);
-  showDetail(0);toast(S.lang==='ko'?`"${item.title}" 다시 보기 ↺`:'Showing "'+item.title+'" again ↺');
+  showDetail(0);toast(S.lang==='ko'?`"${itemTitle(item)}" 다시 보기 ↺`:'Showing "'+item.title+'" again ↺');
 }
 
 function rateItem(id,r){const h=S.history.find(h=>h.id===id);if(h){h.rating=r;saveHistory();renderHistory();}}
 function markHistDone(id){
   const h=S.history.find(h=>h.id===id);
-  if(h){h.completed=true;saveHistory();if(S.settings.checkin)showCheckin(h.title,id);else{renderHistory();toast('Done! 🎉');}}
+  if(h){h.completed=true;saveHistory();if(S.settings.checkin)showCheckin(h.title,id);else{renderHistory();toast(t('doneMsg'));}}
 }
 function deleteItem(id){S.history=S.history.filter(h=>h.id!==id);saveHistory();renderHistory();toast(t('deletedMsg'));}
 function openShareFromHistory(id){const item=S.history.find(h=>h.id===id);if(item){S.current=item;openShare();}}
 
 // ── CALENDAR ───────────────────────────────────────────────
+function localDateStr(d){const dt=new Date(d);return`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;}
 function renderCalendar(){
   const month=S.calMonth,year=month.getFullYear(),mon=month.getMonth();
   const first=new Date(year,mon,1),last=new Date(year,mon+1,0),pad=first.getDay();
-  document.getElementById('calMonth').textContent=month.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  document.getElementById('calMonth').textContent=month.toLocaleDateString(S.lang==='ko'?'ko-KR':'en-US',{month:'long',year:'numeric'});
   const days=S.lang==='ko'?['일','월','화','수','목','금','토']:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   let html=days.map(d=>`<div class="cal-day-label">${d}</div>`).join('');
   for(let i=0;i<pad;i++)html+=`<div class="cal-cell empty"></div>`;
   const today=new Date();
   for(let d=1;d<=last.getDate();d++){
-    const date=new Date(year,mon,d);const dateStr=date.toISOString().split('T')[0];
+    const dateStr=`${year}-${String(mon+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const date=new Date(year,mon,d);
     const isToday=date.toDateString()===today.toDateString();const isSelected=S.calSelected===dateStr;
-    const dayItems=S.history.filter(h=>new Date(h.date).toISOString().split('T')[0]===dateStr);
+    const dayItems=S.history.filter(h=>localDateStr(h.date)===dateStr);
     html+=`<div class="cal-cell${isToday?' today':''}${isSelected?' selected':''}" onclick="selectCalDay('${dateStr}')">
       <div class="cal-date-num">${d}</div>
-      ${dayItems.slice(0,2).map(h=>`<div class="cal-chip ${h.completed?'done':''}">${h.title.substring(0,12)}${h.title.length>12?'...':''}</div>`).join('')}
+      ${dayItems.slice(0,2).map(h=>{const t=itemTitle(h);return`<div class="cal-chip ${h.completed?'done':''}">${t.substring(0,12)}${t.length>12?'...':''}</div>`;}).join('')}
       ${dayItems.length>2?`<div style="font-size:9px;color:var(--muted)">+${dayItems.length-2}</div>`:''}
     </div>`;
   }
@@ -2324,12 +2376,12 @@ function renderCalendar(){
 function selectCalDay(dateStr){S.calSelected=S.calSelected===dateStr?null:dateStr;renderCalendar();}
 function renderCalModal(){
   const dateStr=S.calSelected;if(!dateStr){document.getElementById('calModal').innerHTML='';return;}
-  const date=new Date(dateStr);
-  const items=S.history.filter(h=>new Date(h.date).toISOString().split('T')[0]===dateStr);
-  const label=date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  const [y,mo,d]=dateStr.split('-').map(Number);const date=new Date(y,mo-1,d);
+  const items=S.history.filter(h=>localDateStr(h.date)===dateStr);
+  const label=date.toLocaleDateString(S.lang==='ko'?'ko-KR':'en-US',{weekday:'long',month:'long',day:'numeric'});
   let html=`<div class="cal-modal"><div class="cal-modal-title">${label}<button class="btn-icon" onclick="S.calSelected=null;renderCalendar()">✕</button></div>`;
-  if(!items.length)html+=`<div style="color:var(--muted);font-size:13px;padding:16px 0">No activities on this day.</div>`;
-  else items.forEach(item=>{html+=`<div class="cal-act-item"><div class="cal-act-dot ${item.completed?'done':''}"></div><div><div style="font-size:13px;font-weight:500">${item.title}</div><div style="font-size:11px;color:var(--muted)">${item.category||'Activity'} · ${item.completed?'✓ Done':'Saved'}</div></div></div>`;});
+  if(!items.length)html+=`<div style="color:var(--muted);font-size:13px;padding:16px 0">${S.lang==='ko'?'이 날은 활동이 없어요.':'No activities on this day.'}</div>`;
+  else items.forEach(item=>{html+=`<div class="cal-act-item"><div class="cal-act-dot ${item.completed?'done':''}"></div><div><div style="font-size:13px;font-weight:500">${itemTitle(item)}</div><div style="font-size:11px;color:var(--muted)">${catLabel(item.category)||(S.lang==='ko'?'활동':'Activity')} · ${item.completed?(S.lang==='ko'?'✓ 완료':'✓ Done'):(S.lang==='ko'?'저장됨':'Saved')}</div></div></div>`;});
   html+=`</div>`;
   document.getElementById('calModal').innerHTML=html;
 }
@@ -2338,7 +2390,7 @@ function toggleCalendarView(){
   if(!cal||!btn)return;
   const isOpen=cal.style.display!=='none';
   cal.style.display=isOpen?'none':'block';
-  btn.textContent=isOpen?'📅 Calendar view':'📋 List view';
+  btn.textContent=isOpen?(S.lang==='ko'?'📅 캘린더 보기':'📅 Calendar view'):(S.lang==='ko'?'📋 목록 보기':'📋 List view');
   if(!isOpen)renderCalendar();
 }
 function changeMonth(dir){S.calMonth=new Date(S.calMonth.getFullYear(),S.calMonth.getMonth()+dir,1);S.calSelected=null;renderCalendar();}
@@ -2349,17 +2401,14 @@ function renderInsights(){
   const total=S.history.length;
   const cats=[...new Set(S.history.map(h=>h.category).filter(Boolean))].length;
   const streak=calcStreak();
-  const positiveMoods=['happy','calm','energetic','motivated','inspired','grateful','playful','curious'];
-  const negativeMoods=['stressed','anxious','tired','sad','frustrated','overwhelmed','bored','lonely'];
-  const improved=S.history.filter(h=>h.moodAfter&&h.mood&&negativeMoods.some(m=>h.mood.includes(m))&&positiveMoods.includes(h.moodAfter));
-  const totalWithAfter=S.history.filter(h=>h.moodAfter&&h.mood&&negativeMoods.some(m=>h.mood.includes(m)));
-  const improvePct=totalWithAfter.length>0?Math.round((improved.length/totalWithAfter.length)*100):null;
+  const rated=S.history.filter(h=>h.rating>0);
+  const avgRating=rated.length?(rated.reduce((s,h)=>s+h.rating,0)/rated.length).toFixed(1):'—';
 
   let html=`<div class="insights-grid">
-    <div class="insight-stat"><div class="insight-num">${done}</div><div class="insight-lbl">${t('completed')}</div></div>
-    <div class="insight-stat"><div class="insight-num">${total}</div><div class="insight-lbl">${t('totalSaved')}</div></div>
-    <div class="insight-stat"><div class="insight-num">${cats}</div><div class="insight-lbl">${t('categoriesTried')}</div></div>
-    <div class="insight-stat"><div class="insight-num">${streak>0?streak+'🔥':'—'}</div><div class="insight-lbl">${t('dayStreak')}</div></div>
+    <div class="insight-stat insight-stat-green"><div class="insight-icon">✓</div><div class="insight-num">${done}</div><div class="insight-lbl">${t('completed')}</div></div>
+    <div class="insight-stat insight-stat-amber"><div class="insight-icon">⭐</div><div class="insight-num">${avgRating}</div><div class="insight-lbl">${t('avgRating')}</div></div>
+    <div class="insight-stat insight-stat-purple"><div class="insight-icon">🗂️</div><div class="insight-num">${cats}</div><div class="insight-lbl">${t('categoriesTried')}</div></div>
+    <div class="insight-stat insight-stat-warm"><div class="insight-icon">🔥</div><div class="insight-num">${streak>0?streak:'—'}</div><div class="insight-lbl">${t('dayStreak')}</div></div>
   </div>`;
 
   if(total<2){
@@ -2369,16 +2418,14 @@ function renderInsights(){
 
   html+=buildTasteProfile();
 
-  if(improvePct!==null){
-    const catImprove={};improved.forEach(h=>{if(h.category)catImprove[h.category]=(catImprove[h.category]||0)+1;});
-    const bestCat=Object.entries(catImprove).sort((a,b)=>b[1]-a[1])[0];
-    html+=`<div class="card">
-      <div class="card-title" style="margin-bottom:12px">${t('moodImpactCard')}</div>
-      <div style="font-size:13px;color:var(--muted);margin-bottom:12px">
-        ${improvePct}${t('moodImpactText')}
-        ${bestCat?`<strong style="color:var(--text)">${bestCat[0]}</strong>${t('helpsYouMost')}`:''}
-      </div>
-      <div class="mood-improve-track"><div class="mood-improve-fill" style="width:${improvePct}%"></div></div>
+  const catCounts={};
+  S.history.forEach(h=>{if(h.category)catCounts[h.category]=(catCounts[h.category]||0)+1;});
+  const topCats=Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  if(topCats.length>1){
+    const maxCount=topCats[0][1];
+    html+=`<div class="card" style="margin-bottom:10px">
+      <div class="card-title" style="margin-bottom:14px">${t('topCatsCard')}</div>
+      ${topCats.map(([cat,count])=>`<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--text);font-weight:500">${catLabel(cat)}</span><span style="color:var(--muted)">${count} ${t('activityCountSuffix')}</span></div><div class="mood-improve-track"><div class="mood-improve-fill" style="width:${Math.round((count/maxCount)*100)}%"></div></div></div>`).join('')}
     </div>`;
   }
 
@@ -2390,8 +2437,8 @@ function renderInsights(){
   if(totalActivities>3){
     html+=`<div class="card">
       <div class="card-title" style="margin-bottom:12px">${t('actPatternsCard')}</div>
-      <div style="display:flex;gap:6px;align-items:flex-end;height:60px;margin-bottom:8px">
-        ${dayCounts.map((c,i)=>{const max=Math.max(...dayCounts)||1;const h=Math.round((c/max)*100);return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;background:var(--primary);border-radius:4px 4px 0 0;height:${h}%;opacity:${c===Math.max(...dayCounts)?1:0.4};transition:height 0.5s ease"></div><div style="font-size:9px;color:var(--muted)">${dayNames[i]}</div></div>`;}).join('')}
+      <div style="display:flex;gap:6px;align-items:flex-end;height:56px;margin-bottom:10px">
+        ${dayCounts.map((c,i)=>{const max=Math.max(...dayCounts)||1;const px=Math.round((c/max)*48);return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:flex-end"><div style="width:100%;background:var(--primary);border-radius:4px 4px 0 0;height:${px}px;min-height:${c>0?3:0}px;opacity:${c===Math.max(...dayCounts)?1:0.38};transition:height 0.5s ease"></div><div style="font-size:9px;color:var(--muted)">${dayNames[i]}</div></div>`;}).join('')}
       </div>
       <div style="font-size:12px;color:var(--muted)">${t('mostActiveOnCard')} <strong style="color:var(--text)">${peakDay}</strong></div>
     </div>`;
