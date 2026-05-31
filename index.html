@@ -1141,8 +1141,8 @@ const TRANSLATIONS = {
     laidBack: '✨ Laid-back', engaging: '🧠 Engaging', challenging: '💪 Challenging', project: '🗓️ Project',
     metaTime: 'Time', metaCost: 'Cost', metaDifficulty: 'Difficulty', metaMaterials: 'Materials',
     backToResults: '← Results', free: 'Free',
-    youLoveLabel: '✅ You love', notReallyYourThing: '❌ Not really your thing',
-    topMoodCommon: '🎭 Your most common mood', moodImproveLabel: '💚 Mood improvement rate',
+    youLoveLabel: 'You love', notReallyYourThing: 'Not really your thing',
+    topMoodCommon: 'Your most common mood', moodImproveLabel: '💚 Mood improvement rate',
     moodImproveText: '% of activities improved your mood', bestCatLabel: 'Best:',
     tasteEmpty: 'Rate more activities (⭐) to build your taste profile',
     findingBetter: 'Finding a better match... 🔄',
@@ -1231,8 +1231,8 @@ const TRANSLATIONS = {
     laidBack: '✨ 편안한', engaging: '🧠 몰입감', challenging: '💪 도전적', project: '🗓️ 프로젝트',
     metaTime: '시간', metaCost: '비용', metaDifficulty: '난이도', metaMaterials: '준비물',
     backToResults: '← 결과로', free: '무료',
-    youLoveLabel: '✅ 좋아하는 것', notReallyYourThing: '❌ 별로인 것',
-    topMoodCommon: '🎭 가장 많은 기분', moodImproveLabel: '💚 기분 개선율',
+    youLoveLabel: '좋아하는 것', notReallyYourThing: '별로인 것',
+    topMoodCommon: '가장 많은 기분', moodImproveLabel: '💚 기분 개선율',
     moodImproveText: '% 의 활동이 기분을 개선했어요', bestCatLabel: '최고:',
     tasteEmpty: '더 많은 활동을 평가 (⭐) 하면 취향 프로필을 만들 수 있어요',
     findingBetter: '더 좋은 것을 찾고 있어요... 🔄',
@@ -2231,10 +2231,9 @@ function buildTasteProfile(){
   const topMoodName=topMoodData?(S.lang==='ko'&&topMoodData.lk?topMoodData.lk:topMoodData.l):'';
   return`<div class="taste-profile">
     <div class="taste-title">${t('tasteProfile')}</div>
-    ${loved.length>0?`<div class="taste-row"><div class="taste-row-label">${t('youLoveLabel')}</div><div class="taste-tags">${loved.map(x=>`<span class="taste-tag taste-tag-loved">${catLabel(x.cat)} ${'⭐'.repeat(Math.round(x.avg))}</span>`).join('')}</div></div>`:''}
+    ${loved.length>0?`<div class="taste-row"><div class="taste-row-label">${t('youLoveLabel')}</div><div class="taste-tags">${loved.map(x=>`<span class="taste-tag taste-tag-loved">${catLabel(x.cat)}</span>`).join('')}</div></div>`:''}
     ${disliked.length>0?`<div class="taste-row"><div class="taste-row-label">${t('notReallyYourThing')}</div><div class="taste-tags">${disliked.map(x=>`<span class="taste-tag taste-tag-meh">${catLabel(x.cat)}</span>`).join('')}</div></div>`:''}
-    ${topMoodData?`<div class="taste-row"><div class="taste-row-label">${t('topMoodCommon')}</div><div class="taste-tags"><span class="taste-tag taste-tag-mood">${topMoodData.e} ${topMoodName} (${topMood[1]}x)</span></div></div>`:''}
-    ${improvePct!==null?`<div class="taste-row"><div class="taste-row-label">${t('moodImproveLabel')}</div><div class="mood-improve-bar"><div class="mood-improve-label"><span>${improvePct}${t('moodImproveText')}</span><span>${bestCat?`${t('bestCatLabel')} ${catLabel(bestCat[0])}`:''}</span></div><div class="mood-improve-track"><div class="mood-improve-fill" style="width:${improvePct}%"></div></div></div></div>`:''}
+    ${topMoodData?`<div class="taste-row"><div class="taste-row-label">${t('topMoodCommon')}</div><div class="taste-tags"><span class="taste-tag" style="${(()=>{const th=MOOD_THEME[topMoodData.v];const c={happy:'rgba(74,158,90,0.15)',calm:'rgba(74,158,90,0.15)',energetic:'rgba(196,147,58,0.15)',bored:'rgba(196,147,58,0.15)',sad:'rgba(107,123,191,0.15)',tired:'rgba(107,123,191,0.15)',stressed:'rgba(235,91,91,0.15)'}[th]||'rgba(235,210,210,0.4)';const t2={happy:'#4a9e5a',calm:'#4a9e5a',energetic:'#c4933a',bored:'#c4933a',sad:'#6b7bbf',tired:'#6b7bbf',stressed:'#eb5b5b'}[th]||'var(--text)';return`background:${c};color:${t2}`})()}">${topMoodName} (${topMood[1]}x)</span></div></div>`:''}
     ${loved.length===0&&disliked.length===0?`<div class="taste-empty">${t('tasteEmpty')}</div>`:''}
   </div>`;
 }
@@ -2425,7 +2424,7 @@ function renderInsights(){
     const maxCount=topCats[0][1];
     html+=`<div class="card" style="margin-bottom:10px">
       <div class="card-title" style="margin-bottom:14px">${t('topCatsCard')}</div>
-      ${topCats.map(([cat,count])=>`<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--text);font-weight:500">${catLabel(cat)}</span><span style="color:var(--muted)">${count} ${t('activityCountSuffix')}</span></div><div class="mood-improve-track"><div class="mood-improve-fill" style="width:${Math.round((count/maxCount)*100)}%"></div></div></div>`).join('')}
+      ${topCats.map(([cat,count])=>`<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--text);font-weight:500">${catLabel(cat)}</span><span style="color:var(--muted)">${S.lang==='ko'?count+'개':count+(count===1?' activity':' activities')}</span></div><div class="mood-improve-track"><div class="mood-improve-fill" style="width:${Math.round((count/maxCount)*100)}%"></div></div></div>`).join('')}
     </div>`;
   }
 
