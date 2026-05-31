@@ -30,6 +30,7 @@ body.mood-sad{--bg:#eef0f8;--signal:#6b7bbf;--signal-dim:rgba(107,123,191,0.16);
 body.mood-tired{--bg:#eef0f8;--signal:#6b7bbf;--signal-dim:rgba(107,123,191,0.16);--card:rgba(158,168,216,0.38);}
 body.mood-happy{--bg:#eef5ee;--signal:#4a9e5a;--signal-dim:rgba(74,158,90,0.16);--card:rgba(141,200,138,0.38);}
 body.mood-calm{--bg:#eef5ee;--signal:#4a9e5a;--signal-dim:rgba(74,158,90,0.16);--card:rgba(141,200,138,0.38);}
+body.surprise-neutral{--bg:#f8f6f2;--card:rgba(255,255,255,0.92);--card-white:rgba(255,255,255,0.97);--bg2:#EFEAE1;--bg3:#EFEAE1;}
 body.dark{
   --bg:#1a1714;--card:rgba(55,45,42,0.8);--card-white:rgba(40,34,30,0.9);
   --nav-bg:#1e1a17;--text:#f0eee8;--muted:#7a6f68;
@@ -1477,7 +1478,7 @@ function applyMoodTheme(moods){
   document.body.classList.remove('mood-happy','mood-energetic','mood-calm','mood-sad','mood-stressed','mood-bored','mood-tired');
   if(!S.settings.moodColors) return;
   // Only apply color if user explicitly selected a mood
-  if(S.mood.length>0 && moods.length>0){const theme=MOOD_THEME[moods[0]];if(theme)document.body.classList.add('mood-'+theme);}
+  if(S.mood.length>0 && moods.length>0){const theme=MOOD_THEME[moods[0]];if(theme){document.body.classList.add('mood-'+theme);document.body.classList.remove('surprise-neutral');}}
 }
 
 // ── API ────────────────────────────────────────────────────
@@ -1635,11 +1636,9 @@ async function surpriseMe(){
   const usePeople=S.people||rPeople;
   const usePref=S.preference.length>0?S.preference:[rPref];
   toast('🎲 Picking something random for you...');
-  // If no mood was selected, suppress color theme
-  _suppressMoodTheme = S.mood.length === 0;
-  // Go straight to results — skip refine screen entirely
+  const noMoodSelected = S.mood.length === 0;
   showPage('results');
-  _suppressMoodTheme = false; // reset after showPage
+  if(noMoodSelected) document.body.classList.add('surprise-neutral');
   document.getElementById('resultsContent').innerHTML=`<div class="loading"><div class="spin"></div><h3>${t('findingActivities')}</h3><p>${t('aiPersonalizing')}</p><div class="dots"><span></span><span></span><span></span></div></div>`;
   try{
     const moodLabel=useMood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(' & ');
@@ -2480,6 +2479,7 @@ function startOver(){
   S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=null;S.setting=null;S.difficulty=[];S.specific='';
   refineState={tags:[],sort:'default'};
   applyMoodTheme([]);
+  document.body.classList.remove('surprise-neutral');
   document.querySelectorAll('.mood-card').forEach(b=>b.classList.remove('selected'));
   document.querySelectorAll('.pill').forEach(p=>p.classList.remove('selected'));
   const si=document.getElementById('specificInput');if(si)si.value='';
