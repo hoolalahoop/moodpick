@@ -576,34 +576,35 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:32px;position:relative;
 }
-/* Crosswalk wordmark: | poow | / | mood | */
+/* Crosswalk wordmark — matches Union.png exactly */
 .start-wordmark{
-  display:flex;flex-direction:column;align-items:flex-start;gap:0;
-}
-.start-word-row{
-  display:flex;align-items:center;gap:10px;
+  display:inline-flex;align-items:stretch;gap:0;
+  position:relative;
 }
 .start-vbar{
-  width:5px;height:56px;background:rgba(255,255,255,0.9);border-radius:2px;flex-shrink:0;
+  width:9px;background:white;flex-shrink:0;border-radius:1px;
+}
+.start-words{
+  display:flex;flex-direction:column;gap:0;padding:4px 0;
 }
 .start-word{
-  font-family:'Numans',sans-serif;font-size:52px;font-weight:700;
-  color:white;line-height:1;letter-spacing:-0.01em;
+  font-family:'Numans',sans-serif;font-size:58px;font-weight:700;
+  color:white;line-height:1.05;letter-spacing:-0.02em;
 }
 .start-tagline{
-  font-family:'Numans',sans-serif;font-size:13px;
-  color:rgba(255,255,255,0.45);text-align:center;line-height:1.9;letter-spacing:0.01em;
+  font-family:'Numans',sans-serif;font-size:12px;
+  color:rgba(255,255,255,0.4);text-align:center;line-height:1.9;letter-spacing:0.01em;
 }
-.start-bars{display:flex;gap:8px;align-items:center;height:44px;}
-.start-bar{width:6px;border-radius:3px;background:rgba(255,255,255,0.4);animation:barPulse 1.4s ease-in-out infinite;}
-.start-bar:nth-child(1){height:50%;animation-delay:0s;}
-.start-bar:nth-child(2){height:85%;animation-delay:0.14s;}
-.start-bar:nth-child(3){height:65%;animation-delay:0.28s;}
-.start-bar:nth-child(4){height:80%;animation-delay:0.42s;}
-.start-bar:nth-child(5){height:45%;animation-delay:0.56s;}
+.start-bars{display:flex;gap:7px;align-items:flex-end;height:40px;}
+.start-bar{width:5px;border-radius:2px;background:rgba(255,255,255,0.35);animation:barPulse 1.4s ease-in-out infinite;}
+.start-bar:nth-child(1){height:40%;animation-delay:0s;}
+.start-bar:nth-child(2){height:80%;animation-delay:0.16s;}
+.start-bar:nth-child(3){height:55%;animation-delay:0.32s;}
+.start-bar:nth-child(4){height:70%;animation-delay:0.48s;}
+.start-bar:nth-child(5){height:35%;animation-delay:0.64s;}
 @keyframes barPulse{
-  0%,100%{opacity:0.3;transform:scaleY(0.6);}
-  50%{opacity:0.8;transform:scaleY(1);}
+  0%,100%{opacity:0.25;transform:scaleY(0.5);}
+  50%{opacity:0.75;transform:scaleY(1);}
 }
 </style>
 </head>
@@ -652,18 +653,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 <!-- LANDING PAGE -->
 <div id="landingPage">
   <div class="start-screen">
-    <div class="start-wordmark">
-      <div class="start-word-row">
-        <div class="start-vbar"></div>
-        <span class="start-word">poow</span>
-        <div class="start-vbar"></div>
-      </div>
-      <div class="start-word-row">
-        <div class="start-vbar"></div>
-        <span class="start-word">mood</span>
-        <div class="start-vbar"></div>
-      </div>
-    </div>
+    <img src="data:image/png;base64,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" alt="poow" style="width:220px;height:auto;">
     <p class="start-tagline">every mood is a signal<br>every signal moves you</p>
     <div class="start-bars">
       <div class="start-bar"></div>
@@ -677,7 +667,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 
 <div class="app-shell" style="display:none">
   <nav class="bottom-nav">
-    <button class="nav-btn active" id="nav-home" onclick="showPage('home')">
+    <button class="nav-btn active" id="nav-home" onclick="navToDiscover()">
       <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
       <span class="nav-label">Discover</span>
     </button>
@@ -894,6 +884,8 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 
 <script>
 // ── STATE ──────────────────────────────────────────────────
+let _currentPage = 'home'; // tracks active page for double-tap behavior
+let _lastDiscoverPage = 'home'; // remembers last discover screen (home/refine/results/detail)
 let S = {
   mood:[], time:null, budget:null, people:null, preference:null, setting:null, difficulty:[], specific:'', mobility:null, lang: localStorage.getItem('mp_lang')||'en',
   current:null,
@@ -2398,24 +2390,77 @@ function calcStreak(){
 }
 
 // ── NAVIGATION ─────────────────────────────────────────────
+function navToDiscover(){
+  const discoverPages = ['home','refine','results','detail'];
+  // If already on mood board → reset
+  if(_currentPage === 'home'){
+    startOver();
+    return;
+  }
+  // If on another discover page → go to mood board
+  if(discoverPages.includes(_currentPage)){
+    showPage('home');
+    return;
+  }
+  // Coming from settings/history/insights → restore last discover page
+  const restore = _lastDiscoverPage || 'home';
+  _currentPage = restore;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+restore)?.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav-home')?.classList.add('active');
+  applyMoodTheme(S.mood);
+  window.scrollTo(0,0);
+}
+
 function showPage(name){
+  const discoverPages = ['home','refine','results','detail'];
+
+  // Save last discover page whenever we're on one
+  if(discoverPages.includes(name)){
+    _lastDiscoverPage = name;
+  }
+
+  // Tapping discover nav button (name==='home' from nav)
+  if(name === 'home'){
+    if(_currentPage === 'home' && _lastDiscoverPage === 'home'){
+      // Already on mood board — double tap = reset
+      startOver();
+      _currentPage = 'home';
+      return;
+    } else if(!discoverPages.includes(_currentPage)){
+      // Coming from settings/history/insights → restore last discover page
+      const restore = _lastDiscoverPage || 'home';
+      _currentPage = restore;
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.getElementById('page-'+restore)?.classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+      document.getElementById('nav-home')?.classList.add('active');
+      applyMoodTheme(S.mood);
+      window.scrollTo(0,0);
+      return;
+    } else if(_currentPage === 'home'){
+      // On mood board, tap discover again → reset
+      startOver();
+      _currentPage = 'home';
+      return;
+    }
+  }
+
+  // Switching TO history/insights/settings — reset colors only, preserve mood state
+  if(['history','insights','settings'].includes(name)){
+    applyMoodTheme([]);
+  }
+
+  _currentPage = name;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name)?.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  // Map refine to home nav highlight
   const navName = name === 'refine' ? 'home' : name;
   document.getElementById('nav-'+navName)?.classList.add('active');
   if(name==='history')renderHistory();
   if(name==='insights')renderInsights();
-  if(['history','insights','settings'].includes(name)){
-    S.mood=[];
-    document.querySelectorAll('.mood-card').forEach(b=>b.classList.remove('selected'));
-    const banner=document.getElementById('moodBanner');if(banner)banner.classList.remove('visible');
-    const continueBtn=document.getElementById('moodContinueBtn');if(continueBtn)continueBtn.disabled=true;
-    applyMoodTheme([]);
-  } else {
-    applyMoodTheme(S.mood);
-  }
+  if(discoverPages.includes(name)) applyMoodTheme(S.mood);
   window.scrollTo(0,0);
 }
 
