@@ -30,7 +30,15 @@ body.mood-sad{--bg:#eef0f8;--signal:#6b7bbf;--signal-dim:rgba(107,123,191,0.16);
 body.mood-tired{--bg:#eef0f8;--signal:#6b7bbf;--signal-dim:rgba(107,123,191,0.16);--card:rgba(158,168,216,0.38);}
 body.mood-happy{--bg:#eef5ee;--signal:#4a9e5a;--signal-dim:rgba(74,158,90,0.16);--card:rgba(141,200,138,0.38);}
 body.mood-calm{--bg:#eef5ee;--signal:#4a9e5a;--signal-dim:rgba(74,158,90,0.16);--card:rgba(141,200,138,0.38);}
-body.surprise-neutral{--bg:#f8f6f2;--card:rgba(255,255,255,0.92);--card-white:rgba(255,255,255,0.97);--bg2:#EFEAE1;--bg3:#EFEAE1;}
+body.surprise-neutral{--bg:#f8f6f2;--card:rgba(220,210,195,0.5);--card-white:rgba(255,255,255,0.97);--bg2:#EFEAE1;--bg3:#EFEAE1;--signal:#8a7f74;--signal-dim:rgba(212,201,184,0.4);}
+body.surprise-neutral .card{background:white;}
+body.surprise-neutral .weekly-card{background:white;}
+body.surprise-neutral .status-badge{background:#D4C9B8!important;color:#5a5048!important;}
+body.surprise-neutral .refine-bar{background:#EFEAE1;border-color:rgba(180,168,150,0.25);}
+body.surprise-neutral .sort-pill.active{background:#C4B8A8;border-color:#C4B8A8;color:#3a3028;}
+body.surprise-neutral .sort-pill:hover{border-color:#C4B8A8;color:#3a3028;}
+body.surprise-neutral .refine-tag{background:#E0D8CC;color:#4a3f34;}
+body.surprise-neutral .pill.selected{background:#C4B8A8;border-color:#C4B8A8;}
 body.dark{
   --bg:#1a1714;--card:rgba(55,45,42,0.8);--card-white:rgba(40,34,30,0.9);
   --nav-bg:#1e1a17;--text:#f0eee8;--muted:#7a6f68;
@@ -384,7 +392,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 .btn-notforme:hover{border-color:var(--signal);color:var(--signal);}
 
 /* ── HISTORY ─────────────────────────────────────────────── */
-.progress-bar-card{background:rgba(200,195,220,0.5);border-radius:var(--radius);padding:18px;margin-bottom:10px;}
+.progress-bar-card{background:linear-gradient(135deg,#b8a9d9 0%,#c4b8e8 50%,#d0c4f0 100%);border-radius:var(--radius);padding:18px;margin-bottom:10px;color:white;}
 .prog-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px;}
 .prog-stat{text-align:center;}
 .prog-num{font-size:22px;font-weight:700;color:var(--text);}
@@ -393,28 +401,33 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 .prog-bar{height:100%;background:rgba(107,123,191,0.75);border-radius:100px;transition:width 0.8s ease;}
 .streak-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:100px;background:rgba(255,255,255,0.3);font-size:11px;font-weight:600;margin-top:9px;color:var(--text);}
 
-.weekly-card{background:rgba(255,255,255,0.75);border-radius:var(--radius);padding:16px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
-.weekly-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;text-align:center;}
-.weekly-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;}
-.weekly-stat{text-align:center;background:rgba(235,210,210,0.4);border-radius:var(--radius-sm);padding:11px 6px;}
-.weekly-num{font-size:20px;font-weight:700;color:var(--text);}
-.weekly-lbl{font-size:10px;color:var(--muted);margin-top:2px;}
-.weekly-insight{font-size:12px;color:var(--muted);line-height:1.5;padding:9px 11px;background:rgba(235,210,210,0.3);border-radius:var(--radius-sm);}
+.weekly-card{background:white;border-radius:var(--radius);padding:18px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+.weekly-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px;text-align:center;}
+.weekly-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.weekly-stat{text-align:center;border-radius:var(--radius-sm);padding:13px 6px;}
+.weekly-stat-green{background:rgba(74,158,90,0.12);}
+.weekly-stat-yellow{background:rgba(196,147,58,0.13);}
+.weekly-stat-purple{background:rgba(107,123,191,0.13);}
+.weekly-stat-icon{font-size:18px;margin-bottom:5px;}
+.weekly-num{font-size:18px;font-weight:700;color:var(--text);}
+.weekly-lbl{font-size:10px;color:var(--muted);margin-top:3px;}
+.weekly-insight{font-size:12px;color:var(--muted);line-height:1.5;padding:9px 12px;background:rgba(0,0,0,0.04);border-radius:var(--radius-sm);text-align:center;}
 
-.hist-tabs{display:flex;gap:0;margin-bottom:12px;background:rgba(235,210,210,0.4);border-radius:var(--radius-sm);padding:3px;}
-.hist-tab{flex:1;padding:6px;border-radius:5px;border:none;cursor:pointer;font-family:'Numans',sans-serif;font-size:12px;font-weight:500;background:none;color:var(--muted);transition:all 0.2s;}
-.hist-tab.active{background:white;color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,0.07);}
-.hist-list{display:flex;flex-direction:column;gap:7px;}
-.hist-card{background:rgba(255,255,255,0.75);border-radius:var(--radius-sm);padding:13px;transition:all 0.2s;box-shadow:var(--shadow-sm);}
+.hist-tabs{display:flex;gap:4px;margin-bottom:14px;background:white;border-radius:100px;padding:4px;box-shadow:var(--shadow-sm);}
+.hist-tab{flex:1;padding:7px 6px;border-radius:100px;border:none;cursor:pointer;font-family:'Numans',sans-serif;font-size:12px;font-weight:500;background:none;color:var(--muted);transition:all 0.2s;position:relative;}
+.hist-tab.active{background:var(--bg2);color:var(--text);font-weight:600;}
+.hist-tab.active::after{content:'';display:block;width:18px;height:2px;background:var(--text);border-radius:1px;position:absolute;bottom:2px;left:50%;transform:translateX(-50%);}
+.hist-list{display:flex;flex-direction:column;gap:8px;}
+.hist-card{background:white;border-radius:var(--radius-sm);padding:14px;transition:all 0.2s;box-shadow:var(--shadow-sm);}
 .hist-card:hover{box-shadow:var(--shadow);}
 .hist-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
 .hist-title{font-weight:600;font-size:13px;}
 .hist-date{font-size:11px;color:var(--muted);}
-.hist-desc{font-size:11px;color:var(--muted);margin-bottom:7px;line-height:1.4;}
-.hist-bottom{display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
-.status-badge{font-size:9px;font-weight:600;padding:2px 8px;border-radius:100px;text-transform:uppercase;letter-spacing:0.04em;}
+.hist-desc{font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.4;}
+.hist-bottom{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.status-badge{font-size:9px;font-weight:600;padding:3px 9px;border-radius:100px;text-transform:uppercase;letter-spacing:0.04em;}
 .status-done{background:rgba(74,158,90,0.15);color:#4a9e5a;}
-.status-saved{background:var(--signal-dim);color:var(--signal);}
+.status-saved{background:#E8E0D2;color:#7a6a58;}
 .stars{display:flex;gap:2px;}
 .star{font-size:14px;cursor:pointer;transition:transform 0.1s;}
 .star:hover{transform:scale(1.2);}
@@ -440,7 +453,15 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 .cal-date-num{font-size:11px;font-weight:600;margin-bottom:3px;width:19px;height:19px;display:flex;align-items:center;justify-content:center;}
 .cal-chip{font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;background:var(--signal-dim);color:var(--signal);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .cal-chip.done{background:rgba(74,158,90,0.15);color:#4a9e5a;}
-.cal-modal{background:rgba(255,255,255,0.92);border-radius:var(--radius);padding:14px;margin-top:10px;}
+.cal-modal{background:white;border-radius:var(--radius);padding:14px;margin-top:10px;}
+
+/* ── HISTORY CALENDAR — always neutral, never signal-red ── */
+#page-history .card{background:white;}
+#page-history .cal-cell{background:rgba(255,255,255,0.7);}
+#page-history .cal-cell.selected{border-color:#C4B8A8;background:#EFEAE1;}
+#page-history .cal-cell.today .cal-date-num{background:#8a7f74;color:white;}
+#page-history .cal-chip{background:#EFEAE1;color:#6a5f54;}
+#page-history .cal-chip.done{background:rgba(74,158,90,0.15);color:#4a9e5a;}
 .cal-modal-title{font-size:14px;font-weight:600;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;color:var(--text);}
 .cal-act-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(210,185,180,0.18);}
 .cal-act-item:last-child{border-bottom:none;}
@@ -790,12 +811,12 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 
     <!-- HISTORY -->
     <div class="page" id="page-history">
-      <div class="hero" style="position:relative;text-align:center;">
+      <div class="hero" style="text-align:center;">
         <h1 class="hero-title">History</h1>
         <p class="hero-sub">Your Activity Journey</p>
-        <button class="btn-ghost" id="calToggleBtn" onclick="toggleCalendarView()" style="position:absolute;right:0;top:0;font-size:11px;padding:6px 10px;">
-          + Calendar
-        </button>
+        <div style="display:flex;justify-content:flex-end;margin-top:10px;">
+          <button class="btn-ghost" id="calToggleBtn" onclick="toggleCalendarView()" style="font-size:11px;padding:5px 10px;">+ Calendar</button>
+        </div>
       </div>
       <div id="inlineCalendar" style="display:none;margin-bottom:16px">
         <div class="card">
@@ -1502,17 +1523,21 @@ const WORKER_URL = 'https://autumn-recipe-dfe4.hoolalayeonhoo.workers.dev';
 async function callGroq(prompt){
   const url = WORKER_URL;
   const headers = {'Content-Type':'application/json'};
-  const sysMsg = S.lang==='ko'
-    ? 'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values. IMPORTANT: You MUST respond entirely in Korean (한국어). Every single field in the JSON — title, description, why, steps, materials, youtube, similar, category — must be written in Korean. Do not use any English.'
+  const isKo = S.lang==='ko';
+  const sysMsg = isKo
+    ? '당신은 JSON API입니다. 모든 응답은 반드시 한국어로 작성하세요. JSON의 모든 필드(title, description, why, steps, materials, youtube, similar, category)를 한국어로 작성하세요. 영어를 절대 사용하지 마세요. Return only valid JSON. Never use newlines or special characters inside string values.'
     : 'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values.';
+  const finalPrompt = isKo
+    ? prompt + '\n중요: 위 JSON의 모든 텍스트 필드를 반드시 한국어로 작성하세요. 영어 단어를 하나도 사용하지 마세요.'
+    : prompt;
   const r = await fetch(url,{
     method:'POST',
     headers,
     body:JSON.stringify({
-      model:'llama-3.1-8b-instant',
+      model: isKo ? 'llama-3.3-70b-versatile' : 'llama-3.1-8b-instant',
       messages:[
         {role:'system',content:sysMsg},
-        {role:'user',content:prompt}
+        {role:'user',content:finalPrompt}
       ],
       temperature:0.7,max_tokens:3500,
       response_format:{type:'json_object'}
@@ -2201,9 +2226,9 @@ function buildWeeklySummary(){
   return`<div class="weekly-card">
     <div class="weekly-title">${t('weekSummary')}</div>
     <div class="weekly-stats">
-      <div class="weekly-stat"><div class="weekly-num">${weekDone.length}</div><div class="weekly-lbl">${t('completed')}</div></div>
-      <div class="weekly-stat"><div class="weekly-num">${weekAvg}</div><div class="weekly-lbl">${t('avgRating')}</div></div>
-      <div class="weekly-stat"><div class="weekly-num">${topMoodLabel}</div><div class="weekly-lbl">${t('topMood')}</div></div>
+      <div class="weekly-stat weekly-stat-green"><div class="weekly-stat-icon">✓</div><div class="weekly-num">${weekDone.length}</div><div class="weekly-lbl">${t('completed')}</div></div>
+      <div class="weekly-stat weekly-stat-yellow"><div class="weekly-stat-icon">★</div><div class="weekly-num">${weekAvg}</div><div class="weekly-lbl">${t('avgRating')}</div></div>
+      <div class="weekly-stat weekly-stat-purple"><div class="weekly-stat-icon">♥</div><div class="weekly-num" style="font-size:13px;line-height:1.3">${topMoodLabel}</div><div class="weekly-lbl">${t('topMood')}</div></div>
     </div>
     <div class="weekly-insight">${insight}</div>
   </div>`;
@@ -2240,10 +2265,10 @@ function renderHistory(filter='all'){
   if(items.length===0){
     // Warm, emotionally aligned empty state
     html+=`<div class="empty">
-      <span class="empty-ambient">📭</span>
-      <div class="empty-title">${t('journeyNotStarted')}</div>
+      <span class="empty-ambient">💬</span>
+      <div class="empty-title">${S.lang==='ko'?'아직 활동 기록이 없어요':'Your activity journey hasn\'t started yet'}</div>
       <div class="empty-sub">${t('tryMoodCheckin')}</div>
-      <button class="empty-cta" onclick="showPage('home')">${t('goToHome')}</button>
+      <button class="empty-cta" onclick="showPage('home')">${S.lang==='ko'?'+ 활동 추천 받기':'+ Discover Activities'}</button>
     </div>`;
   } else {
     html+=`<div class="hist-list">`;
@@ -2257,10 +2282,10 @@ function renderHistory(filter='all'){
         <div class="hist-desc">${(item.description||'').substring(0,100)}...</div>
         <div class="hist-bottom">
           <div class="stars">${[1,2,3,4,5].map(s=>`<span class="star" onclick="rateItem(${item.id},${s})" style="color:${s<=(item.rating||0)?'var(--primary)':'var(--border)'}">${s<=(item.rating||0)?'★':'☆'}</span>`).join('')}</div>
-          ${!item.completed?`<button class="btn-ghost" style="padding:4px 12px;font-size:11px" onclick="markHistDone(${item.id})">${t('markDoneBtn')}</button>`:''}
-          <button class="btn-ghost" style="padding:4px 12px;font-size:11px;color:var(--primary);border-color:var(--primary)" onclick="doAgain(${item.id})">${t('doAgainBtn')}</button>
-          <button class="btn-ghost" style="padding:4px 12px;font-size:11px" onclick="openShareFromHistory(${item.id})">${t('shareBtn')}</button>
-          <button class="btn-ghost" style="padding:4px 12px;font-size:11px;color:var(--red);border-color:var(--red);margin-left:auto" onclick="deleteItem(${item.id})">${t('deleteBtn')}</button>
+          ${!item.completed?`<button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="markHistDone(${item.id})">Mark done</button>`:''}
+          <button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="doAgain(${item.id})">↺ Again</button>
+          <button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="openShareFromHistory(${item.id})">Share</button>
+          <button class="btn-ghost" style="padding:4px 10px;font-size:11px;color:var(--red);border-color:var(--red);margin-left:auto;background:rgba(235,91,91,0.08)" onclick="deleteItem(${item.id})">Delete</button>
         </div>
       </div>`;
     });
