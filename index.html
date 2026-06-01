@@ -1092,10 +1092,11 @@ const TRANSLATIONS = {
     tryMoodCheckin: "Try a mood check-in and discover something that fits your moment.",
     darkMode: 'Dark Mode', darkModeSub: 'Switch between light and dark theme',
     moodColors: 'Mood-reactive colors', moodColorsSub: 'Background changes with your mood selection',
-    appearance: 'Appearance', language: 'Language / 언어', langSub: 'App language',
+    appearance: 'Appearance', language: 'Language / 언어', langSub: 'App language', preferences: 'Preferences',
     resetOnboarding: 'Reset onboarding', resetSub: 'Show the onboarding survey again',
     clearHistory: 'Clear all history', clearSub: 'Delete all saved activities',
     reset: 'Reset', clear: 'Clear', data: 'Data',
+    filterMemoryLabel: 'Remember last filters', filterMemorySub: 'Pre-fill your last used mood and filters',
     checkinToggleLabel: 'Mood check-in after activities',
     checkinToggleSub: 'Ask how you feel after completing an activity',
     startNow: 'Start Now Guide', materials: 'What You Need',
@@ -1115,7 +1116,7 @@ const TRANSLATIONS = {
     didMoodChange: 'Did your mood change?', rateActivity: 'Rate this activity',
     saveContinue: 'Save & Continue →', skipBtn: 'Skip',
     shareActivity: 'SHARE ACTIVITY', copyLink: '🔗 Copy Link',
-    historyCleared: 'History cleared', deletedMsg: 'Deleted',
+    historyCleared: 'History cleared', deletedMsg: 'Deleted', clearConfirm: 'Clear all activity history? This cannot be undone.',
     doneMsg: 'Done! 🎉', savedLater: 'Saved for later 🔖', alreadySaved: 'Already saved!',
     copiedClipboard: 'Copied to clipboard! 📋',
     foundActivities: 'Found', showingDiff: 'Showing',
@@ -1182,10 +1183,11 @@ const TRANSLATIONS = {
     tryMoodCheckin: '기분 체크인을 하고 지금 딱 맞는 활동을 찾아보세요.',
     darkMode: '다크 모드', darkModeSub: '라이트/다크 테마 전환',
     moodColors: '기분 반응 색상', moodColorsSub: '기분 선택에 따라 배경색이 변합니다',
-    appearance: '화면', language: 'Language / 언어', langSub: '앱 언어',
+    appearance: '화면', language: 'Language / 언어', langSub: '앱 언어', preferences: '환경설정',
     resetOnboarding: '온보딩 초기화', resetSub: '온보딩 설문을 다시 표시합니다',
     clearHistory: '전체 기록 삭제', clearSub: '저장된 모든 활동을 삭제합니다',
     reset: '초기화', clear: '삭제', data: '데이터',
+    filterMemoryLabel: '마지막 필터 기억', filterMemorySub: '마지막 기분과 필터를 자동으로 채워드려요',
     checkinToggleLabel: '활동 후 기분 체크인',
     checkinToggleSub: '활동 완료 후 기분을 물어봅니다',
     startNow: '지금 시작 가이드', materials: '필요한 것',
@@ -1205,7 +1207,7 @@ const TRANSLATIONS = {
     didMoodChange: '기분이 바뀌었나요?', rateActivity: '이 활동을 평가해요',
     saveContinue: '저장하고 계속 →', skipBtn: '건너뛰기',
     shareActivity: '활동 공유', copyLink: '🔗 링크 복사',
-    historyCleared: '기록이 삭제되었어요', deletedMsg: '삭제되었어요',
+    historyCleared: '기록이 삭제되었어요', deletedMsg: '삭제되었어요', clearConfirm: '모든 활동 기록을 삭제할까요? 되돌릴 수 없어요.',
     doneMsg: '완료했어요! 🎉', savedLater: '나중에 하기로 저장했어요 🔖', alreadySaved: '이미 저장되었어요!',
     copiedClipboard: '클립보드에 복사되었어요! 📋',
     foundActivities: '찾았어요', showingDiff: '보여주는 중',
@@ -1273,8 +1275,15 @@ const CAT_KO={
   'activity':'활동','general':'일반','hobby':'취미','hobbies':'취미',
   'lifestyle':'라이프스타일','culture':'문화','exercise & fitness':'운동·피트니스',
 };
+const CAT_EN={};
+Object.entries(CAT_KO).forEach(([en,ko])=>{CAT_EN[ko]=en;});
 function catLabel(cat){
-  if(!cat||S.lang!=='ko') return cat||'';
+  if(!cat) return '';
+  if(S.lang!=='ko'){
+    if(/[가-힣]/.test(cat)) return CAT_EN[cat]||(()=>{for(const [en,ko] of Object.entries(CAT_KO)){if(ko===cat)return en;}return cat;})();
+    return cat;
+  }
+  if(/[가-힣]/.test(cat)) return cat;
   const key=cat.toLowerCase().trim();
   if(CAT_KO[key]) return CAT_KO[key];
   for(const [k,v] of Object.entries(CAT_KO)){if(key.includes(k)||k.includes(key))return v;}
@@ -1324,7 +1333,7 @@ function applyLangToUI(){
   setEl('#page-settings .hero-eyebrow', t('preferencesEye'));
   // Settings section titles
   const settingsTitles = document.querySelectorAll('#page-settings .settings-title');
-  const titleKeys = ['language','appearance','data'];
+  const titleKeys = ['language','appearance','preferences','data'];
   settingsTitles.forEach((el,i)=>{ if(titleKeys[i]) el.textContent = t(titleKeys[i]); });
   // Settings rows
   const settingsLabels = document.querySelectorAll('#page-settings .settings-label');
@@ -1333,6 +1342,7 @@ function applyLangToUI(){
     ['langSub',''],
     ['darkMode','darkModeSub'],
     ['moodColors','moodColorsSub'],
+    ['filterMemoryLabel','filterMemorySub'],
     ['checkinToggleLabel','checkinToggleSub'],
     ['resetOnboarding','resetSub'],
     ['clearHistory','clearSub'],
@@ -1490,6 +1500,7 @@ function setLang(lang){
   S.mood.forEach(mv=>document.getElementById('mood-'+mv)?.classList.add('selected'));
   toast(lang==='ko' ? '한국어로 변경되었습니다 🇰🇷' : 'Switched to English 🇺🇸');
   if(lang==='ko') translateHistoryTitlesToKo();
+  else translateHistoryTitlesToEn();
 }
 
 function toggleDarkMode(){S.settings.darkMode=!S.settings.darkMode;applySettings();saveSettings();}
@@ -1514,7 +1525,7 @@ function applySettings(){
 }
 
 function clearHistory(){
-  if(confirm('Clear all activity history? This cannot be undone.')){
+  if(confirm(t('clearConfirm'))){
     S.history=[];saveHistory();renderHistory();toast(t('historyCleared'));
   }
 }
@@ -1541,10 +1552,10 @@ function updateApiStatus(){
 // ── WORKER URL — replace with your Cloudflare Worker URL ──
 const WORKER_URL = 'https://autumn-recipe-dfe4.hoolalayeonhoo.workers.dev';
 
-async function callGroq(prompt){
+async function callGroq(prompt,forceKo){
   const url = WORKER_URL;
   const headers = {'Content-Type':'application/json'};
-  const isKo = S.lang==='ko';
+  const isKo = forceKo!==undefined ? forceKo : S.lang==='ko';
   const sysMsg = isKo
     ? '당신은 JSON API입니다. 반드시 한국어(Korean, Hangul 한글)만 사용하세요. 중국어(Chinese), 일본어(Japanese), 영어(English)는 절대 사용하지 마세요. JSON의 모든 텍스트 필드를 한국어 한글로 작성하세요. Return only valid JSON. Never use newlines or special characters inside string values.'
     : 'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values.';
@@ -1570,7 +1581,10 @@ async function callGroq(prompt){
   return d.choices[0].message.content;
 }
 
-function itemTitle(item){return S.lang==='ko'&&item.titleKo?item.titleKo:item.title;}
+function itemTitle(item){
+  if(S.lang==='ko') return item.titleKo||item.title;
+  return item.title;
+}
 
 async function translateHistoryTitlesToKo(){
   S.history.forEach(h=>{if(h.titleKo&&/[一-鿿㐀-䶿]/.test(h.titleKo))delete h.titleKo;});
@@ -1582,6 +1596,76 @@ async function translateHistoryTitlesToKo(){
     const text=await callGroq(prompt);
     const data=safeJSON(text);
     if(data&&Array.isArray(data.t)){data.t.forEach((v,i)=>{if(toTx[i]&&v)toTx[i].titleKo=v;});saveHistory();renderHistory();}
+  }catch(e){}
+}
+
+async function translateHistoryTitlesToEn(){
+  const toTx=S.history.filter(h=>/[가-힣]/.test(h.title));
+  if(!toTx.length)return;
+  try{
+    const list=toTx.map((h,i)=>`${i+1}. ${h.titleKo||h.title}`).join('\n');
+    const prompt=`Translate the following Korean activity titles to English. Return only valid JSON: {"t":["English title 1","English title 2",...]}\n${list}`;
+    const text=await callGroq(prompt,false);
+    const data=safeJSON(text);
+    if(data&&Array.isArray(data.t)){
+      data.t.forEach((v,i)=>{if(toTx[i]&&v)toTx[i].title=v;});
+      saveHistory();renderHistory();
+    }
+  }catch(e){}
+}
+
+async function translateHistoryDescsToEn(){
+  const toTx=S.history.filter(h=>/[가-힣]/.test(h.description||''));
+  if(!toTx.length)return;
+  try{
+    const list=toTx.map((h,i)=>`${i+1}. ${(h.descriptionKo||h.description||'').substring(0,150)}`).join('\n');
+    const prompt=`Translate the following Korean activity descriptions to English (1-2 sentences each). Return only valid JSON: {"d":["English desc 1","English desc 2",...]}\n${list}`;
+    const text=await callGroq(prompt,false);
+    const data=safeJSON(text);
+    if(data&&Array.isArray(data.d)){
+      data.d.forEach((v,i)=>{if(toTx[i]&&v)toTx[i].description=v;});
+      saveHistory();renderHistory();
+    }
+  }catch(e){}
+}
+
+async function translateItemToEn(item){
+  try{
+    const prompt=`Translate this Korean activity to English. Return only valid JSON:
+{"title":"English title","description":"English description 1-2 sentences","category":"one-word English category","why":"English why"}
+Title: ${item.titleKo||item.title}
+Description: ${item.descriptionKo||item.description||''}
+Category: ${item.categoryKo||item.category||''}
+Why: ${item.whyKo||item.why||''}`;
+    const text=await callGroq(prompt,false);
+    const data=safeJSON(text);
+    if(data){
+      if(data.title)item.title=data.title;
+      if(data.description)item.description=data.description;
+      if(data.category)item.category=data.category.toLowerCase().trim();
+      if(data.why)item.why=data.why;
+      saveHistory();
+    }
+  }catch(e){}
+}
+
+async function translateItemDetailToEn(item){
+  const steps=Array.isArray(item.steps)?item.steps:(item.steps||'').split('|').map(s=>s.trim()).filter(Boolean);
+  const needSteps=steps.some(s=>/[가-힣]/.test(s))&&!item.stepsEn;
+  const needWhy=/[가-힣]/.test(item.why||'')&&!item.whyEn;
+  if(!needSteps&&!needWhy)return;
+  try{
+    const parts=[];
+    if(needSteps)parts.push(`Steps:\n${steps.map((s,i)=>`${i+1}. ${s}`).join('\n')}`);
+    if(needWhy)parts.push(`Why: ${item.why}`);
+    const prompt=`Translate the following Korean text to English. Return only valid JSON: {"steps":["step 1","step 2",...],"why":"English why text"}\n${parts.join('\n')}`;
+    const text=await callGroq(prompt,false);
+    const data=safeJSON(text);
+    if(data){
+      if(data.steps&&Array.isArray(data.steps))item.stepsEn=data.steps;
+      if(data.why)item.whyEn=data.why;
+      saveHistory();
+    }
   }catch(e){}
 }
 
@@ -1696,7 +1780,7 @@ async function surpriseMe(){
   const useBudget=S.budget||rBudget;
   const usePeople=S.people||rPeople;
   const usePref=S.preference.length>0?S.preference:[rPref];
-  toast('🎲 Picking something random for you...');
+  toast(S.lang==='ko'?'🎲 랜덤으로 골라드릴게요...':'🎲 Picking something random for you...');
   const noMoodSelected = S.mood.length === 0;
   showPage('results');
   if(noMoodSelected) document.body.classList.add('surprise-neutral');
@@ -1835,7 +1919,7 @@ async function refetchWithDifficulty(diff){
     var parsed=safeJSON(text);
     window._acts=parsed.activities||[];
     renderActCards();
-    toast('Showing '+diffLabel+' ✓');
+    toast(S.lang==='ko'?diffLabel+' 활동을 보여드릴게요 ✓':'Showing '+diffLabel+' ✓');
   }catch(err){
     if(grid) grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:20px"><p style="color:var(--red);margin-bottom:12px">Error: '+err.message+'</p><button class="btn-ghost" onclick="refetchWithDifficulty(\x27'+diff+'\x27)">\u21bb Try again</button></div>';
   }
@@ -2066,7 +2150,16 @@ function buildYouTubeHTML(title,category,difficulty,aiQueries,materials,descript
 function showDetail(i){
   const a=window._acts[i];S.current=a;
   const isSaved=S.history.some(h=>h.title===a.title&&!h.completed);
-  const steps=Array.isArray(a.steps)?a.steps:(a.steps||'').split('|').map(s=>s.trim()).filter(Boolean);
+  const needsEnTranslation=S.lang==='en'&&/[가-힣]/.test(a.title||'');
+  const rawSteps=Array.isArray(a.steps)?a.steps:(a.steps||'').split('|').map(s=>s.trim()).filter(Boolean);
+  const steps=needsEnTranslation&&a.stepsEn?.length?a.stepsEn:rawSteps;
+  if(needsEnTranslation){
+    const rawStepsHaveKo=rawSteps.some(s=>/[가-힣]/.test(s));
+    const whyHasKo=/[가-힣]/.test(a.why||'');
+    if((rawStepsHaveKo&&!a.stepsEn)||(whyHasKo&&!a.whyEn)){
+      translateItemDetailToEn(a).then(()=>showDetail(i));
+    }
+  }
   const yt=Array.isArray(a.youtube)?a.youtube:[];
   const sim=Array.isArray(a.similar)?a.similar:[];
   const materialItems=parseMaterials(a.materials);
@@ -2075,9 +2168,9 @@ function showDetail(i){
     <div style="margin-bottom:24px"><button class="btn-ghost" onclick="showPage('results')">${t('backToResults')}</button></div>
     <div>
       <span class="cat-badge">${catLabel(a.category)||(S.lang==='ko'?'활동':'Activity')}</span>
-      <div class="detail-title">${a.title}</div>
-      <div class="detail-desc">${a.description}</div>
-      ${a.why?`<div style="padding:10px 14px;border-radius:10px;background:var(--primary-dim);border:1px solid var(--border);font-size:13px;color:var(--primary);margin-bottom:20px;font-style:italic">✦ ${a.why}</div>`:''}
+      <div class="detail-title">${itemTitle(a)}</div>
+      <div class="detail-desc">${S.lang==='ko'?(a.descriptionKo||a.description||''):a.description||''}</div>
+      ${(()=>{const w=S.lang==='ko'?(a.whyKo||a.why||''):(a.why||'');return w?`<div style="padding:10px 14px;border-radius:10px;background:var(--primary-dim);border:1px solid var(--border);font-size:13px;color:var(--primary);margin-bottom:20px;font-style:italic">✦ ${w}</div>`:'';})()}
     </div>
     <div class="meta-grid">
       <div class="meta-block"><div class="meta-lbl">${t('metaTime')}</div><div class="meta-val">⏱ ${a.estimated_time||'?'}</div></div>
@@ -2087,7 +2180,7 @@ function showDetail(i){
     </div>
     ${materialItems.length?`<div class="section-block"><h4>🛍 ${t('materials')} <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">${t('clickToShop')}</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
     ${steps.length?`<div class="section-block"><h4>${t('startNow')}</h4><div class="steps-list">${steps.map((s,i)=>`<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s.replace(/^\d+[\.\):\-]\s*/,'')}</div></div>`).join('')}</div></div>`:''}
-    <div class="section-block"><h4>${t('watchYoutube')} <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">${t('sortedByViews')}</span></h4>${buildYouTubeHTML(a.title,a.category,a.difficulty,yt,a.materials,a.description)}</div>
+    <div class="section-block"><h4>${t('watchYoutube')} <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">${t('sortedByViews')}</span></h4>${buildYouTubeHTML(itemTitle(a),a.category,a.difficulty,yt,a.materials,a.description)}</div>
     ${sim.length?`<div class="section-block"><h4>${t('similar')}</h4><div>${sim.map(s=>`<span class="similar-pill">${s}</span>`).join('')}</div></div>`:''}
     <div class="action-row">
       <button class="btn-done" onclick="markDone()">${t('iDidThis')}</button>
@@ -2144,9 +2237,19 @@ function markDone(){
 
 function saveActivity(){
   const a=S.current;if(!a)return;
-  const existing=S.history.find(h=>h.title===a.title);
+  const existing=S.history.find(h=>h.title===a.title||(a.titleKo&&h.titleKo===a.titleKo));
   if(existing){toast(t('alreadySaved'));return;}
-  S.history.unshift({...a,id:Date.now(),date:new Date().toISOString(),completed:false,rating:0,mood:S.mood.join(',')});
+  const entry={...a,id:Date.now(),date:new Date().toISOString(),completed:false,rating:0,mood:S.mood.join(',')};
+  if(S.lang==='ko'&&/[가-힣]/.test(entry.title)){
+    entry.titleKo=entry.title;
+    entry.descriptionKo=entry.description;
+    entry.categoryKo=entry.category;
+    entry.whyKo=entry.why;
+    const enCat=CAT_EN[entry.category]||(()=>{for(const[en,ko] of Object.entries(CAT_KO)){if(ko===entry.category)return en;}return null;})();
+    if(enCat)entry.category=enCat;
+    translateItemToEn(entry);
+  }
+  S.history.unshift(entry);
   saveHistory();
   const btn=document.getElementById('saveBtn');
   if(btn){btn.className='btn-save saved';btn.textContent=t('savedBtn');}
@@ -2210,9 +2313,10 @@ function buildTasteProfile(){
   if(S.history.filter(h=>h.rating>0).length<2) return '';
   const catRatings={};
   S.history.filter(h=>h.rating>0&&h.category).forEach(h=>{
-    if(!catRatings[h.category])catRatings[h.category]={total:0,count:0,completed:0,saved:0};
-    catRatings[h.category].total+=h.rating;catRatings[h.category].count++;
-    if(h.completed)catRatings[h.category].completed++;else catRatings[h.category].saved++;
+    const cat=/[가-힣]/.test(h.category)?(CAT_EN[h.category]||h.category):h.category;
+    if(!catRatings[cat])catRatings[cat]={total:0,count:0,completed:0,saved:0};
+    catRatings[cat].total+=h.rating;catRatings[cat].count++;
+    if(h.completed)catRatings[cat].completed++;else catRatings[cat].saved++;
   });
   const avgByCat=Object.entries(catRatings).map(([cat,d])=>({cat,avg:d.total/d.count,count:d.count,completion:d.completed/(d.completed+d.saved)}));
   const loved=avgByCat.filter(x=>x.avg>=5).sort((a,b)=>b.avg-a.avg).slice(0,4);
@@ -2271,11 +2375,15 @@ function buildWeeklySummary(){
 }
 
 function renderHistory(filter='all'){
+  if(S.lang==='en'){
+    if(S.history.some(h=>/[가-힣]/.test(h.title)))translateHistoryTitlesToEn();
+    if(S.history.some(h=>/[가-힣]/.test(h.description||'')))translateHistoryDescsToEn();
+  }
   const items=filter==='done'?S.history.filter(h=>h.completed):filter==='saved'?S.history.filter(h=>!h.completed):S.history;
   const done=S.history.filter(h=>h.completed).length;
   const rated=S.history.filter(h=>h.rating>0);
   const avg=rated.length?(rated.reduce((s,h)=>s+h.rating,0)/rated.length).toFixed(1):'—';
-  const progress=Math.min((done/10)*100,100);
+  const progress=Math.min((done/Math.max(S.history.length,1))*100,100);
   const streak=calcStreak();
   const weekAgoTs=Date.now()-7*24*60*60*1000;
   const oldSaved=S.history.filter(h=>!h.completed&&new Date(h.date).getTime()<weekAgoTs);
@@ -2314,7 +2422,7 @@ function renderHistory(filter='all'){
       html+=`<div class="hist-card">
         <div class="hist-top"><div><div class="hist-title">${itemTitle(item)}</div><div class="hist-date">${date} · ${catLabel(item.category)||(S.lang==='ko'?'활동':'Activity')}${moodAfterLabel?`${t('feltAfterLabel')}${moodAfterLabel}`:''}</div></div>
         <span class="status-badge ${item.completed?'status-done':'status-saved'}">${item.completed?t('doneStatus'):t('savedStatus')}</span></div>
-        <div class="hist-desc">${(()=>{const d=item.description||'';if(S.lang==='ko'&&d&&!/[가-힣]/.test(d))return'';return d.substring(0,100)+(d.length>100?'...':'');})()}</div>
+        <div class="hist-desc">${(()=>{if(S.lang==='ko'){const d=item.descriptionKo||item.description||'';return d.substring(0,100)+(d.length>100?'...':'');}return(item.description||'').substring(0,100)+((item.description||'').length>100?'...':'');})()}</div>
         <div class="hist-bottom">
           <div class="stars">${[1,2,3,4,5].map(s=>`<span class="star" onclick="rateItem(${item.id},${s})" style="color:${s<=(item.rating||0)?'var(--primary)':'var(--border)'}">${s<=(item.rating||0)?'★':'☆'}</span>`).join('')}</div>
           ${!item.completed?`<button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="markHistDone(${item.id})">${t('markDoneBtn')}</button>`:''}
@@ -2418,7 +2526,7 @@ function renderInsights(){
   html+=buildTasteProfile();
 
   const catCounts={};
-  S.history.forEach(h=>{if(h.category)catCounts[h.category]=(catCounts[h.category]||0)+1;});
+  S.history.forEach(h=>{if(h.category){const cat=/[가-힣]/.test(h.category)?(CAT_EN[h.category]||h.category):h.category;catCounts[cat]=(catCounts[cat]||0)+1;}});
   const topCats=Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).slice(0,3);
   if(topCats.length>1){
     const maxCount=topCats[0][1];
