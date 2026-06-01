@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>poow</title>
-<link href="https://fonts.googleapis.com/css2?family=Numans&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Numans:wght@400&display=swap" rel="stylesheet">
 
 <style>
 /* ── DESIGN TOKENS ─────────────────────────────────────── */
@@ -40,15 +40,224 @@ body.surprise-neutral .sort-pill:hover{border-color:#C4B8A8;color:#3a3028;}
 body.surprise-neutral .refine-tag{background:#E0D8CC;color:#4a3f34;}
 body.surprise-neutral .pill.selected{background:#C4B8A8;border-color:#C4B8A8;}
 body.dark{
-  --bg:#1a1714;--card:rgba(55,45,42,0.8);--card-white:rgba(40,34,30,0.9);
-  --nav-bg:#1e1a17;--text:#f0eee8;--muted:#7a6f68;
-  --border:rgba(80,65,60,0.4);--signal:#eb5b5b;
+  --bg:#111111;
+  --bg2:#1a1a1a;
+  --bg3:#222222;
+  --nav-bg:#0d0d0d;
+  --card:#1a1a1a;
+  --card-white:#1a1a1a;
+  --text:#eeeeee;
+  --muted:#888888;
+  --border:rgba(255,255,255,0.07);
+  --shadow:0 2px 16px rgba(0,0,0,0.6);
+  --shadow-sm:0 1px 6px rgba(0,0,0,0.4);
+  --signal:#eb5b5b;
+  --signal-dim:rgba(235,91,91,0.12);
+  --primary:#eb5b5b;
+  --primary-dim:rgba(235,91,91,0.12);
+  --red:#eb5b5b;
+  --red-dim:rgba(235,91,91,0.12);
+  --green:#5aaf7a;
+  --green-dim:rgba(90,175,122,0.14);
+  --blue:#6e8fcf;
+  --blue-dim:rgba(110,143,207,0.14);
+  --accent:#9b8ec4;
+  background:#0d0d0d;
 }
+
+/* ── DARK MODE OVERRIDES ──────────────────────────────── */
+/* Base */
+body.dark .app-shell{background:#111111;}
+body.dark .bottom-nav{background:#0d0d0d!important;box-shadow:0 -1px 0 rgba(255,255,255,0.06);}
+body.dark .nav-btn{color:#555555;}
+body.dark .nav-btn.active{color:#eb5b5b;}
+
+/* Settings */
+body.dark #page-settings{background:#111111!important;}
+body.dark #page-settings .card{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.07)!important;}
+body.dark #page-settings .btn-ghost{background:#222222!important;color:#eeeeee!important;border:1px solid rgba(255,255,255,0.09)!important;}
+body.dark .settings-row{border-bottom-color:rgba(255,255,255,0.05);}
+body.dark .settings-label{color:#eeeeee;}
+body.dark .settings-sub{color:#888888;}
+body.dark .settings-title{color:#555555;}
+body.dark .toggle{background:#333333;}
+body.dark .toggle.on{background:#eb5b5b;}
+
+/* History */
+body.dark #page-history{background:#111111!important;}
+body.dark .history-hero h1{color:#eeeeee;}
+body.dark .history-hero p{color:#888888;}
+body.dark .cal-btn{background:#222222!important;color:#888888!important;border:1px solid rgba(255,255,255,0.07)!important;}
+body.dark .weekly-card,body.dark .week-summary-card{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.06)!important;box-shadow:none!important;}
+body.dark .weekly-title,body.dark .week-summary-title{color:#eeeeee!important;}
+body.dark .weekly-stat{border-radius:8px;}
+body.dark .weekly-stat-green,body.dark .week-stat-box.green{background:rgba(90,175,122,0.14)!important;}
+body.dark .weekly-stat-yellow,body.dark .week-stat-box.yellow{background:rgba(196,160,70,0.14)!important;}
+body.dark .weekly-stat-purple,body.dark .week-stat-box.purple{background:rgba(155,142,196,0.14)!important;}
+body.dark .weekly-stat-icon,body.dark .week-stat-icon{color:#eeeeee!important;}
+body.dark .week-stat-icon.green{background:rgba(90,175,122,0.2)!important;color:#6abf8a!important;}
+body.dark .week-stat-icon.yellow{background:rgba(196,160,70,0.2)!important;color:#d4b060!important;}
+body.dark .week-stat-icon.purple{background:rgba(155,142,196,0.2)!important;color:#b0a0e0!important;}
+body.dark .weekly-num,body.dark .week-stat-num{color:#eeeeee!important;}
+body.dark .weekly-lbl,body.dark .week-stat-lbl{color:#888888!important;}
+body.dark .weekly-insight,body.dark .week-insight{background:#1e1e1e!important;color:#888888!important;border:none!important;}
+body.dark .progress-bar-card,body.dark .progress-card{background:linear-gradient(135deg,#1e1640,#0f1e3a)!important;border:1px solid rgba(155,142,196,0.15)!important;}
+body.dark .prog-num,body.dark .progress-stat-num{color:#eeeeee!important;}
+body.dark .prog-lbl,body.dark .progress-stat-lbl{color:rgba(255,255,255,0.45)!important;}
+body.dark .prog-bar-wrap,body.dark .progress-bar-track{background:rgba(255,255,255,0.1)!important;}
+body.dark .prog-bar,body.dark .progress-bar-fill{background:rgba(255,255,255,0.65)!important;}
+body.dark .streak-badge,body.dark .streak-pill{background:rgba(255,255,255,0.07)!important;color:#eeeeee!important;border:none!important;}
+body.dark .hist-tabs{background:#1a1a1a!important;border:none!important;}
+body.dark .hist-tab,body.dark .hist-tabs-row{background:#1a1a1a!important;}
+body.dark .hist-tab{color:#888888!important;border:none!important;}
+body.dark .hist-tab.active,body.dark .hist-tab-btn.active{background:#252525!important;color:#eeeeee!important;}
+body.dark .hist-tab-btn{color:#888888!important;}
+body.dark .hist-card,body.dark .hist-item{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.06)!important;box-shadow:none!important;}
+body.dark .hist-title,body.dark .hist-item-title{color:#eeeeee!important;}
+body.dark .hist-date,body.dark .hist-item-meta{color:#888888!important;}
+body.dark .hist-desc,body.dark .hist-item-desc{color:#888888!important;}
+body.dark .hist-action-btn{background:#222222!important;color:#cccccc!important;border:none!important;}
+body.dark .hist-delete-btn{background:rgba(235,91,91,0.12)!important;color:#ef8080!important;border:none!important;}
+body.dark .status-badge.status-saved,body.dark .hist-status-badge.saved{background:#222222!important;color:#888888!important;}
+body.dark .status-badge.status-done,body.dark .hist-status-badge.done{background:rgba(90,175,122,0.15)!important;color:#6abf8a!important;}
+body.dark .saved-reminder{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.06)!important;}
+body.dark .saved-reminder-text{color:#cccccc!important;}
+body.dark .saved-reminder-sub{color:#888888!important;}
+
+/* Insights */
+body.dark #page-insights{background:#111111!important;}
+body.dark .card{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.06)!important;box-shadow:none!important;}
+body.dark .card-title{color:#eeeeee!important;}
+body.dark .insight-stat{background:#1a1a1a!important;}
+body.dark .insight-stat-green{background:rgba(90,175,122,0.14)!important;}
+body.dark .insight-stat-amber{background:rgba(196,160,70,0.14)!important;}
+body.dark .insight-stat-purple{background:rgba(110,143,207,0.14)!important;}
+body.dark .insight-stat-warm{background:rgba(235,140,70,0.14)!important;}
+body.dark .insight-icon{color:#eeeeee!important;}
+body.dark .insight-num{color:#eeeeee!important;}
+body.dark .insight-lbl{color:#888888!important;}
+body.dark .taste-profile,body.dark .chart-card{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.06)!important;}
+body.dark .taste-title{color:#eeeeee!important;}
+body.dark .taste-row-label{color:#888888!important;}
+body.dark .taste-tag{background:#222222!important;color:#cccccc!important;border-color:rgba(255,255,255,0.07)!important;}
+body.dark .taste-tag-loved{background:rgba(90,175,122,0.18)!important;color:#6abf8a!important;}
+body.dark .taste-tag-meh{background:rgba(235,91,91,0.12)!important;color:#ef8080!important;}
+body.dark .mood-improve-track{background:rgba(255,255,255,0.08)!important;}
+body.dark .mood-improve-fill{background:#eb5b5b!important;}
+
+/* Calendar */
+body.dark .cal-cell{background:#1a1a1a!important;border-color:rgba(255,255,255,0.05)!important;}
+body.dark .cal-cell.today .cal-date-num{background:#eb5b5b!important;color:#fff!important;}
+body.dark .cal-chip{background:rgba(235,91,91,0.15)!important;color:#ef8080!important;}
+body.dark .cal-chip.done{background:rgba(90,175,122,0.15)!important;color:#6abf8a!important;}
+body.dark .cal-modal{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.07)!important;}
+
+/* Activity cards */
+body.dark .act-card{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.06)!important;box-shadow:none!important;}
+body.dark .act-title{color:#eeeeee!important;}
+body.dark .act-desc{color:#cccccc!important;}
+body.dark .act-meta{color:#888888!important;}
+body.dark .cat-badge{background:#222222!important;color:#aaaaaa!important;}
+body.dark .diff-badge{background:#201840!important;color:#b0a0e0!important;}
+
+/* Detail page */
+body.dark .meta-block{background:#222222!important;border:1px solid rgba(255,255,255,0.07)!important;}
+body.dark .meta-box{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.07)!important;}
+body.dark .meta-label{color:#888888!important;}
+body.dark .meta-value{color:#eeeeee!important;}
+body.dark .materials-box{background:#222222!important;border:1px solid rgba(255,255,255,0.07)!important;}
+body.dark .mat-name{color:#cccccc!important;}
+body.dark .mat-row{border-bottom-color:rgba(255,255,255,0.05)!important;}
+body.dark .step-num{background:#222222!important;color:#eb5b5b!important;border:none!important;}
+body.dark .step-text{color:#cccccc!important;}
+body.dark .similar-pill{background:#222222!important;color:#cccccc!important;border-color:rgba(255,255,255,0.07)!important;}
+body.dark .youtube-card{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.06)!important;}
+body.dark .yt-title{color:#cccccc!important;}
+body.dark .yt-badge{background:#222222!important;color:#aaaaaa!important;}
+body.dark .btn-done{background:#eb5b5b!important;color:#fff!important;}
+body.dark .btn-save{background:#222222!important;color:#cccccc!important;border:1px solid rgba(255,255,255,0.09)!important;}
+body.dark .btn-save.saved{background:rgba(90,175,122,0.18)!important;color:#6abf8a!important;}
+body.dark .btn-notforme{background:#1a1a1a!important;color:#888888!important;border:1px solid rgba(255,255,255,0.07)!important;}
+
+/* Modals */
+body.dark .modal{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.08)!important;}
+body.dark .checkin-modal{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.08)!important;}
+body.dark .share-modal{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.08)!important;}
+body.dark .modal-overlay{background:rgba(0,0,0,0.75)!important;}
+body.dark .modal-steps{background:#222222!important;border:none!important;}
+body.dark .checkin-mood{background:#222222!important;border:1px solid rgba(255,255,255,0.07)!important;}
+body.dark .checkin-mood.selected{background:#eb5b5b!important;border-color:#eb5b5b!important;}
+body.dark .checkin-label{color:#cccccc!important;}
+body.dark .r-star{color:#333333!important;}
+body.dark .r-star.on{color:#eb5b5b!important;}
+body.dark .share-platform-btn{background:#222222!important;color:#cccccc!important;border:1px solid rgba(255,255,255,0.08)!important;}
+
+/* Refine screen */
+body.dark .refine-card{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.06)!important;}
+body.dark .refine-field-label{color:#888888!important;}
+body.dark .refine-input{background:#222222!important;border:1px solid rgba(255,255,255,0.09)!important;color:#eeeeee!important;}
+body.dark .refine-input::placeholder{color:#555555!important;}
+body.dark .refine-tag{background:#222222!important;color:#cccccc!important;border:none!important;}
+body.dark .energy-toggle-btn{background:#222222!important;color:#cccccc!important;border:1px solid rgba(255,255,255,0.09)!important;}
+body.dark .energy-panel{background:#1a1a1a!important;}
+
+/* Results */
+body.dark .results-filter-bar{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.06)!important;}
+body.dark .sort-pill{background:#222222!important;color:#888888!important;}
+body.dark .sort-pill.active{background:#eb5b5b!important;color:#fff!important;}
+body.dark .results-meta{color:#888888!important;}
+
+/* Pills */
+body.dark .pill{background:#222222!important;border:1px solid rgba(255,255,255,0.08)!important;color:#cccccc!important;}
+body.dark .pill.selected{background:#eb5b5b!important;border-color:#eb5b5b!important;color:#fff!important;}
+
+/* Buttons */
+body.dark .btn-primary{background:#eb5b5b!important;color:#fff!important;border:none!important;}
+body.dark .btn-ghost{background:#222222!important;border:1px solid rgba(255,255,255,0.09)!important;color:#cccccc!important;}
+body.dark .btn-discover{background:#eeeeee!important;color:#111111!important;}
+body.dark .mood-continue-btn{background:#eeeeee!important;color:#111111!important;}
+body.dark .btn-surprise{background:#1a1a1a!important;color:#888888!important;border:1px solid rgba(255,255,255,0.08)!important;}
+
+/* Mood screen */
+body.dark .mood-screen-title{color:#eeeeee!important;}
+body.dark .mood-screen-sub{color:#888888!important;}
+body.dark .mood-card{filter:brightness(0.6) saturate(0.85);}
+body.dark .mood-card.selected{filter:brightness(0.9) saturate(1);box-shadow:0 0 0 2px rgba(255,255,255,0.45);}
+body.dark .mood-selected-label{color:#cccccc!important;}
+
+/* Onboarding */
+body.dark .onboard-card{background:#1a1a1a!important;border:1px solid rgba(255,255,255,0.07)!important;}
+body.dark .onboard-title{color:#eeeeee!important;}
+body.dark .onboard-sub{color:#888888!important;}
+body.dark .onboard-indicator.active{background:#eb5b5b!important;}
+body.dark .onboard-indicator{background:#333333!important;}
+
+/* Empty states */
+body.dark .empty-title{color:#eeeeee!important;}
+body.dark .empty-sub{color:#888888!important;}
+body.dark .empty-cta{background:#eb5b5b!important;color:#fff!important;}
+body.dark .empty-ambient{opacity:0.3!important;}
+
+/* Typography */
+body.dark .hero-title{color:#eeeeee!important;}
+body.dark .hero-sub{color:#888888!important;}
+body.dark .hero-eyebrow{color:#555555!important;}
+body.dark h1,body.dark h2,body.dark h3{color:#eeeeee;}
+body.dark ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);}
+/* dreamy dark mood overrides — muted, cool, calm */
+body.dark.mood-stressed{--bg:#100d12;--signal:#b0608a;--signal-dim:rgba(176,96,138,0.16);--card:rgba(80,40,65,0.35);}
+body.dark.mood-energetic{--bg:#0e0f14;--signal:#8f7fd4;--signal-dim:rgba(143,127,212,0.16);--card:rgba(60,55,100,0.35);}
+body.dark.mood-bored{--bg:#0e0f14;--signal:#8f7fd4;--signal-dim:rgba(143,127,212,0.16);--card:rgba(60,55,100,0.35);}
+body.dark.mood-sad{--bg:#0c0e14;--signal:#5e78b8;--signal-dim:rgba(94,120,184,0.16);--card:rgba(40,55,100,0.32);}
+body.dark.mood-tired{--bg:#0c0e14;--signal:#5e78b8;--signal-dim:rgba(94,120,184,0.16);--card:rgba(40,55,100,0.32);}
+body.dark.mood-happy{--bg:#0c100e;--signal:#5a9e7a;--signal-dim:rgba(90,158,122,0.16);--card:rgba(35,70,55,0.35);}
+body.dark.mood-calm{--bg:#0c100e;--signal:#5a9e7a;--signal-dim:rgba(90,158,122,0.16);--card:rgba(35,70,55,0.35);}
+body.dark.surprise-neutral{--bg:#0d0f14;--card:rgba(28,32,44,0.7);--card-white:rgba(18,21,32,0.95);--bg2:rgba(28,32,44,0.45);--bg3:rgba(28,32,44,0.3);--signal:#6a708a;--signal-dim:rgba(106,112,138,0.18);}
 
 /* ── BASE ──────────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0;}
 body{
-  font-family:'Numans','Noto Sans KR',sans-serif;
+  font-family:'Numans',sans-serif;
   background:#e0dbd5;color:var(--text);
   min-height:100vh;display:flex;justify-content:center;
   transition:var(--transition);
@@ -78,7 +287,7 @@ body{
 .nav-btn{
   display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:8px 16px;border:none;background:none;color:var(--muted);
-  cursor:pointer;font-family:'Numans','Noto Sans KR',sans-serif;
+  cursor:pointer;font-family:'Numans',sans-serif;
   font-size:10px;font-weight:500;transition:color 0.2s;
 }
 .nav-btn.active{color:var(--text);}
@@ -177,7 +386,7 @@ body.mood-calm .mood-screen-sub{color:var(--signal);}
 .btn-primary{
   width:100%;padding:13px 22px;border-radius:var(--radius-sm);
   background:#1a1714;color:white;border:none;cursor:pointer;
-  font-family:'Numans','Noto Sans KR',sans-serif;font-size:14px;font-weight:600;
+  font-family:'Numans',sans-serif;font-size:14px;font-weight:600;
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   transition:all 0.2s;margin-top:8px;
 }
@@ -196,7 +405,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
   padding:9px 16px;border-radius:var(--radius-sm);
   background:rgba(235,210,210,0.45);color:var(--text);
   border:1px solid rgba(210,185,180,0.4);cursor:pointer;
-  font-family:'Numans','Noto Sans KR',sans-serif;font-size:12px;
+  font-family:'Numans',sans-serif;font-size:12px;
   font-weight:500;transition:all 0.2s;
   display:inline-flex;align-items:center;gap:5px;
 }
@@ -207,7 +416,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
   font-size:13px;transition:all 0.2s;color:var(--muted);
 }
 .btn-icon:hover{color:var(--signal);}
-.surprise-btn{display:none;} /* replaced by btn-ghost */
+.surprise-btn{display:none;}
 
 /* ── PILLS ──────────────────────────────────────────────── */
 .pill-row{display:flex;flex-wrap:wrap;gap:6px;}
@@ -215,7 +424,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
   padding:6px 13px;border-radius:100px;
   border:1px solid rgba(210,185,180,0.4);
   background:rgba(255,255,255,0.65);
-  cursor:pointer;font-family:'Numans','Noto Sans KR',sans-serif;
+  cursor:pointer;font-family:'Numans',sans-serif;
   font-size:12px;font-weight:500;color:var(--text);transition:all 0.14s;
 }
 .pill:hover{border-color:var(--signal);}
@@ -226,7 +435,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
   width:100%;padding:11px 13px;
   border:1px solid rgba(210,185,180,0.35);border-radius:var(--radius-sm);
   background:rgba(255,255,255,0.7);
-  font-family:'Numans','Noto Sans KR',sans-serif;font-size:13px;
+  font-family:'Numans',sans-serif;font-size:13px;
   color:var(--text);outline:none;transition:border-color 0.2s;
 }
 .text-input:focus{border-color:var(--signal);}
@@ -240,7 +449,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 .refine-back{
   display:inline-flex;align-items:center;gap:4px;
   font-size:12px;color:var(--muted);cursor:pointer;
-  background:none;border:none;font-family:'Numans','Noto Sans KR',sans-serif;
+  background:none;border:none;font-family:'Numans',sans-serif;
   margin-bottom:14px;padding:0;transition:color 0.2s;
 }
 .refine-back:hover{color:var(--text);}
@@ -365,8 +574,8 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
 .material-name{font-size:12px;color:var(--text);flex:1;}
 .shop-btns{display:flex;gap:5px;flex-shrink:0;}
 .shop-btn{display:inline-flex;align-items:center;gap:3px;padding:4px 8px;border-radius:5px;font-size:10px;font-weight:600;text-decoration:none;transition:all 0.2s;white-space:nowrap;}
-.shop-btn-google,.shop-btn-coupang{background:rgba(235,210,210,0.6);color:var(--muted);border:none;}
-.shop-btn-google:hover,.shop-btn-coupang:hover{background:var(--signal-dim);color:var(--signal);}
+.shop-btn-google,.shop-btn-amazon{background:rgba(235,210,210,0.6);color:var(--muted);border:none;}
+.shop-btn-google:hover,.shop-btn-amazon:hover{background:var(--signal-dim);color:var(--signal);}
 
 /* ── YOUTUBE ─────────────────────────────────────────────── */
 .yt-link{display:flex;gap:10px;align-items:center;padding:10px;border-radius:var(--radius-sm);background:rgba(235,210,210,0.5);margin-bottom:7px;text-decoration:none;color:var(--text);transition:all 0.2s;}
@@ -666,7 +875,7 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
     </div>
     <div class="share-card" id="shareCardEl"></div>
     <div class="share-btns">
-      <button class="share-platform-btn" onclick="shareToKakao()">💬 KakaoTalk</button>
+      <button class="share-platform-btn" onclick="shareNative()">📱 More</button>
       <button class="share-platform-btn" onclick="shareToTwitter()">🐦 Twitter/X</button>
       <button class="share-platform-btn" onclick="copyShareLink()" id="copyLinkBtn">🔗 Copy Link</button>
     </div>
@@ -834,16 +1043,6 @@ body.mood-calm .btn-primary:not(:disabled){background:var(--signal);}
       <div class="hero" style="text-align:center;"><h1 class="hero-title" id="settingsHeroTitle">Settings</h1><p class="hero-sub" style="margin-top:4px">poow</p></div>
       <div class="card">
         <div class="settings-section">
-          <div class="settings-title">Language / 언어</div>
-          <div class="settings-row">
-            <div><div class="settings-label">App language</div><div class="settings-sub" id="langSubLabel">Recommendations and UI language</div></div>
-            <div style="display:flex;gap:8px;">
-              <button id="langEnBtn" onclick="setLang('en')" style="padding:6px 14px;border-radius:8px;font-family:'Numans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg3);color:var(--text);transition:all 0.2s;">EN</button>
-              <button id="langKrBtn" onclick="setLang('ko')" style="padding:6px 14px;border-radius:8px;font-family:'Numans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg3);color:var(--text);transition:all 0.2s;">한국어</button>
-            </div>
-          </div>
-        </div>
-        <div class="settings-section">
           <div class="settings-title">Appearance</div>
           <div class="settings-row">
             <div><div class="settings-label">Dark Mode</div><div class="settings-sub">Switch between light and dark theme</div></div>
@@ -899,7 +1098,7 @@ let _currentPage = 'home'; // tracks active page for double-tap behavior
 let _suppressMoodTheme = false; // when true, showPage won't apply mood colors
 let _lastDiscoverPage = 'home'; // remembers last discover screen (home/refine/results/detail)
 let S = {
-  mood:[], time:null, budget:null, people:null, preference:[], setting:null, difficulty:[], specific:'', mobility:null, lang: localStorage.getItem('mp_lang')||'en',
+  mood:[], time:null, budget:null, people:null, preference:[], setting:null, difficulty:[], specific:'', mobility:null, lang: 'en',
   current:null,
   history: JSON.parse(localStorage.getItem('mp_history')||'[]'),
   apiKey: localStorage.getItem('mp_groq_key')||'',
@@ -914,73 +1113,73 @@ let S = {
 
 // ── CONFIG ─────────────────────────────────────────────────
 const MOODS=[
-  {v:'stressed',e:'😤',l:'Stressed',lk:'스트레스'},
-  {v:'frustrated',e:'😠',l:'Frustrated',lk:'짜증나'},
-  {v:'bored',e:'😐',l:'Bored',lk:'심심해'},
-  {v:'restless',e:'🦋',l:'Restless',lk:'안절부절'},
-  {v:'anxious',e:'😰',l:'Anxious',lk:'불안해'},
-  {v:'overwhelmed',e:'🌊',l:'Overwhelmed',lk:'벅차'},
-  {v:'motivated',e:'🔥',l:'Motivated',lk:'의욕충만'},
-  {v:'energetic',e:'⚡',l:'Energetic',lk:'에너지 넘쳐'},
-  {v:'sad',e:'🌧️',l:'Sad',lk:'슬퍼'},
-  {v:'tired',e:'😴',l:'Tired',lk:'피곤해'},
-  {v:'happy',e:'😊',l:'Happy',lk:'행복해'},
-  {v:'inspired',e:'✨',l:'Inspired',lk:'영감받았어'},
-  {v:'lonely',e:'🫂',l:'Lonely',lk:'외로워'},
-  {v:'nostalgic',e:'🌅',l:'Nostalgic',lk:'그리워'},
-  {v:'calm',e:'🌿',l:'Calm',lk:'차분해'},
-  {v:'grateful',e:'🙏',l:'Grateful',lk:'감사해'}
+  {v:'stressed',e:'😤',l:'Stressed'},
+  {v:'frustrated',e:'😠',l:'Frustrated'},
+  {v:'bored',e:'😐',l:'Bored'},
+  {v:'restless',e:'🦋',l:'Restless'},
+  {v:'anxious',e:'😰',l:'Anxious'},
+  {v:'overwhelmed',e:'🌊',l:'Overwhelmed'},
+  {v:'motivated',e:'🔥',l:'Motivated'},
+  {v:'energetic',e:'⚡',l:'Energetic'},
+  {v:'sad',e:'🌧️',l:'Sad'},
+  {v:'tired',e:'😴',l:'Tired'},
+  {v:'happy',e:'😊',l:'Happy'},
+  {v:'inspired',e:'✨',l:'Inspired'},
+  {v:'lonely',e:'🫂',l:'Lonely'},
+  {v:'nostalgic',e:'🌅',l:'Nostalgic'},
+  {v:'calm',e:'🌿',l:'Calm'},
+  {v:'grateful',e:'🙏',l:'Grateful'}
 ];
 const TIME=[
-  {v:'flash',l:'15 min+',lk:'15분+'},
-  {v:'short',l:'10-30 min',lk:'10-30분'},
-  {v:'medium',l:'30-90 min',lk:'30-90분'},
-  {v:'long',l:'1.5-2 hrs',lk:'1.5-2시간'},
-  {v:'day',l:'Full day',lk:'하루 종일'}
+  {v:'flash',l:'15 min+'},
+  {v:'short',l:'10-30 min'},
+  {v:'medium',l:'30-90 min'},
+  {v:'long',l:'1.5-2 hrs'},
+  {v:'day',l:'Full day'}
 ];
 const BUDGET=[
-  {v:'free',l:'Free',lk:'무료'},
-  {v:'low',l:'Under $10',lk:'1만원 이하'},
-  {v:'medium',l:'$10-$50',lk:'1만–5만원'},
-  {v:'high',l:'$50+',lk:'5만원 이상'}
+  {v:'free',l:'Free'},
+  {v:'low',l:'Under $10'},
+  {v:'medium',l:'$10-$50'},
+  {v:'high',l:'$50+'}
 ];
 const PEOPLE=[
-  {v:'alone',l:'Solo',lk:'혼자'},
-  {v:'partner',l:'Partner',lk:'파트너와'},
-  {v:'friends',l:'Friends',lk:'친구와'},
-  {v:'family',l:'Family',lk:'가족과'},
-  {v:'group',l:'Group',lk:'여러 명'}
+  {v:'alone',l:'Solo'},
+  {v:'partner',l:'Partner'},
+  {v:'friends',l:'Friends'},
+  {v:'family',l:'Family'},
+  {v:'group',l:'Group'}
 ];
 const PREF=[
-  {v:'creative',l:'Creative',lk:'창의적'},
-  {v:'learning',l:'Learning',lk:'배움'},
-  {v:'productive',l:'Productive',lk:'생산적'},
-  {v:'food',l:'Food',lk:'음식'},
-  {v:'active',l:'Active',lk:'활동적'},
-  {v:'social',l:'Social',lk:'사교적'},
-  {v:'relaxing',l:'Relaxing',lk:'휴식'},
-  {v:'nature',l:'Nature',lk:'자연'},
-  {v:'music',l:'Music',lk:'음악'},
-  {v:'entertainment',l:'Entertainment',lk:'엔터테인먼트'},
-  {v:'gaming',l:'Gaming',lk:'게임'},
-  {v:'anything',l:'Anything',lk:'아무거나'}
+  {v:'creative',l:'Creative'},
+  {v:'learning',l:'Learning'},
+  {v:'productive',l:'Productive'},
+  {v:'food',l:'Food'},
+  {v:'active',l:'Active'},
+  {v:'social',l:'Social'},
+  {v:'relaxing',l:'Relaxing'},
+  {v:'nature',l:'Nature'},
+  {v:'music',l:'Music'},
+  {v:'entertainment',l:'Entertainment'},
+  {v:'gaming',l:'Gaming'},
+  {v:'anything',l:'Anything'}
 ];
 const SETTING=[
-  {v:'indoor',l:'Indoor',lk:'실내'},
-  {v:'outdoor',l:'Outdoor',lk:'야외'},
-  {v:'either',l:'Either',lk:'상관없음'}
+  {v:'indoor',l:'Indoor'},
+  {v:'outdoor',l:'Outdoor'},
+  {v:'either',l:'Either'}
 ];
 const MOBILITY=[
-  {v:'full',l:'Full mobility',lk:'완전한 이동'},
-  {v:'limited',l:'Limited mobility',lk:'제한된 이동'},
-  {v:'seated',l:'Wheelchair / seated',lk:'휠체어 / 앉은 자세'},
-  {v:'low_energy',l:'Low energy / Chronic Illness',lk:'저에너지 / 만성질환'}
+  {v:'full',l:'Full mobility'},
+  {v:'limited',l:'Limited mobility'},
+  {v:'seated',l:'Wheelchair / seated'},
+  {v:'low_energy',l:'Low energy / Chronic Illness'}
 ];
 const DIFF=[
-  {v:'easy',l:'Laid-back',lk:'가볍게'},
-  {v:'medium',l:'Engaging',lk:'몰입감 있게'},
-  {v:'hard',l:'Challenging',lk:'도전적으로'},
-  {v:'long_project',l:'Start a Project',lk:'프로젝트 시작'}
+  {v:'easy',l:'Laid-back'},
+  {v:'medium',l:'Engaging'},
+  {v:'hard',l:'Challenging'},
+  {v:'long_project',l:'Start a Project'}
 ];
 
 const MOOD_THEME={happy:'happy',playful:'happy',grateful:'happy',energetic:'energetic',motivated:'energetic',restless:'energetic',calm:'calm',inspired:'calm',curious:'calm',sad:'sad',lonely:'sad',nostalgic:'sad',stressed:'stressed',anxious:'stressed',frustrated:'stressed',overwhelmed:'stressed',bored:'bored',tired:'tired'};
@@ -993,9 +1192,9 @@ const ONBOARD_STEPS = [
 ];
 
 const CHECKIN_MOODS=[
-  {v:'happy',e:'😊',l:'Happy',lk:'행복해'},{v:'calm',e:'🌿',l:'Calm',lk:'차분해'},{v:'energetic',e:'⚡',l:'Energized',lk:'활기차'},
-  {v:'motivated',e:'🔥',l:'Motivated',lk:'의욕적'},{v:'tired',e:'😴',l:'Tired',lk:'피곤해'},{v:'sad',e:'🌧️',l:'Sad',lk:'슬퍼'},
-  {v:'stressed',e:'😤',l:'Still stressed',lk:'긴장해'},{v:'peaceful',e:'☁️',l:'Peaceful',lk:'평화로워'}
+  {v:'happy',e:'😊',l:'Happy'},{v:'calm',e:'🌿',l:'Calm'},{v:'energetic',e:'⚡',l:'Energized'},
+  {v:'motivated',e:'🔥',l:'Motivated'},{v:'tired',e:'😴',l:'Tired'},{v:'sad',e:'🌧️',l:'Sad'},
+  {v:'stressed',e:'😤',l:'Still stressed'},{v:'peaceful',e:'☁️',l:'Peaceful'}
 ];
 
 let onboardStep = 0;
@@ -1061,7 +1260,7 @@ function resetOnboarding(){
 }
 
 // ── SETTINGS ───────────────────────────────────────────────
-function saveSettings(){localStorage.setItem('mp_settings',JSON.stringify(S.settings));}
+function saveSettings(){try{localStorage.setItem('mp_settings',JSON.stringify(S.settings));}catch(e){}}
 
 // ── TRANSLATIONS ──────────────────────────────────────────
 const TRANSLATIONS = {
@@ -1082,17 +1281,17 @@ const TRANSLATIONS = {
     yourActivities: 'Your Activities', yourJourney: '✦ Your Journey',
     activityHistory: 'Activity', historyWord: 'History',
     analyticsEye: '✦ Analytics', yourInsights: 'Your', insightsWord: 'Insights',
-    preferencesEye: '✦ Preferences', appSettings: 'App', settingsWord: 'Settings',
+    preferencesEye: '✦ Preferences', settingsWord: 'Settings',
     startOver: '🔄 Start Over', refresh: '↻ Refresh', back: '← Back',
-    iDidThis: '✓ I Did This!', saveForLater: '🔖 Save for Later', saved: '✓ Saved',
-    share: '↗ Share', notForMe: "👎 Not for me — try another",
+    iDidThis: '✓ I Did This!', saveForLater: '🔖 Save for Later', savedBtn: '✓ Saved',
+    notForMe: '👎 Not for me — try another',
     markDone: 'Mark done', doAgain: '↺ Again', delete: 'Delete',
     goToHome: '+ Discover Activities',
     journeyNotStarted: "Your activity journey hasn't started yet.",
     tryMoodCheckin: "Try a mood check-in and discover something that fits your moment.",
     darkMode: 'Dark Mode', darkModeSub: 'Switch between light and dark theme',
     moodColors: 'Mood-reactive colors', moodColorsSub: 'Background changes with your mood selection',
-    appearance: 'Appearance', language: 'Language / 언어', langSub: 'App language', preferences: 'Preferences',
+    appearance: 'Appearance', preferences: 'Preferences',
     resetOnboarding: 'Reset onboarding', resetSub: 'Show the onboarding survey again',
     clearHistory: 'Clear all history', clearSub: 'Delete all saved activities',
     reset: 'Reset', clear: 'Clear', data: 'Data',
@@ -1101,12 +1300,9 @@ const TRANSLATIONS = {
     checkinToggleSub: 'Ask how you feel after completing an activity',
     startNow: 'Start Now Guide', materials: 'What You Need',
     similar: 'Similar Activities', watchYoutube: '▶ Watch on YouTube',
-    iDidThis: '✓ I Did This!', saveForLater: '🔖 Save for Later', savedBtn: '✓ Saved',
-    notForMe: '👎 Not for me — try another',
     clickToShop: 'click to shop', sortedByViews: 'sorted by views',
     nothingNeeded: 'Nothing needed',
-    tasteProfile: '🎯 Taste Profile', youLove: '✅ You Love',
-    notYourThing: '❌ Not Your Thing', topMoodLbl: '🎭 Top Mood',
+    topMoodLbl: '🎭 Top Mood',
     moodImprove: '💚 Mood Improve Rate',
     moodImpactTitle: '💚 Mood Impact', activityPatternsTitle: '📅 Activity Patterns',
     mostActiveOn: "You're most active on",
@@ -1155,140 +1351,12 @@ const TRANSLATIONS = {
     topCatsCard: '🗂️ Top Categories', activityCountSuffix: 'activities',
     ytMostViewed: '🔥 Most Viewed', ytHowTo: '📚 How To', ytTips: '💡 Tips & Tricks',
     ytSortedViews: 'Sorted by view count', ytStepByStep: 'Step-by-step tutorial', ytExpertTips: 'Expert tips',
-  },
-  ko: {
-    discover: '추천', history: '기록', insights: '분석', settings: '설정',
-    moodCheckin: '✦ 기분 체크인', howFeeling: '지금 기분이', rightNow: '어떠세요?',
-    moodSignal: '당신의 기분이 신호입니다.', continueRefine: '계속하기 →',
-    surpriseMe: '🎲 깜짝 추천', refineBack: '← 기분 선택으로',
-    refineTitle: '지금 이 순간을', refineMoment: '맞춰볼게요',
-    refineSub: '딱 맞는 활동을 찾아드릴게요. 모든 항목은 선택 사항입니다.',
-    alreadyKnow: '이미 하고 싶은 게 있나요?', optional: '선택 사항',
-    specificPlaceholder: '예: "영화 보기", "그림 그리기"...',
-    timeLabel: '⏱ 가능한 시간', budgetLabel: '💰 예산',
-    peopleLabel: '👥 함께하는 사람', activityLabel: '🎨 활동 유형',
-    settingLabel: '🌿 실내 또는 야외', mobilityLabel: '♿ 신체 접근성',
-    refineMore: '＋ 더 세부적으로', hideRefine: '－ 숨기기',
-    findActivity: '✦ 나에게 맞는 활동 찾기',
-    yourActivities: '추천 활동', yourJourney: '✦ 나의 여정',
-    activityHistory: '활동', historyWord: '기록',
-    analyticsEye: '✦ 분석', yourInsights: '나의', insightsWord: '인사이트',
-    preferencesEye: '✦ 환경설정', appSettings: '앱', settingsWord: '설정',
-    startOver: '🔄 처음부터', refresh: '↻ 새로고침', back: '← 뒤로',
-    iDidThis: '✓ 했어요!', saveForLater: '🔖 나중에 하기', saved: '✓ 저장됨',
-    share: '↗ 공유', notForMe: '👎 별로예요 — 다른 것 추천',
-    markDone: '완료 표시', doAgain: '↺ 다시', delete: '삭제',
-    goToHome: '+ 활동 찾기',
-    journeyNotStarted: '아직 시작된 활동이 없어요.',
-    tryMoodCheckin: '기분 체크인을 하고 지금 딱 맞는 활동을 찾아보세요.',
-    darkMode: '다크 모드', darkModeSub: '라이트/다크 테마 전환',
-    moodColors: '기분 반응 색상', moodColorsSub: '기분 선택에 따라 배경색이 변합니다',
-    appearance: '화면', language: 'Language / 언어', langSub: '앱 언어', preferences: '환경설정',
-    resetOnboarding: '온보딩 초기화', resetSub: '온보딩 설문을 다시 표시합니다',
-    clearHistory: '전체 기록 삭제', clearSub: '저장된 모든 활동을 삭제합니다',
-    reset: '초기화', clear: '삭제', data: '데이터',
-    filterMemoryLabel: '마지막 필터 기억', filterMemorySub: '마지막 기분과 필터를 자동으로 채워드려요',
-    checkinToggleLabel: '활동 후 기분 체크인',
-    checkinToggleSub: '활동 완료 후 기분을 물어봅니다',
-    startNow: '지금 시작 가이드', materials: '필요한 것',
-    similar: '비슷한 활동', watchYoutube: '▶ 유튜브로 보기',
-    iDidThis: '✓ 했어요!', saveForLater: '🔖 나중에 하기', savedBtn: '✓ 저장됨',
-    notForMe: '👎 별로예요 — 다른 것 추천',
-    clickToShop: '눌러서 쇼핑하기', sortedByViews: '조회수 정렬',
-    nothingNeeded: '준비물 없음',
-    tasteProfile: '🎯 나의 취향 프로필', youLove: '✅ 좋아하는 것',
-    notYourThing: '❌ 별로인 것', topMoodLbl: '🎭 가장 많은 기분',
-    moodImprove: '💚 기분 개선율',
-    moodImpactTitle: '💚 기분 변화', activityPatternsTitle: '📅 활동 패턴',
-    mostActiveOn: '가장 활발한 날은',
-    findingActivities: '딱 맞는 활동을 찾고 있어요...', aiPersonalizing: 'AI가 맞춤 추천을 준비 중이에요',
-    avgRatingLbl: '평균 평점',
-    howFeelNow: '지금 기분이 어때요?', justCompleted: '방금 완료했어요',
-    didMoodChange: '기분이 바뀌었나요?', rateActivity: '이 활동을 평가해요',
-    saveContinue: '저장하고 계속 →', skipBtn: '건너뛰기',
-    shareActivity: '활동 공유', copyLink: '🔗 링크 복사',
-    historyCleared: '기록이 삭제되었어요', deletedMsg: '삭제되었어요', clearConfirm: '모든 활동 기록을 삭제할까요? 되돌릴 수 없어요.',
-    doneMsg: '완료했어요! 🎉', savedLater: '나중에 하기로 저장했어요 🔖', alreadySaved: '이미 저장되었어요!',
-    copiedClipboard: '클립보드에 복사되었어요! 📋',
-    foundActivities: '찾았어요', showingDiff: '보여주는 중',
-    welcomeTitle: 'poow에 오신 것을 환영해요', getStarted: '시작하기',
-    allSetTitle: '준비 완료!', moodCheckinTitle: '✦ 기분 체크인',
-    completed: '완료', totalSaved: '전체 저장', completion: '완료율',
-    allTab: '전체', savedTab: '저장됨', doneTab: '완료',
-    weekSummary: '이번 주 요약', avgRating: '평균 평점', topMood: '주요 기분',
-    dayStreak: '일 연속!', done: '완료', next: '다음 목표',
-    categoriesTried: '시도한 카테고리', doneStatus: '완료', savedStatus: '저장됨',
-    markDoneBtn: '완료 표시', doAgainBtn: '↺ 다시', deleteBtn: '삭제', shareBtn: '↗ 공유',
-    notEnoughData: '아직 데이터가 충분하지 않아요', notEnoughDataSub: '더 많은 활동을 저장하고 완료하면 인사이트를 볼 수 있어요.',
-    weekNoActivity: '이번 주에 완료한 활동이 없어요. "깜짝 추천" 버튼을 눌러보세요!',
-    weekGoodStart: '좋은 시작이에요! 이번 주에 {n}개의 활동을 완료했어요. 계속해봐요!',
-    weekGreat: '멋진 한 주예요! {n}개의 활동을 완료했어요. 가장 좋아하는 카테고리는 {cat}이에요.',
-    appSettings: '앱 설정',
-    moodImpact: '💚 기분 변화', activityPatterns: '📅 활동 패턴',
-    mostActive: '가장 활발한 날은', tasteProfile: '🎯 나의 취향 프로필',
-    youLove: '✅ 좋아하는 것', notYourThing: '❌ 별로인 것',
-    topMoodLabel: '🎭 가장 많은 기분', moodImproveRate: '💚 기분 개선율',
-    sort: '정렬:', want: '원하는:',
-    time: '⏱ 시간', cost: '💰 비용', effort: '💪 난이도',
-    laidBack: '✨ 편안한', engaging: '🧠 몰입감', challenging: '💪 도전적', project: '🗓️ 프로젝트',
-    metaTime: '시간', metaCost: '비용', metaDifficulty: '난이도', metaMaterials: '준비물',
-    backToResults: '← 결과로', free: '무료',
-    youLoveLabel: '좋아하는 것', notReallyYourThing: '별로인 것',
-    topMoodCommon: '가장 많은 기분', moodImproveLabel: '💚 기분 개선율',
-    moodImproveText: '% 의 활동이 기분을 개선했어요', bestCatLabel: '최고:',
-    tasteEmpty: '더 많은 활동을 평가 (⭐) 하면 취향 프로필을 만들 수 있어요',
-    findingBetter: '더 좋은 것을 찾고 있어요... 🔄',
-    savedDaysAgo: '일 전', stillWantTry: '아직 하고 싶나요? 탭해서 보기 →',
-    feltAfterLabel: ' · 이후: ', moodImpactCard: '💚 기분 변화',
-    moodImpactText: '%의 활동이 기분을 좋게 만들었어요.',
-    helpsYouMost: ' 활동이 가장 도움이 돼요.',
-    actPatternsCard: '📅 활동 패턴', mostActiveOnCard: '가장 활발한 날:',
-    topCatsCard: '🗂️ 주요 카테고리', activityCountSuffix: '개',
-    ytMostViewed: '🔥 최다 조회', ytHowTo: '📚 방법 소개', ytTips: '💡 팁 & 트릭',
-    ytSortedViews: '조회수 순 정렬', ytStepByStep: '단계별 튜토리얼', ytExpertTips: '전문가 팁',
   }
 };
 
 function t(key){ return (TRANSLATIONS[S.lang]||TRANSLATIONS.en)[key] || key; }
 
-const CAT_KO={
-  'mindfulness':'마음챙김','creative':'창의','exercise':'운동','social':'사교',
-  'learning':'학습','relaxation':'휴식','outdoor':'야외활동','art':'예술',
-  'music':'음악','cooking':'요리','reading':'독서','gaming':'게임',
-  'wellness':'웰니스','adventure':'모험','fitness':'피트니스','writing':'글쓰기',
-  'photography':'사진','crafts':'공예','sports':'스포츠','travel':'여행',
-  'food':'음식','entertainment':'오락','nature':'자연','home':'집',
-  'productivity':'생산성','self-care':'자기관리','meditation':'명상',
-  'yoga':'요가','dance':'댄스','gardening':'정원 가꾸기','journaling':'일기쓰기',
-  'crafting':'공예','diy':'DIY','drawing':'그림그리기','painting':'그림',
-  'hiking':'하이킹','running':'달리기','walking':'산책','stretching':'스트레칭',
-  'baking':'베이킹','board games':'보드게임','volunteering':'봉사활동',
-  'shopping':'쇼핑','movies':'영화','theater':'연극','film':'영화',
-  'music & arts':'음악·예술','creative arts':'창의예술','physical activity':'신체활동',
-  'mental health':'정신건강','mental wellness':'정신건강','social connection':'소통',
-  'indoor activities':'실내활동','outdoor activities':'야외활동',
-  'arts & crafts':'예술공예','music & relaxation':'음악·휴식',
-  'creative writing':'창작글쓰기','home improvement':'집 꾸미기',
-  'personal development':'자기계발','stress relief':'스트레스 해소',
-  'social activities':'사교활동','relaxation & wellness':'휴식·웰니스',
-  'mind & body':'몸과 마음','creative expression':'창의적 표현',
-  'activity':'활동','general':'일반','hobby':'취미','hobbies':'취미',
-  'lifestyle':'라이프스타일','culture':'문화','exercise & fitness':'운동·피트니스',
-};
-const CAT_EN={};
-Object.entries(CAT_KO).forEach(([en,ko])=>{CAT_EN[ko]=en;});
-function catLabel(cat){
-  if(!cat) return '';
-  if(S.lang!=='ko'){
-    if(/[가-힣]/.test(cat)) return CAT_EN[cat]||(()=>{for(const [en,ko] of Object.entries(CAT_KO)){if(ko===cat)return en;}return cat;})();
-    return cat;
-  }
-  if(/[가-힣]/.test(cat)) return cat;
-  const key=cat.toLowerCase().trim();
-  if(CAT_KO[key]) return CAT_KO[key];
-  for(const [k,v] of Object.entries(CAT_KO)){if(key.includes(k)||k.includes(key))return v;}
-  return cat;
-}
+function catLabel(cat){ return cat||''; }
 
 function applyLangToUI(){
   // ── NAV ──
@@ -1322,24 +1390,17 @@ function applyLangToUI(){
   fieldLabels.forEach((el,i)=>{ if(labelKeys[i]) el.textContent = t(labelKeys[i]); });
   const findBtn = document.getElementById('discoverBtn');
   if(findBtn) findBtn.innerHTML = t('findActivity');
-  const energyBtn = document.getElementById('energyToggleBtn');
-  if(energyBtn){
-    const isOpen = document.getElementById('energyPanel')?.style.display !== 'none';
-    energyBtn.textContent = isOpen ? t('hideRefine') : t('refineMore');
-  }
-
   // ── SETTINGS ──
   const setEl = (sel, text) => { const el = document.querySelector(sel); if(el) el.textContent = text; };
   setEl('#page-settings .hero-eyebrow', t('preferencesEye'));
   // Settings section titles
   const settingsTitles = document.querySelectorAll('#page-settings .settings-title');
-  const titleKeys = ['language','appearance','preferences','data'];
+  const titleKeys = ['appearance','preferences','data'];
   settingsTitles.forEach((el,i)=>{ if(titleKeys[i]) el.textContent = t(titleKeys[i]); });
   // Settings rows
   const settingsLabels = document.querySelectorAll('#page-settings .settings-label');
   const settingsSubLabels = document.querySelectorAll('#page-settings .settings-sub');
   const labelPairs = [
-    ['langSub',''],
     ['darkMode','darkModeSub'],
     ['moodColors','moodColorsSub'],
     ['filterMemoryLabel','filterMemorySub'],
@@ -1360,14 +1421,11 @@ function applyLangToUI(){
   const histTitle = document.querySelector('#page-history .hero-title');
   if(histTitle) histTitle.innerHTML = t('activityHistory')+' <em>'+t('historyWord')+'</em>';
   const calBtn = document.getElementById('calToggleBtn');
-  if(calBtn) calBtn.textContent = S.lang==='ko'?'📅 캘린더 보기':'📅 Calendar view';
+  if(calBtn) calBtn.textContent = '📅 Calendar view';
   // Calendar modal
   const calMonth = document.getElementById('calMonth');
   // Day labels
-  const calDayLabels = document.querySelectorAll('.cal-day-label');
-  const days_en = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const days_ko = ['일','월','화','수','목','금','토'];
-  calDayLabels.forEach((el,i)=>{ el.textContent = S.lang==='ko'?days_ko[i]:days_en[i]; });
+  document.querySelectorAll('.cal-day-label').forEach((el,i)=>{ el.textContent=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][i]; });
 
   // ── INSIGHTS PAGE ──
   setEl('#page-insights .hero-eyebrow', t('analyticsEye'));
@@ -1382,22 +1440,11 @@ function applyLangToUI(){
     if(optSpan) optSpan.textContent = t('optional');
     alreadyKnowEl.childNodes[0].textContent = t('alreadyKnow')+' ';
   }
-  const energyTitleEl = document.getElementById('energyCardTitle');
-  if(energyTitleEl){
-    const optSpan2 = document.getElementById('energyOptional');
-    if(optSpan2) optSpan2.textContent = t('optional');
-    energyTitleEl.childNodes[0].textContent = (S.lang==='ko'?'에너지가 얼마나 있나요? ':'How much energy do you have? ');
-  }
-
   // ── REFINE SCREEN STATIC TEXT ──
   const refineTitleEl2 = document.getElementById('refineTitleEl');
-  if(refineTitleEl2) refineTitleEl2.innerHTML = S.lang==='ko'?'지금 이 순간을 <em style="color:var(--primary)">맞춰볼게요</em>':'Refine your <em style="color:var(--primary)">moment</em>';
-  const alreadyKnowTitle = document.getElementById('alreadyKnowTitle');
-  if(alreadyKnowTitle) alreadyKnowTitle.childNodes[0].textContent = S.lang==='ko'?'이미 하고 싶은 게 있나요? ':'Already know what you want? ';
-  const alreadyKnowOpt = document.getElementById('alreadyKnowOptional');
-  if(alreadyKnowOpt) alreadyKnowOpt.textContent = S.lang==='ko'?'선택':'Optional';
+  if(refineTitleEl2) refineTitleEl2.innerHTML = 'Refine your <em style="color:var(--primary)">moment</em>';
   const specificInput = document.getElementById('specificInput');
-  if(specificInput) specificInput.placeholder = S.lang==='ko'?'예: "영화 보기", "그림 그리기"...':'e.g. "watch a movie", "draw something"...';
+  if(specificInput) specificInput.placeholder = 'e.g. "watch a movie", "draw something"...';
 
   // ── CHECKIN MODAL ──
   const checkinTitle = document.getElementById('checkinTitle');
@@ -1416,22 +1463,13 @@ function applyLangToUI(){
   const copyLinkBtn = document.getElementById('copyLinkBtn');
   if(copyLinkBtn) copyLinkBtn.textContent = t('copyLink');
 
-  // ── ENERGY PANEL ──
-  const projectNote = document.getElementById('projectNote');
-  if(projectNote) projectNote.textContent = S.lang==='ko'?'🗓️ 프로젝트 시작 = 오늘 시작하고, 계속 이어나가기':'🗓️ Start a Project = begin today, continue over time';
-  const energyBtn2 = document.getElementById('energyToggleBtn');
-  if(energyBtn2){
-    const isOpen2 = document.getElementById('energyPanel')?.style.display !== 'none';
-    energyBtn2.textContent = isOpen2 ? t('hideRefine') : t('refineMore');
-  }
-
   // ── QUICK CONTEXT ──
   const qcTitle = document.getElementById('quickContextTitle');
-  if(qcTitle) qcTitle.textContent = S.lang==='ko'?'빠른 설정':'Quick context';
+  if(qcTitle) qcTitle.textContent = 'Quick context';
 
   // ── SETTINGS HERO ──
   const settingsHero = document.getElementById('settingsHeroTitle');
-  if(settingsHero) settingsHero.innerHTML = S.lang==='ko'?'앱 <em>설정</em>':'App <em>Settings</em>';
+  if(settingsHero) settingsHero.innerHTML = 'App <em>Settings</em>';
 
   // ── EMPTY STATE ──
   const emptyTitle = document.querySelector('.empty-title');
@@ -1454,7 +1492,7 @@ function applyLangToUI(){
   const wantLabel = document.getElementById('wantLabel');
   if(wantLabel) wantLabel.textContent = t('want');
   const sortDefault = document.getElementById('sort-default');
-  if(sortDefault) sortDefault.textContent = S.lang==='ko'?'기본':'Default';
+  if(sortDefault) sortDefault.textContent = 'Default';
   const sortTime = document.getElementById('sort-time');
   if(sortTime) sortTime.textContent = t('time');
   const sortCost = document.getElementById('sort-cost');
@@ -1462,46 +1500,9 @@ function applyLangToUI(){
   const sortEffort = document.getElementById('sort-effort');
   if(sortEffort) sortEffort.textContent = t('effort');
 
-  // ── PLACEHOLDER — handled in refine section above ──
 }
 
-function setLang(lang){
-  S.lang = lang;
-  localStorage.setItem('mp_lang', lang);
-  const enBtn = document.getElementById('langEnBtn');
-  const krBtn = document.getElementById('langKrBtn');
-  if(enBtn && krBtn){
-    enBtn.style.background = lang==='en' ? 'var(--primary)' : 'var(--bg3)';
-    enBtn.style.color = lang==='en' ? 'white' : 'var(--text)';
-    enBtn.style.borderColor = lang==='en' ? 'var(--primary)' : 'var(--border)';
-    krBtn.style.background = lang==='ko' ? 'var(--primary)' : 'var(--bg3)';
-    krBtn.style.color = lang==='ko' ? 'white' : 'var(--text)';
-    krBtn.style.borderColor = lang==='ko' ? 'var(--primary)' : 'var(--border)';
-  }
-  applyLangToUI();
-  // Re-render all pill groups with correct language
-  const rp2=(id,opts,key)=>{const el=document.getElementById(id);if(!el)return;el.innerHTML=opts.map(o=>`<button class="pill${S[key]===o.v?' selected':''}" onclick="selPill('${key}','${o.v}',this)">${lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');};
-  rp2('timeGroup',TIME,'time');
-  rp2('budgetGroup',BUDGET,'budget');
-  rp2('peopleGroup',PEOPLE,'people');
-  // Preference uses multi-select
-  const prefEl=document.getElementById('prefGroup');
-  if(prefEl) prefEl.innerHTML=PREF.map(o=>`<button class="pill${(S.preference||[]).includes(o.v)?' selected':''}" onclick="togglePref('${o.v}',this)">${lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');
-  rp2('settingGroup',SETTING,'setting');
-  rp2('mobilityGroup',MOBILITY,'mobility');
-  renderDiffGroup();
-  // Re-render mood cards with correct language
-  document.getElementById('moodGrid').innerHTML=MOODS.map(m=>`
-    <button class="mood-card" onclick="toggleMood('${m.v}')" id="mood-${m.v}">
-      <span class="mood-card-emoji">${m.e}</span>
-      <span class="mood-card-label">${lang==='ko'&&m.lk?m.lk:m.l}</span>
-    </button>`).join('');
-  // Re-apply selected states
-  S.mood.forEach(mv=>document.getElementById('mood-'+mv)?.classList.add('selected'));
-  toast(lang==='ko' ? '한국어로 변경되었습니다 🇰🇷' : 'Switched to English 🇺🇸');
-  if(lang==='ko') translateHistoryTitlesToKo();
-  else translateHistoryTitlesToEn();
-}
+function setLang(lang){ S.lang='en'; localStorage.setItem('mp_lang','en'); }
 
 function toggleDarkMode(){S.settings.darkMode=!S.settings.darkMode;applySettings();saveSettings();}
 function toggleMoodColors(){S.settings.moodColors=!S.settings.moodColors;applySettings();saveSettings();}
@@ -1540,36 +1541,25 @@ function applyMoodTheme(moods){
 }
 
 // ── API ────────────────────────────────────────────────────
-function showApiModal(){} // disabled — using Worker
+function showApiModal(){}
 function saveApiKey(){}
-function updateApiStatus(){
-  const dot=document.getElementById('apiDot'),txt=document.getElementById('apiStatusText');
-  if(!dot||!txt)return;
-  if(S.apiKey){dot.className='api-dot';txt.textContent='Groq Connected';}
-  else{dot.className='api-dot off';txt.textContent='Connect API';}
-}
+function updateApiStatus(){}
 
 // ── WORKER URL — replace with your Cloudflare Worker URL ──
 const WORKER_URL = 'https://autumn-recipe-dfe4.hoolalayeonhoo.workers.dev';
 
-async function callGroq(prompt,forceKo){
+async function callGroq(prompt){
   const url = WORKER_URL;
   const headers = {'Content-Type':'application/json'};
-  const isKo = forceKo!==undefined ? forceKo : S.lang==='ko';
-  const sysMsg = isKo
-    ? '당신은 JSON API입니다. 반드시 한국어(Korean, Hangul 한글)만 사용하세요. 중국어(Chinese), 일본어(Japanese), 영어(English)는 절대 사용하지 마세요. JSON의 모든 텍스트 필드를 한국어 한글로 작성하세요. Return only valid JSON. Never use newlines or special characters inside string values.'
-    : 'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values.';
-  const finalPrompt = isKo
-    ? prompt + '\n중요: 모든 텍스트를 반드시 한국어(한글)로 작성하세요. 중국어나 영어를 절대 사용하지 마세요.'
-    : prompt;
+  const sysMsg = 'You are a JSON API. Return only valid JSON. Never use newlines or special characters inside string values.';
   const r = await fetch(url,{
     method:'POST',
     headers,
     body:JSON.stringify({
-      model: isKo ? 'llama-3.3-70b-versatile' : 'llama-3.1-8b-instant',
+      model: 'llama-3.1-8b-instant',
       messages:[
         {role:'system',content:sysMsg},
-        {role:'user',content:finalPrompt}
+        {role:'user',content:prompt}
       ],
       temperature:0.7,max_tokens:3500,
       response_format:{type:'json_object'}
@@ -1581,93 +1571,9 @@ async function callGroq(prompt,forceKo){
   return d.choices[0].message.content;
 }
 
-function itemTitle(item){
-  if(S.lang==='ko') return item.titleKo||item.title;
-  return item.title;
-}
+function itemTitle(item){ return item.title||''; }
 
-async function translateHistoryTitlesToKo(){
-  S.history.forEach(h=>{if(h.titleKo&&/[一-鿿㐀-䶿]/.test(h.titleKo))delete h.titleKo;});
-  const toTx=S.history.filter(h=>!h.titleKo&&h.title&&!/[가-힣]/.test(h.title));
-  if(!toTx.length)return;
-  try{
-    const list=toTx.map((h,i)=>`${i+1}. ${h.title}`).join('\n');
-    const prompt=`다음 영어 제목들을 한국어(Korean 한글)로 번역하세요. 반드시 한글만 사용하고 중국어는 절대 쓰지 마세요. JSON만 반환: {"t":["한국어번역1","한국어번역2",...]}\n${list}`;
-    const text=await callGroq(prompt);
-    const data=safeJSON(text);
-    if(data&&Array.isArray(data.t)){data.t.forEach((v,i)=>{if(toTx[i]&&v)toTx[i].titleKo=v;});saveHistory();renderHistory();}
-  }catch(e){}
-}
 
-async function translateHistoryTitlesToEn(){
-  const toTx=S.history.filter(h=>/[가-힣]/.test(h.title));
-  if(!toTx.length)return;
-  try{
-    const list=toTx.map((h,i)=>`${i+1}. ${h.titleKo||h.title}`).join('\n');
-    const prompt=`Translate the following Korean activity titles to English. Return only valid JSON: {"t":["English title 1","English title 2",...]}\n${list}`;
-    const text=await callGroq(prompt,false);
-    const data=safeJSON(text);
-    if(data&&Array.isArray(data.t)){
-      data.t.forEach((v,i)=>{if(toTx[i]&&v)toTx[i].title=v;});
-      saveHistory();renderHistory();
-    }
-  }catch(e){}
-}
-
-async function translateHistoryDescsToEn(){
-  const toTx=S.history.filter(h=>/[가-힣]/.test(h.description||''));
-  if(!toTx.length)return;
-  try{
-    const list=toTx.map((h,i)=>`${i+1}. ${(h.descriptionKo||h.description||'').substring(0,150)}`).join('\n');
-    const prompt=`Translate the following Korean activity descriptions to English (1-2 sentences each). Return only valid JSON: {"d":["English desc 1","English desc 2",...]}\n${list}`;
-    const text=await callGroq(prompt,false);
-    const data=safeJSON(text);
-    if(data&&Array.isArray(data.d)){
-      data.d.forEach((v,i)=>{if(toTx[i]&&v)toTx[i].description=v;});
-      saveHistory();renderHistory();
-    }
-  }catch(e){}
-}
-
-async function translateItemToEn(item){
-  try{
-    const prompt=`Translate this Korean activity to English. Return only valid JSON:
-{"title":"English title","description":"English description 1-2 sentences","category":"one-word English category","why":"English why"}
-Title: ${item.titleKo||item.title}
-Description: ${item.descriptionKo||item.description||''}
-Category: ${item.categoryKo||item.category||''}
-Why: ${item.whyKo||item.why||''}`;
-    const text=await callGroq(prompt,false);
-    const data=safeJSON(text);
-    if(data){
-      if(data.title)item.title=data.title;
-      if(data.description)item.description=data.description;
-      if(data.category)item.category=data.category.toLowerCase().trim();
-      if(data.why)item.why=data.why;
-      saveHistory();
-    }
-  }catch(e){}
-}
-
-async function translateItemDetailToEn(item){
-  const steps=Array.isArray(item.steps)?item.steps:(item.steps||'').split('|').map(s=>s.trim()).filter(Boolean);
-  const needSteps=steps.some(s=>/[가-힣]/.test(s))&&!item.stepsEn;
-  const needWhy=/[가-힣]/.test(item.why||'')&&!item.whyEn;
-  if(!needSteps&&!needWhy)return;
-  try{
-    const parts=[];
-    if(needSteps)parts.push(`Steps:\n${steps.map((s,i)=>`${i+1}. ${s}`).join('\n')}`);
-    if(needWhy)parts.push(`Why: ${item.why}`);
-    const prompt=`Translate the following Korean text to English. Return only valid JSON: {"steps":["step 1","step 2",...],"why":"English why text"}\n${parts.join('\n')}`;
-    const text=await callGroq(prompt,false);
-    const data=safeJSON(text);
-    if(data){
-      if(data.steps&&Array.isArray(data.steps))item.stepsEn=data.steps;
-      if(data.why)item.whyEn=data.why;
-      saveHistory();
-    }
-  }catch(e){}
-}
 
 function safeJSON(text){
   text=text.replace(/```json\s*/gi,'').replace(/```\s*/gi,'').trim();
@@ -1696,8 +1602,8 @@ function toggleMood(v){
   const banner=document.getElementById('moodBanner');
   const continueBtn=document.getElementById('moodContinueBtn');
   if(S.mood.length>0){
-    const labels=S.mood.map(m=>{const md=MOODS.find(x=>x.v===m);return S.lang==='ko'&&md?.lk?md.lk:md?.l||m;});
-    banner.textContent=(S.lang==='ko'?'✦ 지금 기분: ':'✦ Feeling ')+labels.join(' & ');
+    const labels=S.mood.map(m=>{const md=MOODS.find(x=>x.v===m);return md?.l||m;});
+    banner.textContent='✦ Feeling '+labels.join(' & ');
     banner.classList.add('visible');
     continueBtn.disabled=false;
   } else {
@@ -1712,7 +1618,7 @@ function goToRefine(){
   const recap=document.getElementById('refineMoodRecap');
   recap.innerHTML=S.mood.map(m=>{
     const md=MOODS.find(x=>x.v===m);
-    return `<div class="refine-mood-chip"><span>${md?.e||''}</span>${S.lang==='ko'&&md?.lk?md.lk:md?.l||m}</div>`;
+    return `<div class="refine-mood-chip"><span>${md?.e||''}</span>${md?.l||m}</div>`;
   }).join('');
   // Reset discover button state
   checkReady();
@@ -1721,16 +1627,6 @@ function goToRefine(){
 
 function goHome(){
   showPage('home');
-}
-
-// ── COLLAPSIBLE ENERGY ──────────────────────────────────────
-function toggleEnergy(){
-  const panel=document.getElementById('energyPanel');
-  const btn=document.getElementById('energyToggleBtn');
-  if(!panel||!btn) return;
-  const isOpen=panel.style.display!=='none';
-  panel.style.display=isOpen?'none':'block';
-  btn.textContent=isOpen?t('refineMore'):t('hideRefine');
 }
 
 // ── PILL SELECTION ──────────────────────────────────────────
@@ -1756,7 +1652,7 @@ function renderDiffGroup(){
   const group=document.getElementById('diffGroup');
   if(!group) return;
   S.difficulty=[];
-  group.innerHTML=DIFF.map(o=>`<button class="pill" onclick="toggleDiff('${o.v}',this)" id="diff-${o.v}">${S.lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');
+  group.innerHTML=DIFF.map(o=>`<button class="pill" onclick="toggleDiff('${o.v}',this)" id="diff-${o.v}">${o.l}</button>`).join('');
 }
 
 function checkReady(){
@@ -1766,8 +1662,14 @@ function checkReady(){
   if(btn) btn.disabled=!ok;
 }
 
+// ── AI CALL GUARD — prevents double-tap spam ───────────────
+let _aiRunning = false;
+function _aiStart(){ if(_aiRunning){toast('Still thinking… ⏳');return false;} _aiRunning=true; return true; }
+function _aiDone(){ _aiRunning=false; }
+
 // ── SURPRISE ME ────────────────────────────────────────────
 async function surpriseMe(){
+  if(!_aiStart()) return;
   if(false){}// worker handles auth
   const rMood=MOODS[Math.floor(Math.random()*MOODS.length)].v;
   const rTime=TIME[Math.floor(Math.random()*TIME.length)].v;
@@ -1780,7 +1682,7 @@ async function surpriseMe(){
   const useBudget=S.budget||rBudget;
   const usePeople=S.people||rPeople;
   const usePref=S.preference.length>0?S.preference:[rPref];
-  toast(S.lang==='ko'?'🎲 랜덤으로 골라드릴게요...':'🎲 Picking something random for you...');
+  toast('🎲 Picking something random for you...');
   const noMoodSelected = S.mood.length === 0;
   showPage('results');
   if(noMoodSelected) document.body.classList.add('surprise-neutral');
@@ -1794,13 +1696,14 @@ async function surpriseMe(){
     renderResults(window._acts);
   }catch(err){
     document.getElementById('resultsContent').innerHTML=`<div class="loading"><div style="font-size:40px;margin-bottom:16px">⚠️</div><h3>Something went wrong</h3><p style="color:var(--red);margin-bottom:20px">${err.message}</p><div style="display:flex;gap:10px;justify-content:center"><button class="btn-ghost" onclick="showPage('home')">← Back</button><button class="btn-ghost" onclick="surpriseMe()">↻ Retry</button></div></div>`;
-  }
+  } finally{ _aiDone(); }
 }
 
 // ─────────────────────────────────────────────────────────
 // ENHANCED AI RECOMMENDATION ENGINE
 // ─────────────────────────────────────────────────────────
 async function getRecommendations(){
+  if(!_aiStart()) return;
   if(false){}// worker handles auth
 
   if(S.settings.filterMemory){
@@ -1825,8 +1728,6 @@ async function getRecommendations(){
     : '';
 
   const settingCtx = S.setting ? `Setting preference: ${S.setting}.` : '';
-  const langCtx = S.lang === 'ko' ? 'IMPORTANT: Respond entirely in Korean (한국어). All activity titles, descriptions, steps, and why fields must be in Korean.' : '';
-
   const prompt = `Suggest 4 activities for this person.
 Mood: ${moodLabels||'any'}
 Time available: ${S.time||'any'} (flash=under 10min, short=10-30min, medium=30-90min, long=1.5-3hrs, day=full day)
@@ -1834,7 +1735,6 @@ Budget: ${S.budget||'any'} (free=no cost, low=under $10, medium=$10-50, high=$50
 People: ${S.people||'any'}
 Preference: ${S.preference.length?S.preference.join(', '):'any'}
 ${settingCtx}
-${langCtx}
 ${S.difficulty.length?`Energy/style: ${S.difficulty.join(', ')}. long_project = start today, continue over time.`:''}
 ${timeCtx}
 ${histCtx}
@@ -1873,8 +1773,8 @@ Return JSON: {"activities":[{"title":"string","description":"string","category":
     window._acts=parsed.activities||[];
     renderResults(window._acts);
   }catch(err){
-    document.getElementById('resultsContent').innerHTML=`<div class="loading"><div style="font-size:40px;margin-bottom:16px">⚠️</div><h3>${S.lang==='ko'?'문제가 발생했어요':'Something went wrong'}</h3><p style="color:var(--red);margin-bottom:20px">${err.message}</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn-ghost" onclick="showPage('refine')">${S.lang==='ko'?'← 뒤로':'← Back'}</button><button class="btn-ghost" onclick="getRecommendations()">${S.lang==='ko'?'↻ 다시 시도':'↻ Retry'}</button></div></div>`;
-  }
+    document.getElementById('resultsContent').innerHTML=`<div class="loading"><div style="font-size:40px;margin-bottom:16px">⚠️</div><h3>Something went wrong</h3><p style="color:var(--red);margin-bottom:20px">${err.message}</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn-ghost" onclick="showPage('refine')">← Back</button><button class="btn-ghost" onclick="getRecommendations()">↻ Retry</button></div></div>`;
+  } finally{ _aiDone(); }
 }
 
 // ── RESULTS ────────────────────────────────────────────────
@@ -1900,7 +1800,7 @@ function setDiffFilter(val){
 }
 
 async function refetchWithDifficulty(diff){
-  if(false){}// worker handles auth
+  if(!_aiStart()) return;
   var grid=document.getElementById('activityGrid');
   var diffLabels={'long_project':'long-term projects (start today, continue over time)','hard':'challenging, skill-stretching activities','medium':'moderately engaging activities','easy':'easy, low-effort, relaxing activities'};
   var diffLabel=diffLabels[diff]||diff;
@@ -1919,49 +1819,49 @@ async function refetchWithDifficulty(diff){
     var parsed=safeJSON(text);
     window._acts=parsed.activities||[];
     renderActCards();
-    toast(S.lang==='ko'?diffLabel+' 활동을 보여드릴게요 ✓':'Showing '+diffLabel+' ✓');
+    toast('Showing '+diffLabel+' ✓');
   }catch(err){
     if(grid) grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:20px"><p style="color:var(--red);margin-bottom:12px">Error: '+err.message+'</p><button class="btn-ghost" onclick="refetchWithDifficulty(\x27'+diff+'\x27)">\u21bb Try again</button></div>';
-  }
+  } finally{ _aiDone(); }
 }
 
 function renderResults(acts,resetRefine=true){
   if(resetRefine)refineState={tags:[],sort:'default',diffFilter:null};
   window._acts=acts;
   window._selectedActs=new Set();
-  const moodText=S.mood.map(m=>{const md=MOODS.find(x=>x.v===m);return md?(S.lang==='ko'&&md.lk?md.lk:md.l):m;}).join(' & ');
+  const moodText=S.mood.map(m=>{const md=MOODS.find(x=>x.v===m);return md?md.l:m;}).join(' & ');
   const sub=[S.specific,moodText,S.preference.length?S.preference.join(', '):null,S.time].filter(Boolean).join(' · ');
   document.getElementById('resultsContent').innerHTML=`
     <div class="results-header">
       <div>
-        <button class="btn-ghost" onclick="showPage('refine')" style="margin-bottom:12px">${S.lang==='ko'?'← 뒤로':'← Back'}</button>
-        <h2>${S.specific?(S.lang==='ko'?`"${S.specific}" 추천`:`Ideas for "${S.specific}"`):(S.lang==='ko'?'추천 활동':'Your Activities')}</h2>
+        <button class="btn-ghost" onclick="showPage('refine')" style="margin-bottom:12px">← Back</button>
+        <h2>${S.specific?`Ideas for "${S.specific}"`:' Your Activities'}</h2>
         <div class="results-meta" style="text-transform:none">${sub}</div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-ghost" onclick="getRecommendations()">${S.lang==='ko'?'↻ 새로고침':'↻ Refresh'}</button>
-        <button class="btn-ghost" onclick="startOver()" style="color:var(--red);border-color:var(--red)">${S.lang==='ko'?'🔄 처음부터':'🔄 Start Over'}</button>
+        <button class="btn-ghost" onclick="getRecommendations()">↻ Refresh</button>
+        <button class="btn-ghost" onclick="startOver()" style="color:var(--red);border-color:var(--red)">🔄 Start Over</button>
       </div>
     </div>
     <div class="refine-bar">
       <div class="refine-input-row">
-        <input class="refine-input" id="refineInput" placeholder='${S.lang==="ko"?"예: \"화면 없이\", \"야외만\", \"30분 이하\"":'e.g. "no screens", "outdoor only", "under 30 min"'}' onkeydown="if(event.key==='Enter'){event.preventDefault();addRefineTag();}"/>
-        <button class="btn-ghost" onclick="addRefineTag()">${S.lang==='ko'?'+ 추가':'+ Add'}</button>
+        <input class="refine-input" id="refineInput" placeholder='e.g. "no screens", "outdoor only", "under 30 min"' onkeydown="if(event.key==='Enter'){event.preventDefault();addRefineTag();}"/>
+        <button class="btn-ghost" onclick="addRefineTag()">+ Add</button>
       </div>
       <div class="refine-tags" id="refineTags"></div>
       <div class="sort-row">
-        <span class="sort-lbl" id="sortLabel">${S.lang==='ko'?'정렬:':'Sort:'}</span>
-        <button class="sort-pill ${refineState.sort==='default'?'active':''}" onclick="setSort('default',this)" id="sort-default">${S.lang==='ko'?'기본':'Default'}</button>
-        <button class="sort-pill ${refineState.sort==='time'?'active':''}" onclick="setSort('time',this)" id="sort-time">${S.lang==='ko'?'⏱ 시간':'⏱ Time'}</button>
-        <button class="sort-pill ${refineState.sort==='cost'?'active':''}" onclick="setSort('cost',this)" id="sort-cost">${S.lang==='ko'?'💰 비용':'💰 Cost'}</button>
-        <button class="sort-pill ${refineState.sort==='difficulty'?'active':''}" onclick="setSort('difficulty',this)" id="sort-effort">${S.lang==='ko'?'💪 난이도':'💪 Effort'}</button>
+        <span class="sort-lbl" id="sortLabel">Sort:</span>
+        <button class="sort-pill ${refineState.sort==='default'?'active':''}" onclick="setSort('default',this)" id="sort-default">Default</button>
+        <button class="sort-pill ${refineState.sort==='time'?'active':''}" onclick="setSort('time',this)" id="sort-time">⏱ Time</button>
+        <button class="sort-pill ${refineState.sort==='cost'?'active':''}" onclick="setSort('cost',this)" id="sort-cost">💰 Cost</button>
+        <button class="sort-pill ${refineState.sort==='difficulty'?'active':''}" onclick="setSort('difficulty',this)" id="sort-effort">💪 Effort</button>
       </div>
       <div class="sort-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
-        <span class="sort-lbl" id="wantLabel">${S.lang==='ko'?'원하는:':'Want:'}</span>
-        <button class="sort-pill ${refineState.diffFilter==='easy'?'active':''}" id="diff-filter-easy" onclick="setDiffFilter('easy')">${S.lang==='ko'?'✨ 가볍게':'✨ Laid-back'}</button>
-        <button class="sort-pill ${refineState.diffFilter==='medium'?'active':''}" id="diff-filter-medium" onclick="setDiffFilter('medium')">${S.lang==='ko'?'🧠 몰입감':'🧠 Engaging'}</button>
-        <button class="sort-pill ${refineState.diffFilter==='hard'?'active':''}" id="diff-filter-hard" onclick="setDiffFilter('hard')">${S.lang==='ko'?'💪 도전적':'💪 Challenging'}</button>
-        <button class="sort-pill ${refineState.diffFilter==='long_project'?'active':''}" id="diff-filter-long_project" onclick="setDiffFilter('long_project')">${S.lang==='ko'?'🗓️ 프로젝트':'🗓️ Project'}</button>
+        <span class="sort-lbl" id="wantLabel">Want:</span>
+        <button class="sort-pill ${refineState.diffFilter==='easy'?'active':''}" id="diff-filter-easy" onclick="setDiffFilter('easy')">✨ Laid-back</button>
+        <button class="sort-pill ${refineState.diffFilter==='medium'?'active':''}" id="diff-filter-medium" onclick="setDiffFilter('medium')">🧠 Engaging</button>
+        <button class="sort-pill ${refineState.diffFilter==='hard'?'active':''}" id="diff-filter-hard" onclick="setDiffFilter('hard')">💪 Challenging</button>
+        <button class="sort-pill ${refineState.diffFilter==='long_project'?'active':''}" id="diff-filter-long_project" onclick="setDiffFilter('long_project')">🗓️ Project</button>
       </div>
     </div>
     <div class="activity-grid" id="activityGrid"></div>
@@ -1982,7 +1882,7 @@ function removeTag(idx){
 }
 function renderTags(){
   const c=document.getElementById('refineTags');if(!c)return;
-  c.innerHTML=refineState.tags.map((t,i)=>`<div class="refine-tag">${t}<button onclick="removeTag(${i})">×</button></div>`).join('');
+  c.innerHTML=refineState.tags.map((tag,i)=>`<div class="refine-tag">${tag}<button onclick="removeTag(${i})">×</button></div>`).join('');
 }
 function setSort(sort,el){
   refineState.sort=sort;
@@ -2009,11 +1909,11 @@ function renderActCards(){
 
       <div onclick="showDetail(${idx})">
         <div class="act-top">
-          <span class="cat-badge">${catLabel(a.category)||(S.lang==='ko'?'활동':'Activity')}</span>
+          <span class="cat-badge">${catLabel(a.category)||'Activity'}</span>
           <span class="diff-badge ${getDiffClass(a.difficulty)}">${getDiffLabel(a.difficulty)}</span>
         </div>
-        <div class="act-title">${a.title}</div>
-        <div class="act-desc">${a.description}</div>
+        <div class="act-title">${itemTitle(a)}</div>
+        <div class="act-desc">${a.description||''}</div>
         ${a.why?`<div class="why-tag">✦ ${a.why}</div>`:''}
         <div class="act-meta" style="margin-top:10px"><span>⏱ ${a.estimated_time||'?'}</span><span>💰 ${a.estimated_cost||t('free')}</span></div>
         <div class="match-bar" title="Mood match score"><div class="match-fill" style="width:${matchPct}%"></div></div>
@@ -2040,18 +1940,18 @@ function updateSelectionBar(){
   const count=sel?sel.size:0;
   bar.classList.toggle('hidden',count===0);
   const countEl=document.getElementById('act-sel-count');
-  if(countEl)countEl.textContent=count+(S.lang==='ko'?' 개 선택':count===1?' selected':' selected');
+  if(countEl)countEl.textContent=count+(count===1?' selected':' selected');
 }
 function saveAllSelected(){
   const sel=window._selectedActs;if(!sel||sel.size===0)return;
   sel.forEach(idx=>{
     const a=window._acts[idx];if(!a)return;
     if(!S.history.some(h=>h.title===a.title&&!h.completed)){
-      S.history.unshift({...a,savedAt:new Date().toISOString(),rating:0,completed:false});
+      S.history.unshift({...a,id:Date.now()+Math.floor(Math.random()*1000),date:new Date().toISOString(),completed:false,rating:0,mood:S.mood.join(',')});
     }
   });
-  save();
-  toast(S.lang==='ko'?sel.size+'개 저장됨! ✓':sel.size+' activit'+(sel.size===1?'y':'ies')+' saved! ✓');
+  saveHistory();
+  toast(sel.size+' activit'+(sel.size===1?'y':'ies')+' saved! ✓');
   clearActSelection();
 }
 function clearActSelection(){
@@ -2068,7 +1968,7 @@ function calcMatchScore(activity){
   const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l?.toLowerCase()||m);
   const desc=(activity.description||'').toLowerCase();
   const title=(activity.title||'').toLowerCase();
-  moodLabels.forEach(m=>{if(desc.includes(m)||title.includes(m))score+=10;});
+  moodLabels.forEach(m=>{if(desc.includes(m)||title.toLowerCase().includes(m))score+=10;});
   if(S.preference.length&&activity.category&&S.preference.some(p=>activity.category.toLowerCase().includes(p)))score+=15;
   const likedCats=getLikedCategories();
   if(likedCats.includes(activity.category))score+=10;
@@ -2092,8 +1992,8 @@ function getLikedCategories(){return S.history.filter(h=>h.rating>=4&&h.category
 function getDislikedCategories(){return S.history.filter(h=>(h.rating<=2&&h.rating>0)&&h.category).map(h=>h.category);}
 
 async function refetchWithRefinements(){
-  if(false){}// worker handles auth
   if(refineState.tags.length===0){renderActCards();return;}
+  if(!_aiStart()) return;
   const grid=document.getElementById('activityGrid');
   if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)"><div class="spin" style="margin:0 auto 12px"></div><p>Finding activities matching: <strong>${refineState.tags.join(', ')}</strong></p></div>`;
   const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
@@ -2109,10 +2009,10 @@ Return JSON: {"activities":[{"title":"string","description":"string","category":
     const parsed=safeJSON(text);
     window._acts=parsed.activities||[];
     renderActCards();
-    toast(S.lang==='ko'?`${window._acts.length}개의 활동을 찾았어요 ✓`:`Found ${window._acts.length} activities matching your filters ✓`);
+    toast(`Found ${window._acts.length} activities matching your filters ✓`);
   }catch(err){
     if(grid)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:20px"><p style="color:var(--red);margin-bottom:12px">Error: ${err.message}</p><button class="btn-ghost" onclick="refetchWithRefinements()">↻ Try again</button></div>`;
-  }
+  } finally{ _aiDone(); }
 }
 
 // ── DETAIL ─────────────────────────────────────────────────
@@ -2124,7 +2024,7 @@ function buildShoppingHTML(materials){
   const items=parseMaterials(materials);if(!items.length)return'';
   return`<div class="materials-box">${items.map(item=>{
     const q=encodeURIComponent(item);
-    return`<div class="material-item"><span class="material-name">📦 ${item}</span><div class="shop-btns"><a class="shop-btn shop-btn-google" href="https://www.google.com/search?q=${q}&tbm=shop" target="_blank">🛍 Google</a><a class="shop-btn shop-btn-coupang" href="https://www.coupang.com/np/search?q=${q}" target="_blank">🛒 Coupang</a></div></div>`;
+    return`<div class="material-item"><span class="material-name">📦 ${item}</span><div class="shop-btns"><a class="shop-btn shop-btn-google" href="https://www.google.com/search?q=${q}&tbm=shop" target="_blank">🛍 Google</a><a class="shop-btn shop-btn-amazon" href="https://www.amazon.com/s?k=${q}" target="_blank">📦 Amazon</a></div></div>`;
   }).join('')}</div>`;
 }
 function buildYouTubeHTML(title,category,difficulty,aiQueries,materials,description){
@@ -2148,18 +2048,9 @@ function buildYouTubeHTML(title,category,difficulty,aiQueries,materials,descript
 }
 
 function showDetail(i){
-  const a=window._acts[i];S.current=a;
+  const a=window._acts[i];if(!a)return;S.current=a;
   const isSaved=S.history.some(h=>h.title===a.title&&!h.completed);
-  const needsEnTranslation=S.lang==='en'&&/[가-힣]/.test(a.title||'');
-  const rawSteps=Array.isArray(a.steps)?a.steps:(a.steps||'').split('|').map(s=>s.trim()).filter(Boolean);
-  const steps=needsEnTranslation&&a.stepsEn?.length?a.stepsEn:rawSteps;
-  if(needsEnTranslation){
-    const rawStepsHaveKo=rawSteps.some(s=>/[가-힣]/.test(s));
-    const whyHasKo=/[가-힣]/.test(a.why||'');
-    if((rawStepsHaveKo&&!a.stepsEn)||(whyHasKo&&!a.whyEn)){
-      translateItemDetailToEn(a).then(()=>showDetail(i));
-    }
-  }
+  const steps=Array.isArray(a.steps)?a.steps:(a.steps||'').split('|').map(s=>s.trim()).filter(Boolean);
   const yt=Array.isArray(a.youtube)?a.youtube:[];
   const sim=Array.isArray(a.similar)?a.similar:[];
   const materialItems=parseMaterials(a.materials);
@@ -2167,16 +2058,16 @@ function showDetail(i){
   document.getElementById('detailContent').innerHTML=`
     <div style="margin-bottom:24px"><button class="btn-ghost" onclick="showPage('results')">${t('backToResults')}</button></div>
     <div>
-      <span class="cat-badge">${catLabel(a.category)||(S.lang==='ko'?'활동':'Activity')}</span>
+      <span class="cat-badge">${catLabel(a.category)||'Activity'}</span>
       <div class="detail-title">${itemTitle(a)}</div>
-      <div class="detail-desc">${S.lang==='ko'?(a.descriptionKo||a.description||''):a.description||''}</div>
-      ${(()=>{const w=S.lang==='ko'?(a.whyKo||a.why||''):(a.why||'');return w?`<div style="padding:10px 14px;border-radius:10px;background:var(--primary-dim);border:1px solid var(--border);font-size:13px;color:var(--primary);margin-bottom:20px;font-style:italic">✦ ${w}</div>`:'';})()}
+      <div class="detail-desc">${a.description||''}</div>
+      ${a.why?`<div style="padding:10px 14px;border-radius:10px;background:var(--primary-dim);border:1px solid var(--border);font-size:13px;color:var(--primary);margin-bottom:20px;font-style:italic">✦ ${a.why}</div>`:''}
     </div>
     <div class="meta-grid">
       <div class="meta-block"><div class="meta-lbl">${t('metaTime')}</div><div class="meta-val">⏱ ${a.estimated_time||'?'}</div></div>
       <div class="meta-block"><div class="meta-lbl">${t('metaCost')}</div><div class="meta-val">💰 ${a.estimated_cost||t('free')}</div></div>
       <div class="meta-block"><div class="meta-lbl">${t('metaDifficulty')}</div><div class="meta-val">${getDiffLabel(a.difficulty)}</div></div>
-      <div class="meta-block"><div class="meta-lbl">${t('metaMaterials')}</div><div class="meta-val">${materialItems.length?(materialItems.length+(S.lang==='ko'?' 개 준비물':' item'+(materialItems.length>1?'s':''))):t('nothingNeeded')}</div></div>
+      <div class="meta-block"><div class="meta-lbl">${t('metaMaterials')}</div><div class="meta-val">${materialItems.length?(materialItems.length+' item'+(materialItems.length>1?'s':'')):t('nothingNeeded')}</div></div>
     </div>
     ${materialItems.length?`<div class="section-block"><h4>🛍 ${t('materials')} <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">${t('clickToShop')}</span></h4>${buildShoppingHTML(a.materials)}</div>`:''}
     ${steps.length?`<div class="section-block"><h4>${t('startNow')}</h4><div class="steps-list">${steps.map((s,i)=>`<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s.replace(/^\d+[\.\):\-]\s*/,'')}</div></div>`).join('')}</div></div>`:''}
@@ -2197,10 +2088,10 @@ function showDetail(i){
 
 // ── SAVE / DONE ────────────────────────────────────────────
 async function notForMe(){
+  if(!_aiStart()) return;
   const a=S.current;
   if(!a) return;
   const idx=window._acts.findIndex(x=>x.title===a.title);
-  toast(t('findingBetter'));
 
   const moodLabels=S.mood.map(m=>MOODS.find(x=>x.v===m)?.l||m).join(', ');
   const dislikedCats=getDislikedCategories();
@@ -2217,38 +2108,29 @@ Return JSON: {"activities":[{"title":"string","description":"string","category":
     if(parsed.activities&&parsed.activities[0]){
       if(idx>-1) window._acts.splice(idx,1,parsed.activities[0]);
       else window._acts.push(parsed.activities[0]);
-      toast(t('findingBetter'));
+      toast('Found a better match ✓');
       showPage('results');
       renderActCards();
     }
   }catch(err){
-    toast(S.lang==='ko'?'다른 활동을 찾지 못했어요 😅':'Could not find alternative 😅');
-  }
+    toast('Could not find alternative 😅');
+  } finally{ _aiDone(); }
 }
 
 function markDone(){
   const a=S.current;if(!a)return;
   const existing=S.history.find(h=>h.title===a.title);
   if(existing){existing.completed=true;saveHistory();}
-  else{S.history.unshift({...a,id:Date.now(),date:new Date().toISOString(),completed:true,rating:0,mood:S.mood.join(',')});saveHistory();}
+  else{S.history.unshift({...a,id:Date.now()+Math.floor(Math.random()*1000),date:new Date().toISOString(),completed:true,rating:0,mood:S.mood.join(',')});saveHistory();}
   if(S.settings.checkin) showCheckin(a.title,existing?existing.id:S.history[0].id);
   else{toast(t('doneMsg'));showPage('history');}
 }
 
 function saveActivity(){
   const a=S.current;if(!a)return;
-  const existing=S.history.find(h=>h.title===a.title||(a.titleKo&&h.titleKo===a.titleKo));
+  const existing=S.history.find(h=>h.title===a.title);
   if(existing){toast(t('alreadySaved'));return;}
-  const entry={...a,id:Date.now(),date:new Date().toISOString(),completed:false,rating:0,mood:S.mood.join(',')};
-  if(S.lang==='ko'&&/[가-힣]/.test(entry.title)){
-    entry.titleKo=entry.title;
-    entry.descriptionKo=entry.description;
-    entry.categoryKo=entry.category;
-    entry.whyKo=entry.why;
-    const enCat=CAT_EN[entry.category]||(()=>{for(const[en,ko] of Object.entries(CAT_KO)){if(ko===entry.category)return en;}return null;})();
-    if(enCat)entry.category=enCat;
-    translateItemToEn(entry);
-  }
+  const entry={...a,id:Date.now()+Math.floor(Math.random()*1000),date:new Date().toISOString(),completed:false,rating:0,mood:S.mood.join(',')};
   S.history.unshift(entry);
   saveHistory();
   const btn=document.getElementById('saveBtn');
@@ -2256,13 +2138,13 @@ function saveActivity(){
   toast(t('savedLater'));
 }
 
-function saveHistory(){localStorage.setItem('mp_history',JSON.stringify(S.history));}
+function saveHistory(){try{localStorage.setItem('mp_history',JSON.stringify(S.history));}catch(e){toast('Storage full — old entries may not be saved');}}
 
 // ── CHECKIN ────────────────────────────────────────────────
 function showCheckin(activityName,activityId){
   S.checkinData={activityId,mood:null,rating:0};
   document.getElementById('checkinActivityName').textContent=`"${activityName}"`;
-  document.getElementById('checkinMoods').innerHTML=CHECKIN_MOODS.map(m=>`<div class="checkin-mood" onclick="selectCheckinMood('${m.v}',this)" id="cm-${m.v}"><span class="checkin-emoji">${m.e}</span><span class="checkin-label">${S.lang==='ko'&&m.lk?m.lk:m.l}</span></div>`).join('');
+  document.getElementById('checkinMoods').innerHTML=CHECKIN_MOODS.map(m=>`<div class="checkin-mood" onclick="selectCheckinMood('${m.v}',this)" id="cm-${m.v}"><span class="checkin-emoji">${m.e}</span><span class="checkin-label">${m.l}</span></div>`).join('');
   document.getElementById('checkinStars').innerHTML=[1,2,3,4,5].map(s=>`<span class="r-star" onclick="setCheckinRating(${s})" id="rs-${s}">⭐</span>`).join('');
   updateCheckinStars();
   document.getElementById('checkinOverlay').style.display='flex';
@@ -2281,7 +2163,7 @@ function submitCheckin(){
   const item=S.history.find(h=>h.id===S.checkinData.activityId);
   if(item){item.rating=S.checkinData.rating;item.moodAfter=S.checkinData.mood;saveHistory();}
   document.getElementById('checkinOverlay').style.display='none';
-  toast(S.lang==='ko'?`${S.checkinData.rating}⭐ 평가 완료 — 공유해줘서 고마워요! 🎉`:`Rated ${S.checkinData.rating}⭐ — thanks for sharing! 🎉`);
+  toast(`Rated ${S.checkinData.rating}⭐ — thanks for sharing! 🎉`);
   showPage('history');
 }
 function skipCheckin(){document.getElementById('checkinOverlay').style.display='none';toast(t('doneMsg'));showPage('history');}
@@ -2291,29 +2173,29 @@ function openShare(){
   const a=S.current;if(!a)return;
   S.shareActivity=a;
   const moodEmoji=S.mood.length>0?MOODS.find(x=>x.v===S.mood[0])?.e||'✨':'✨';
-  const moodLabel=S.mood.length>0?S.mood.map(m=>{const md=MOODS.find(x=>x.v===m);return md?(S.lang==='ko'&&md.lk?md.lk:md.l):m;}).join(' & '):(S.lang==='ko'?'좋은 기운':'Good vibes');
+  const moodLabel=S.mood.length>0?S.mood.map(m=>{const md=MOODS.find(x=>x.v===m);return md?md.l:m;}).join(' & '):'Good vibes';
   document.getElementById('shareCardEl').innerHTML=`
     <div class="share-card-eyebrow">poow Activity</div>
     <div class="share-card-mood">${moodEmoji}</div>
-    <div class="share-card-title">${a.title}</div>
+    <div class="share-card-title">${itemTitle(a)}</div>
     <div class="share-card-sub">Feeling ${moodLabel} · ${a.estimated_time||'?'} · ${a.estimated_cost||'Free'}</div>
     <div style="display:flex;justify-content:center;gap:8px;margin-top:12px">
       ${[1,2,3,4,5].map(s=>`<span style="opacity:${s<=(a.rating||0)?1:0.3}">⭐</span>`).join('')}
     </div>
-    <div class="share-card-footer">moodpick.app · ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>`;
+    <div class="share-card-footer">poow · ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>`;
   document.getElementById('shareOverlay').style.display='flex';
 }
 function closeShare(){document.getElementById('shareOverlay').style.display='none';}
-function shareToTwitter(){const a=S.shareActivity;if(!a)return;const text=encodeURIComponent(`Just tried "${a.title}" with poow! 🎯 ${a.estimated_time||''} · ${a.estimated_cost||'Free'}\n\n#poow #ActivityRecommender`);window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');}
-function shareToKakao(){const a=S.shareActivity;if(!a)return;const text=encodeURIComponent(`poow이 추천한 활동: "${a.title}" 🎯\n${a.estimated_time||''} · ${a.estimated_cost||'무료'}\n\n#poow`);window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');toast('Opening share... (KakaoTalk SDK required for native share)');}
-function copyShareLink(){const a=S.shareActivity;if(!a)return;const text=`poow: "${a.title}" — ${a.description} (${a.estimated_time||'?'}, ${a.estimated_cost||'Free'})`;navigator.clipboard.writeText(text).then(()=>toast(t('copiedClipboard'))).catch(()=>toast(S.lang==='ko'?'복사 실패':'Could not copy'));}
+function shareToTwitter(){const a=S.shareActivity;if(!a)return;const text=encodeURIComponent(`Just tried "${itemTitle(a)}" with poow! 🎯 ${a.estimated_time||''} · ${a.estimated_cost||'Free'}\n\n#poow #ActivityRecommender`);window.open(`https://twitter.com/intent/tweet?text=${text}`,'_blank');}
+function shareNative(){const a=S.shareActivity;if(!a)return;const title=`poow: ${itemTitle(a)}`;const text=`${itemTitle(a)} — ${a.description||''} (${a.estimated_time||'?'}, ${a.estimated_cost||'Free'})`;if(navigator.share){navigator.share({title,text}).catch(()=>{});}else{navigator.clipboard.writeText(text).then(()=>toast(t('copiedClipboard'))).catch(()=>toast('Could not share'));}}
+function copyShareLink(){const a=S.shareActivity;if(!a)return;const desc=a.description||'';const text=`poow: "${itemTitle(a)}" — ${desc} (${a.estimated_time||'?'}, ${a.estimated_cost||'Free'})`;navigator.clipboard.writeText(text).then(()=>toast(t('copiedClipboard'))).catch(()=>toast('Could not copy'));}
 
 // ── HISTORY ────────────────────────────────────────────────
 function buildTasteProfile(){
   if(S.history.filter(h=>h.rating>0).length<2) return '';
   const catRatings={};
   S.history.filter(h=>h.rating>0&&h.category).forEach(h=>{
-    const cat=/[가-힣]/.test(h.category)?(CAT_EN[h.category]||h.category):h.category;
+    const cat=h.category;
     if(!catRatings[cat])catRatings[cat]={total:0,count:0,completed:0,saved:0};
     catRatings[cat].total+=h.rating;catRatings[cat].count++;
     if(h.completed)catRatings[cat].completed++;else catRatings[cat].saved++;
@@ -2332,7 +2214,7 @@ function buildTasteProfile(){
   const improvePct=totalWithAfter.length>0?Math.round((improved.length/totalWithAfter.length)*100):null;
   const catImprove={};improved.forEach(h=>{if(h.category)catImprove[h.category]=(catImprove[h.category]||0)+1;});
   const bestCat=Object.entries(catImprove).sort((a,b)=>b[1]-a[1])[0];
-  const topMoodName=topMoodData?(S.lang==='ko'&&topMoodData.lk?topMoodData.lk:topMoodData.l):'';
+  const topMoodName=topMoodData?topMoodData.l:'';
   return`<div class="taste-profile">
     <div class="taste-title">${t('tasteProfile')}</div>
     ${loved.length>0?`<div class="taste-row"><div class="taste-row-label">${t('youLoveLabel')}</div><div class="taste-tags">${loved.map(x=>`<span class="taste-tag taste-tag-loved">${catLabel(x.cat)}</span>`).join('')}</div></div>`:''}
@@ -2345,8 +2227,8 @@ function buildTasteProfile(){
 function showSavedItem(id){
   const item=S.history.find(h=>h.id===id);if(!item)return;
   S.current=item;window._acts=window._acts||[item];
-  if(!window._acts.find(a=>a.title===item.title))window._acts.unshift(item);
-  showDetail(window._acts.findIndex(a=>a.title===item.title));
+  if(!window._acts.find(a=>a.id===item.id))window._acts.unshift(item);
+  showDetail(window._acts.findIndex(a=>a.id===item.id));
 }
 
 function buildWeeklySummary(){
@@ -2358,11 +2240,11 @@ function buildWeeklySummary(){
   const topMood=weekItems.reduce((acc,h)=>{if(h.mood)h.mood.split(',').forEach(m=>{if(m)acc[m]=(acc[m]||0)+1;});return acc;},{});
   const topMoodKey=Object.keys(topMood).sort((a,b)=>topMood[b]-topMood[a])[0];
   const topMoodObj=topMoodKey?MOODS.find(x=>x.v===topMoodKey):null;
-  const topMoodLabel=topMoodObj?(S.lang==='ko'&&topMoodObj.lk?topMoodObj.lk:topMoodObj.l):'N/A';
+  const topMoodLabel=topMoodObj?topMoodObj.l:'N/A';
   const topCat=weekDone.reduce((acc,h)=>{if(h.category)acc[h.category]=(acc[h.category]||0)+1;return acc;},{});
   const topCatKey=Object.keys(topCat).sort((a,b)=>topCat[b]-topCat[a])[0]||'—';
   const topCatLabel=catLabel(topCatKey);
-  const insight=weekDone.length===0?t('weekNoActivity'):weekDone.length<3?(S.lang==='ko'?t('weekGoodStart').replace('{n}',weekDone.length):t('weekGoodStart').replace('{n}',weekDone.length).replace('{y}',weekDone.length===1?'y':'ies')):(S.lang==='ko'?t('weekGreat').replace('{n}',weekDone.length).replace('{cat}',topCatLabel):t('weekGreat').replace('{n}',weekDone.length).replace('{cat}',topCatLabel));
+  const insight=weekDone.length===0?t('weekNoActivity'):weekDone.length<3?t('weekGoodStart').replace('{n}',weekDone.length).replace('{y}',weekDone.length===1?'y':'ies'):t('weekGreat').replace('{n}',weekDone.length).replace('{cat}',topCatLabel);
   return`<div class="weekly-card">
     <div class="weekly-title">${t('weekSummary')}</div>
     <div class="weekly-stats">
@@ -2375,10 +2257,6 @@ function buildWeeklySummary(){
 }
 
 function renderHistory(filter='all'){
-  if(S.lang==='en'){
-    if(S.history.some(h=>/[가-힣]/.test(h.title)))translateHistoryTitlesToEn();
-    if(S.history.some(h=>/[가-힣]/.test(h.description||'')))translateHistoryDescsToEn();
-  }
   const items=filter==='done'?S.history.filter(h=>h.completed):filter==='saved'?S.history.filter(h=>!h.completed):S.history;
   const done=S.history.filter(h=>h.completed).length;
   const rated=S.history.filter(h=>h.rating>0);
@@ -2394,7 +2272,7 @@ function renderHistory(filter='all'){
     html+=`<div class="saved-reminder" onclick="showSavedItem(${item.id})">
       <div class="saved-reminder-icon">🔖</div>
       <div class="saved-reminder-text">
-        ${S.lang==='ko'?`"<strong>${itemTitle(item)}</strong>" — ${daysAgo}${t('savedDaysAgo')}`:`You saved "<strong>${itemTitle(item)}</strong>" ${daysAgo} days ago`}
+        You saved "<strong>${itemTitle(item)}</strong>" ${daysAgo} days ago
         <div class="saved-reminder-sub">${t('stillWantTry')}</div>
       </div>
     </div>`;
@@ -2409,20 +2287,20 @@ function renderHistory(filter='all'){
     // Warm, emotionally aligned empty state
     html+=`<div class="empty">
       <span class="empty-ambient">💬</span>
-      <div class="empty-title">${S.lang==='ko'?'아직 활동 기록이 없어요':'Your activity journey hasn\'t started yet'}</div>
+      <div class="empty-title">Your activity journey hasn't started yet</div>
       <div class="empty-sub">${t('tryMoodCheckin')}</div>
-      <button class="empty-cta" onclick="showPage('home')">${S.lang==='ko'?'+ 활동 추천 받기':'+ Discover Activities'}</button>
+      <button class="empty-cta" onclick="showPage('home')">+ Discover Activities</button>
     </div>`;
   } else {
     html+=`<div class="hist-list">`;
     items.forEach(item=>{
-      const date=new Date(item.date).toLocaleDateString(S.lang==='ko'?'ko-KR':'en-US',{month:'short',day:'numeric'});
+      const date=new Date(item.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
       const moodAfterData=item.moodAfter?MOODS.find(x=>x.v===item.moodAfter):null;
-      const moodAfterLabel=moodAfterData?(S.lang==='ko'&&moodAfterData.lk?moodAfterData.lk:moodAfterData.l):'';
+      const moodAfterLabel=moodAfterData?moodAfterData.l:'';
       html+=`<div class="hist-card">
-        <div class="hist-top"><div><div class="hist-title">${itemTitle(item)}</div><div class="hist-date">${date} · ${catLabel(item.category)||(S.lang==='ko'?'활동':'Activity')}${moodAfterLabel?`${t('feltAfterLabel')}${moodAfterLabel}`:''}</div></div>
+        <div class="hist-top"><div><div class="hist-title">${itemTitle(item)}</div><div class="hist-date">${date} · ${catLabel(item.category)||'Activity'}${moodAfterLabel?`${t('feltAfterLabel')}${moodAfterLabel}`:''}</div></div>
         <span class="status-badge ${item.completed?'status-done':'status-saved'}">${item.completed?t('doneStatus'):t('savedStatus')}</span></div>
-        <div class="hist-desc">${(()=>{if(S.lang==='ko'){const d=item.descriptionKo||item.description||'';return d.substring(0,100)+(d.length>100?'...':'');}return(item.description||'').substring(0,100)+((item.description||'').length>100?'...':'');})()}</div>
+        <div class="hist-desc">${(()=>{return(item.description||'').substring(0,100)+((item.description||'').length>100?'...':'');})()}</div>
         <div class="hist-bottom">
           <div class="stars">${[1,2,3,4,5].map(s=>`<span class="star" onclick="rateItem(${item.id},${s})" style="color:${s<=(item.rating||0)?'var(--primary)':'var(--border)'}">${s<=(item.rating||0)?'★':'☆'}</span>`).join('')}</div>
           ${!item.completed?`<button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="markHistDone(${item.id})">${t('markDoneBtn')}</button>`:''}
@@ -2445,7 +2323,7 @@ function doAgain(id){
   const existing=window._acts.findIndex(a=>a.title===item.title);
   if(existing>-1)window._acts.splice(existing,1);
   window._acts.unshift(item);
-  showDetail(0);toast(S.lang==='ko'?`"${itemTitle(item)}" 다시 보기 ↺`:'Showing "'+item.title+'" again ↺');
+  showDetail(0);toast('Showing "'+item.title+'" again ↺');
 }
 
 function rateItem(id,r){const h=S.history.find(h=>h.id===id);if(h){h.rating=r;saveHistory();renderHistory();}}
@@ -2461,8 +2339,8 @@ function localDateStr(d){const dt=new Date(d);return`${dt.getFullYear()}-${Strin
 function renderCalendar(){
   const month=S.calMonth,year=month.getFullYear(),mon=month.getMonth();
   const first=new Date(year,mon,1),last=new Date(year,mon+1,0),pad=first.getDay();
-  document.getElementById('calMonth').textContent=month.toLocaleDateString(S.lang==='ko'?'ko-KR':'en-US',{month:'long',year:'numeric'});
-  const days=S.lang==='ko'?['일','월','화','수','목','금','토']:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  document.getElementById('calMonth').textContent=month.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   let html=days.map(d=>`<div class="cal-day-label">${d}</div>`).join('');
   for(let i=0;i<pad;i++)html+=`<div class="cal-cell empty"></div>`;
   const today=new Date();
@@ -2485,10 +2363,10 @@ function renderCalModal(){
   const dateStr=S.calSelected;if(!dateStr){document.getElementById('calModal').innerHTML='';return;}
   const [y,mo,d]=dateStr.split('-').map(Number);const date=new Date(y,mo-1,d);
   const items=S.history.filter(h=>localDateStr(h.date)===dateStr);
-  const label=date.toLocaleDateString(S.lang==='ko'?'ko-KR':'en-US',{weekday:'long',month:'long',day:'numeric'});
+  const label=date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
   let html=`<div class="cal-modal"><div class="cal-modal-title">${label}<button class="btn-icon" onclick="S.calSelected=null;renderCalendar()">✕</button></div>`;
-  if(!items.length)html+=`<div style="color:var(--muted);font-size:13px;padding:16px 0">${S.lang==='ko'?'이 날은 활동이 없어요.':'No activities on this day.'}</div>`;
-  else items.forEach(item=>{html+=`<div class="cal-act-item"><div class="cal-act-dot ${item.completed?'done':''}"></div><div><div style="font-size:13px;font-weight:500">${itemTitle(item)}</div><div style="font-size:11px;color:var(--muted)">${catLabel(item.category)||(S.lang==='ko'?'활동':'Activity')} · ${item.completed?(S.lang==='ko'?'✓ 완료':'✓ Done'):(S.lang==='ko'?'저장됨':'Saved')}</div></div></div>`;});
+  if(!items.length)html+=`<div style="color:var(--muted);font-size:13px;padding:16px 0">No activities on this day.</div>`;
+  else items.forEach(item=>{html+=`<div class="cal-act-item"><div class="cal-act-dot ${item.completed?'done':''}"></div><div><div style="font-size:13px;font-weight:500">${itemTitle(item)}</div><div style="font-size:11px;color:var(--muted)">${catLabel(item.category)||'Activity'} · ${item.completed?'✓ Done':'Saved'}</div></div></div>`;});
   html+=`</div>`;
   document.getElementById('calModal').innerHTML=html;
 }
@@ -2497,7 +2375,7 @@ function toggleCalendarView(){
   if(!cal||!btn)return;
   const isOpen=cal.style.display!=='none';
   cal.style.display=isOpen?'none':'block';
-  btn.textContent=isOpen?(S.lang==='ko'?'📅 캘린더 보기':'📅 Calendar view'):(S.lang==='ko'?'📋 목록 보기':'📋 List view');
+  btn.textContent=isOpen?'📅 Calendar view':'📋 List view';
   if(!isOpen)renderCalendar();
 }
 function changeMonth(dir){S.calMonth=new Date(S.calMonth.getFullYear(),S.calMonth.getMonth()+dir,1);S.calSelected=null;renderCalendar();}
@@ -2526,18 +2404,18 @@ function renderInsights(){
   html+=buildTasteProfile();
 
   const catCounts={};
-  S.history.forEach(h=>{if(h.category){const cat=/[가-힣]/.test(h.category)?(CAT_EN[h.category]||h.category):h.category;catCounts[cat]=(catCounts[cat]||0)+1;}});
+  S.history.forEach(h=>{if(h.category){catCounts[h.category]=(catCounts[h.category]||0)+1;}});
   const topCats=Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).slice(0,3);
   if(topCats.length>1){
     const maxCount=topCats[0][1];
     html+=`<div class="card" style="margin-bottom:10px">
       <div class="card-title" style="margin-bottom:14px">${t('topCatsCard')}</div>
-      ${topCats.map(([cat,count])=>`<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--text);font-weight:500">${catLabel(cat)}</span><span style="color:var(--muted)">${S.lang==='ko'?count+'개':count+(count===1?' activity':' activities')}</span></div><div class="mood-improve-track"><div class="mood-improve-fill" style="width:${Math.round((count/maxCount)*100)}%"></div></div></div>`).join('')}
+      ${topCats.map(([cat,count])=>`<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--text);font-weight:500">${catLabel(cat)}</span><span style="color:var(--muted)">${count+(count===1?' activity':' activities')}</span></div><div class="mood-improve-track"><div class="mood-improve-fill" style="width:${Math.round((count/maxCount)*100)}%"></div></div></div>`).join('')}
     </div>`;
   }
 
   const dayCounts=[0,0,0,0,0,0,0];
-  const dayNames=S.lang==='ko'?['일','월','화','수','목','금','토']:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   S.history.forEach(h=>{dayCounts[new Date(h.date).getDay()]++;});
   const peakDay=dayNames[dayCounts.indexOf(Math.max(...dayCounts))];
   const totalActivities=dayCounts.reduce((a,b)=>a+b,0);
@@ -2642,7 +2520,7 @@ function showPage(name){
 
 function startOver(){
   S.mood=[];S.time=null;S.budget=null;S.people=null;S.preference=[];S.setting=null;S.difficulty=[];S.specific='';
-  refineState={tags:[],sort:'default'};
+  refineState={tags:[],sort:'default',diffFilter:null};
   applyMoodTheme([]);
   document.body.classList.remove('surprise-neutral');
   document.querySelectorAll('.mood-card').forEach(b=>b.classList.remove('selected'));
@@ -2651,9 +2529,14 @@ function startOver(){
   const banner=document.getElementById('moodBanner');if(banner)banner.classList.remove('visible');
   const continueBtn=document.getElementById('moodContinueBtn');if(continueBtn)continueBtn.disabled=true;
   const discoverBtn=document.getElementById('discoverBtn');if(discoverBtn)discoverBtn.disabled=true;
-  const ep=document.getElementById('energyPanel');if(ep)ep.style.display='none';
-  const etb=document.getElementById('energyToggleBtn');if(etb)etb.textContent=t('refineMore');
-  showPage('home');toast('Starting fresh! 🔄');
+  // Navigate directly — avoids showPage('home') recursion when _currentPage is already 'home'
+  _currentPage='home';_lastDiscoverPage='home';
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-home')?.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav-home')?.classList.add('active');
+  window.scrollTo(0,0);
+  toast('Starting fresh! 🔄');
 }
 
 // ── SETUP ──────────────────────────────────────────────────
@@ -2669,17 +2552,17 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('moodGrid').innerHTML=MOODS.map(m=>`
     <button class="mood-card" onclick="toggleMood('${m.v}')" id="mood-${m.v}">
       <span class="mood-card-emoji">${m.e}</span>
-      <span class="mood-card-label">${S.lang==='ko'&&m.lk?m.lk:m.l}</span>
+      <span class="mood-card-label">${m.l}</span>
     </button>`).join('');
 
   // Pill groups on refine screen
-  const rp=(id,opts,key)=>{document.getElementById(id).innerHTML=opts.map(o=>`<button class="pill" onclick="selPill('${key}','${o.v}',this)">${S.lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');};
+  const rp=(id,opts,key)=>{document.getElementById(id).innerHTML=opts.map(o=>`<button class="pill" onclick="selPill('${key}','${o.v}',this)">${o.l}</button>`).join('');};
   rp('timeGroup',TIME,'time');
   rp('budgetGroup',BUDGET,'budget');
   rp('peopleGroup',PEOPLE,'people');
   // Preference uses multi-select
   const prefElInit=document.getElementById('prefGroup');
-  if(prefElInit) prefElInit.innerHTML=PREF.map(o=>`<button class="pill${(S.preference||[]).includes(o.v)?' selected':''}" onclick="togglePref('${o.v}',this)">${S.lang==='ko'&&o.lk?o.lk:o.l}</button>`).join('');
+  if(prefElInit) prefElInit.innerHTML=PREF.map(o=>`<button class="pill${(S.preference||[]).includes(o.v)?' selected':''}" onclick="togglePref('${o.v}',this)">${o.l}</button>`).join('');
   rp('settingGroup',SETTING,'setting');
   rp('mobilityGroup',MOBILITY,'mobility');
   renderDiffGroup();
